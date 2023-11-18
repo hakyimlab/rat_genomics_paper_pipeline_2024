@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Natasha Santhanam">
+<meta name="dcterms.date" content="2022-05-04">
+
+<title>Rat Genomics Pipeline Rendered - 09.PRS_Rats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#run-prsice-in-rats" id="toc-run-prsice-in-rats" class="nav-link active" data-scroll-target="#run-prsice-in-rats">Run PRSice in Rats</a></li>
+  <li><a href="#run-gwas-in-rats-for-bodylength" id="toc-run-gwas-in-rats-for-bodylength" class="nav-link" data-scroll-target="#run-gwas-in-rats-for-bodylength">Run GWAS in rats for bodylength</a></li>
+  <li><a href="#run-prsice" id="toc-run-prsice" class="nav-link" data-scroll-target="#run-prsice">Run PRSice</a></li>
+  <li><a href="#evaluate-performance-of-prsice" id="toc-evaluate-performance-of-prsice" class="nav-link" data-scroll-target="#evaluate-performance-of-prsice">Evaluate performance of PRSice</a></li>
+  <li><a href="#test-ptrs-prs-as-a-weighted-sum" id="toc-test-ptrs-prs-as-a-weighted-sum" class="nav-link" data-scroll-target="#test-ptrs-prs-as-a-weighted-sum">Test PTRS PRS as a weighted sum</a></li>
+  <li><a href="#plot-prs-vs-ptrs" id="toc-plot-prs-vs-ptrs" class="nav-link" data-scroll-target="#plot-prs-vs-ptrs">Plot PRS vs PTRS</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">09.PRS_Rats</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Natasha Santhanam </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 4, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="run-prsice-in-rats" class="level2">
+<h2 class="anchored" data-anchor-id="run-prsice-in-rats">Run PRSice in Rats</h2>
+</section>
+<section id="run-gwas-in-rats-for-bodylength" class="level1">
+<h1>Run GWAS in rats for bodylength</h1>
+<p>first extract out 500 random rats that we’ll use as baseline</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/rat_genotypes_LD_pruned_0.95/plink_format/rat_metabolic_impute.fam"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>all_names <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/all_names.txt"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> fam <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(V2 <span class="sc">%in%</span> all_names<span class="sc">$</span>ID))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>base_ref <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">FID =</span> <span class="fu">sample</span>(fam<span class="sc">$</span>V2, <span class="dv">500</span>)) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> FID)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(base_ref, geno.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/PRSice_Rats/PRSice_rats_reference_names.txt"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove any overlap of training rats</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DIR</span><span class="op">=</span>/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/PTRS_weights/PRSice_Rats/</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute <span class="at">--remove</span> <span class="va">$DIR</span>/all_training_rats.txt  <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_abrv</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#remove 500 rats that will later be used in baseline reference</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_abrv <span class="at">--remove</span> <span class="va">$DIR</span>/PRSice_rats_reference_names.txt <span class="at">--make-bed</span> <span class="at">--out</span> <span class="va">$DIR</span>/rat_metabolic_PRSice</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#create plink files for reference</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_abrv <span class="at">--keep</span> <span class="va">$DIR</span>/PRSice_rats_reference_names.txt <span class="at">--make-bed</span> <span class="at">--out</span> <span class="va">$DIR</span>/rat_reference_PRSice</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> <span class="fu">read.table</span>(DIR <span class="sc">%&amp;%</span> <span class="st">"/rat_metabolic_PRSice.fam"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/processed_obesity_rat_Palmer_phenotypes.tsv"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pheno_all <span class="ot">&lt;-</span> pheno[<span class="fu">na.omit</span>(<span class="fu">match</span>(fam<span class="sc">$</span>V1, pheno<span class="sc">$</span>rat_rfid)),]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pheno_all <span class="ot">&lt;-</span> pheno_all <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> rat_rfid, <span class="at">.before =</span> <span class="st">"rat_rfid"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(pheno_all, DIR <span class="sc">%&amp;%</span> <span class="st">"bodylength_phenotype_PRSice.phe"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>pheno_ref <span class="ot">&lt;-</span> pheno[<span class="fu">na.omit</span>(<span class="fu">match</span>(base_ref<span class="sc">$</span>FID, pheno<span class="sc">$</span>rat_rfid)),] </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>pheno_ref <span class="ot">&lt;-</span> pheno_ref <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">IID =</span> pheno_ref<span class="sc">$</span>rat_rfid, <span class="at">.before =</span> <span class="st">"rat_rfid"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(pheno_ref, DIR <span class="sc">%&amp;%</span> <span class="st">"bodylength_phenotype_ref_PRSice.phe"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_PRSice <span class="at">--pheno</span> bodylength_phenotype_PRSice.phe <span class="at">--assoc</span> <span class="at">--out</span> PRSIce_bodylength_assoc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="run-prsice" class="level1">
+<h1>Run PRSice</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gwas <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/PRSice_Rats/PRSIce_bodylength_assoc.qassoc"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>bim <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/PRSice_Rats/rat_metabolic_PRSice.bim"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#table(bim$V2 == gwas$SNP)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>gwas <span class="ot">&lt;-</span> gwas <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A1 =</span> bim<span class="sc">$</span>V5, <span class="at">.before =</span> <span class="st">"BP"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(gwas, <span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/PTRS_weights/PRSice_Rats/PRSIce_bodylength_assoc_imputed.text"</span>,  <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a> <span class="ex">PRSice</span> <span class="at">--base</span> PRSIce_bodylength_assoc_imputed.text <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--snp</span> SNP <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--chr</span> CHR <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bp</span> BP <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--pvalue</span> P <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--A1</span> A1 <span class="dt">\</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binary-target</span> F <span class="dt">\</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--beta</span> <span class="dt">\</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--stat</span> BETA <span class="dt">\</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--target</span> rat_reference_PRSice  <span class="dt">\</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">--pheno</span> bodylength_phenotype_ref_PRSice.phe <span class="dt">\</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">--out</span> rat_metabolic_PRSice</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="evaluate-performance-of-prsice" class="level1">
+<h1>Evaluate performance of PRSice</h1>
+<p>Plot performance as a function of pvalue threshold</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prsice_perf <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_PRSice.prsice"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prsice_perf, <span class="fu">aes</span>(<span class="sc">-</span><span class="fu">log10</span>(Threshold), <span class="sc">-</span><span class="fu">log10</span>(P))) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check Correlation between observed bodylength and PRS from PRSice</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>prs <span class="ot">&lt;-</span> <span class="fu">fread</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_PRSice.best"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>all_rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"all_names.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"processed_obesity_rat_Palmer_phenotypes.csv"</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(rat_rfid  <span class="sc">%in%</span> all_rats<span class="sc">$</span>ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pheno_height <span class="ot">&lt;-</span> pheno[<span class="fu">na.omit</span>(<span class="fu">match</span>(prs<span class="sc">$</span>FID, pheno<span class="sc">$</span>rat_rfid)),] <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> prs[<span class="fu">na.omit</span>(<span class="fu">match</span>(pheno<span class="sc">$</span>rat_rfid, prs<span class="sc">$</span>FID)),]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> tempo[<span class="fu">match</span>(pheno_height<span class="sc">$</span>rat_rfid, tempo<span class="sc">$</span>FID), ]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>PRSice_height <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">estimate =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>() )</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>estimate</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>p.value</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="test-ptrs-prs-as-a-weighted-sum" class="level1">
+<h1>Test PTRS PRS as a weighted sum</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ptrs_height <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_w_Human_best_PTRS.RDS"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()  <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(model_35)) </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ptrs_height <span class="ot">&lt;-</span> ptrs_height <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> <span class="fu">rownames</span>(ptrs_height), <span class="at">.before =</span> <span class="st">"model_35"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>ptrs_height <span class="ot">&lt;-</span> ptrs_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(prs<span class="sc">$</span>FID, ptrs_height<span class="sc">$</span>FID)), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>prs_ptrs_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> <span class="dv">500</span>, <span class="at">ncol =</span> <span class="dv">10</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ratios <span class="ot">=</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   index <span class="ot">&lt;-</span> ratios[i]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>   prs_ptrs_df[,i] <span class="ot">&lt;-</span> (prs<span class="sc">$</span>PRS<span class="sc">*</span>index)<span class="sc">+</span>(ptrs_height<span class="sc">$</span>model_35<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>index))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(prs_ptrs_df)[i] <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"PRS"</span>, index, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>prs_ptrs_df <span class="ot">&lt;-</span> prs_ptrs_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> prs<span class="sc">$</span>FID, <span class="at">.before =</span> <span class="fu">colnames</span>(prs_ptrs_df)[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pheno_height <span class="ot">&lt;-</span> pheno_height[<span class="fu">match</span>(prs_ptrs_df<span class="sc">$</span>FID, pheno_height<span class="sc">$</span>rat_rfid), ]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cor =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(prs_ptrs_df)) {</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>estimate</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>p.value</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(prs_ptrs_df)[j]</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-prs-vs-ptrs" class="level1">
+<h1>Plot PRS vs PTRS</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor<span class="sc">$</span>model <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">sapply</span>(<span class="fu">strsplit</span>(prs_ptrs_cor<span class="sc">$</span>model, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">2</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>full_ptrs_cor <span class="ot">=</span>  bodylength_w_tail_cor <span class="sc">%&gt;%</span> <span class="fu">filter</span>(model <span class="sc">==</span> <span class="st">"model_35"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(n_genes_in_model))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>full_ptrs_cor<span class="sc">$</span>model <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prs_ptrs_cor, full_ptrs_cor)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor <span class="ot">&lt;-</span> prs_ptrs_cor <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">type_model =</span> <span class="fu">c</span>(<span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PRS only"</span>, <span class="st">"PTRS only"</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prs_ptrs_cor, <span class="fu">aes</span>(model, cor))  <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="fu">ifelse</span>(prs_ptrs_cor<span class="sc">$</span>type_model <span class="sc">==</span> <span class="st">"PTRS only"</span>, <span class="st">"dodgerblue2"</span>, <span class="st">"black"</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Weight of PRS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>correlation between PRS and PTRS</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ptrs <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_w_Human_best_PTRS.RDS"</span>) </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ptrs <span class="ot">&lt;-</span> ptrs[<span class="fu">na.omit</span>(<span class="fu">match</span>(prs<span class="sc">$</span>FID, <span class="fu">rownames</span>(ptrs))), ]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(prs<span class="sc">$</span>PRS, ptrs[,<span class="dv">36</span>])</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(pheno_height<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> prs<span class="sc">$</span>PRS <span class="sc">+</span> ptrs[,<span class="dv">36</span>]))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">formula =</span> pheno_height<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> prs<span class="sc">$</span>PRS))</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">formula =</span> pheno_height<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> ptrs[,<span class="dv">36</span>]))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(bodylength_w_tail<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_height))), ]</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>all_ptrs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">PTRS =</span> tempo[,<span class="dv">36</span>], <span class="at">pheno =</span> bodylength_w_tail<span class="sc">$</span>bodylength_w_tail)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>all_ptrs <span class="ot">&lt;-</span> all_ptrs <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">test_set =</span> <span class="fu">ifelse</span>(<span class="fu">rownames</span>(all_ptrs) <span class="sc">%in%</span> pheno_height<span class="sc">$</span>rat_rfid, <span class="st">"TRUE"</span>, <span class="st">"FALSE"</span>))</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_ptrs, <span class="fu">aes</span>(PTRS, pheno)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="fu">ifelse</span>(all_ptrs<span class="sc">$</span>test_set <span class="sc">==</span> <span class="st">"TRUE"</span>, <span class="st">"blue"</span>, <span class="st">"black"</span>)) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">color =</span> <span class="st">"darkgrey"</span>) </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>prs <span class="ot">&lt;-</span> prs <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(FID, PRS))</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>ptrs_best_genes <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pred_height) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> <span class="fu">rownames</span>(pred_height), <span class="at">.before =</span> <span class="st">"model_0"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(FID, <span class="st">"model_34"</span>)) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">PTRS_best_genes =</span> model_34)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>bodylength <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">FID =</span> rat_rfid)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>ptrs_all_genes <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_PTRS.RDS"</span>) </span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>ptrs_all_genes <span class="ot">&lt;-</span> ptrs_all_genes <span class="sc">%&gt;%</span> <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> <span class="fu">rownames</span>(ptrs_all_genes), <span class="at">.before =</span> <span class="st">"model_0"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(FID, <span class="st">"model_34"</span>)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(FID  <span class="sc">%in%</span> all_rats<span class="sc">$</span>ID)) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">PTRS_all_genes=</span> model_34)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>all_ptrs <span class="ot">&lt;-</span> <span class="fu">full_join</span>(ptrs_all_genes, ptrs_best_genes, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>prs_pheno <span class="ot">&lt;-</span> <span class="fu">full_join</span>(prs, bodylength, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>all_tibbles <span class="ot">&lt;-</span> <span class="fu">full_join</span>(all_ptrs, prs_pheno, <span class="at">by =</span> <span class="st">"FID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+<!-- -->
+
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "09.PRS_Rats"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Natasha Santhanam"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "5/4/2022"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">output:</span><span class="co"> html_document</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RSQLite)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="st">"%&amp;%"</span> <span class="ot">=</span> <span class="cf">function</span>(a,b) <span class="fu">paste</span>(a,b,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="st">"/Users/natashasanthanam/Github/rat-genomic-analysis/data/"</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>geno.dir <span class="ot">&lt;-</span> <span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/"</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Run PRSice in Rats </span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># Run GWAS in rats for bodylength</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>first extract out 500 random rats that we'll use as baseline</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r subsampel 500 random rats}</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/rat_genotypes_LD_pruned_0.95/plink_format/rat_metabolic_impute.fam"</span>)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>all_names <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/all_names.txt"</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> fam <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(V2 <span class="sc">%in%</span> all_names<span class="sc">$</span>ID))</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>base_ref <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">FID =</span> <span class="fu">sample</span>(fam<span class="sc">$</span>V2, <span class="dv">500</span>)) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> FID)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(base_ref, geno.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/PRSice_Rats/PRSice_rats_reference_names.txt"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash generate plink files, eval=FALSE}</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co"># remove any overlap of training rats</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DIR</span><span class="op">=</span>/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/PTRS_weights/PRSice_Rats/</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute <span class="at">--remove</span> <span class="va">$DIR</span>/all_training_rats.txt  <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_abrv</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="co">#remove 500 rats that will later be used in baseline reference</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_abrv <span class="at">--remove</span> <span class="va">$DIR</span>/PRSice_rats_reference_names.txt <span class="at">--make-bed</span> <span class="at">--out</span> <span class="va">$DIR</span>/rat_metabolic_PRSice</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co">#create plink files for reference</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_abrv <span class="at">--keep</span> <span class="va">$DIR</span>/PRSice_rats_reference_names.txt <span class="at">--make-bed</span> <span class="at">--out</span> <span class="va">$DIR</span>/rat_reference_PRSice</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="in">```{r create phenotype file, eval=FALSE}</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> <span class="fu">read.table</span>(DIR <span class="sc">%&amp;%</span> <span class="st">"/rat_metabolic_PRSice.fam"</span>)</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/processed_obesity_rat_Palmer_phenotypes.tsv"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail))</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>pheno_all <span class="ot">&lt;-</span> pheno[<span class="fu">na.omit</span>(<span class="fu">match</span>(fam<span class="sc">$</span>V1, pheno<span class="sc">$</span>rat_rfid)),]</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>pheno_all <span class="ot">&lt;-</span> pheno_all <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> rat_rfid, <span class="at">.before =</span> <span class="st">"rat_rfid"</span>)</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(pheno_all, DIR <span class="sc">%&amp;%</span> <span class="st">"bodylength_phenotype_PRSice.phe"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>pheno_ref <span class="ot">&lt;-</span> pheno[<span class="fu">na.omit</span>(<span class="fu">match</span>(base_ref<span class="sc">$</span>FID, pheno<span class="sc">$</span>rat_rfid)),] </span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>pheno_ref <span class="ot">&lt;-</span> pheno_ref <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">IID =</span> pheno_ref<span class="sc">$</span>rat_rfid, <span class="at">.before =</span> <span class="st">"rat_rfid"</span>)</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(pheno_ref, DIR <span class="sc">%&amp;%</span> <span class="st">"bodylength_phenotype_ref_PRSice.phe"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash run GWAS, eval=FALSE}</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_PRSice <span class="at">--pheno</span> bodylength_phenotype_PRSice.phe <span class="at">--assoc</span> <span class="at">--out</span> PRSIce_bodylength_assoc</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a><span class="fu"># Run PRSice</span></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a><span class="in">```{r add effect allele to GWAS}</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>gwas <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/PRSice_Rats/PRSIce_bodylength_assoc.qassoc"</span>)</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>bim <span class="ot">&lt;-</span> <span class="fu">fread</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/PRSice_Rats/rat_metabolic_PRSice.bim"</span>)</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="co">#table(bim$V2 == gwas$SNP)</span></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>gwas <span class="ot">&lt;-</span> gwas <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">A1 =</span> bim<span class="sc">$</span>V5, <span class="at">.before =</span> <span class="st">"BP"</span>)</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(gwas, <span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/PTRS_weights/PRSice_Rats/PRSIce_bodylength_assoc_imputed.text"</span>,  <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a> <span class="ex">PRSice</span> <span class="at">--base</span> PRSIce_bodylength_assoc_imputed.text <span class="dt">\</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">--snp</span> SNP <span class="dt">\</span></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">--chr</span> CHR <span class="dt">\</span></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bp</span> BP <span class="dt">\</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">--pvalue</span> P <span class="dt">\</span></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">--A1</span> A1 <span class="dt">\</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">--binary-target</span> F <span class="dt">\</span></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">--beta</span> <span class="dt">\</span></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">--stat</span> BETA <span class="dt">\</span></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">--target</span> rat_reference_PRSice  <span class="dt">\</span></span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">--pheno</span> bodylength_phenotype_ref_PRSice.phe <span class="dt">\</span></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">--out</span> rat_metabolic_PRSice</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="fu"># Evaluate performance of PRSice</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>Plot performance as a function of pvalue threshold</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot perf of PRSice as function of pval}</span></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>prsice_perf <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_PRSice.prsice"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prsice_perf, <span class="fu">aes</span>(<span class="sc">-</span><span class="fu">log10</span>(Threshold), <span class="sc">-</span><span class="fu">log10</span>(P))) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>Check Correlation between observed bodylength and PRS from PRSice</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read in weights and expression for Framingham, eval=FALSE}</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>prs <span class="ot">&lt;-</span> <span class="fu">fread</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_PRSice.best"</span>)</span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>all_rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"all_names.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"processed_obesity_rat_Palmer_phenotypes.csv"</span>) <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail))</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(rat_rfid  <span class="sc">%in%</span> all_rats<span class="sc">$</span>ID))</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{r corrleation with PRSice, eval=FALSE}</span></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>pheno_height <span class="ot">&lt;-</span> pheno[<span class="fu">na.omit</span>(<span class="fu">match</span>(prs<span class="sc">$</span>FID, pheno<span class="sc">$</span>rat_rfid)),] <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> prs[<span class="fu">na.omit</span>(<span class="fu">match</span>(pheno<span class="sc">$</span>rat_rfid, prs<span class="sc">$</span>FID)),]</span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> tempo[<span class="fu">match</span>(pheno_height<span class="sc">$</span>rat_rfid, tempo<span class="sc">$</span>FID), ]</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>PRSice_height <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">estimate =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>() )</span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>estimate</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>p.value</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a>  PRSice_height[<span class="dv">1</span>,<span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, tempo<span class="sc">$</span>PRS)<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a><span class="fu"># Test PTRS PRS as a weighted sum</span></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r match ptrs IDs to prs}</span></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>ptrs_height <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_w_Human_best_PTRS.RDS"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()  <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(model_35)) </span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>ptrs_height <span class="ot">&lt;-</span> ptrs_height <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> <span class="fu">rownames</span>(ptrs_height), <span class="at">.before =</span> <span class="st">"model_35"</span>)</span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>ptrs_height <span class="ot">&lt;-</span> ptrs_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(prs<span class="sc">$</span>FID, ptrs_height<span class="sc">$</span>FID)), ]</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r create different ptrs prs combinations}</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>prs_ptrs_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> <span class="dv">500</span>, <span class="at">ncol =</span> <span class="dv">10</span>))</span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>ratios <span class="ot">=</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>)</span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>   index <span class="ot">&lt;-</span> ratios[i]</span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>   prs_ptrs_df[,i] <span class="ot">&lt;-</span> (prs<span class="sc">$</span>PRS<span class="sc">*</span>index)<span class="sc">+</span>(ptrs_height<span class="sc">$</span>model_35<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>index))</span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>   <span class="fu">colnames</span>(prs_ptrs_df)[i] <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"PRS"</span>, index, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>prs_ptrs_df <span class="ot">&lt;-</span> prs_ptrs_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> prs<span class="sc">$</span>FID, <span class="at">.before =</span> <span class="fu">colnames</span>(prs_ptrs_df)[<span class="dv">1</span>])</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test all combinations of prs ptrs on observed phenotype}</span></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>pheno_height <span class="ot">&lt;-</span> pheno_height[<span class="fu">match</span>(prs_ptrs_df<span class="sc">$</span>FID, pheno_height<span class="sc">$</span>rat_rfid), ]</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cor =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(prs_ptrs_df)) {</span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>estimate</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>p.value</span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(prs_ptrs_df)[j]</span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a>  prs_ptrs_cor[j<span class="dv">-1</span>, <span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(pheno_height<span class="sc">$</span>bodylength_w_tail, prs_ptrs_df[,j])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="fu"># Plot PRS vs PTRS</span></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot PRS, eval=FALSE}</span></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor<span class="sc">$</span>model <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">sapply</span>(<span class="fu">strsplit</span>(prs_ptrs_cor<span class="sc">$</span>model, <span class="st">"_"</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">2</span>))</span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a>full_ptrs_cor <span class="ot">=</span>  bodylength_w_tail_cor <span class="sc">%&gt;%</span> <span class="fu">filter</span>(model <span class="sc">==</span> <span class="st">"model_35"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(n_genes_in_model))</span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>full_ptrs_cor<span class="sc">$</span>model <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prs_ptrs_cor, full_ptrs_cor)</span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a>prs_ptrs_cor <span class="ot">&lt;-</span> prs_ptrs_cor <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">type_model =</span> <span class="fu">c</span>(<span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PTRS+PRS"</span>, <span class="st">"PRS only"</span>, <span class="st">"PTRS only"</span>))</span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prs_ptrs_cor, <span class="fu">aes</span>(model, cor))  <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="fu">ifelse</span>(prs_ptrs_cor<span class="sc">$</span>type_model <span class="sc">==</span> <span class="st">"PTRS only"</span>, <span class="st">"dodgerblue2"</span>, <span class="st">"black"</span>)) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Weight of PRS"</span>)</span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>correlation between PRS and PTRS</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>ptrs <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_w_Human_best_PTRS.RDS"</span>) </span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>ptrs <span class="ot">&lt;-</span> ptrs[<span class="fu">na.omit</span>(<span class="fu">match</span>(prs<span class="sc">$</span>FID, <span class="fu">rownames</span>(ptrs))), ]</span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(prs<span class="sc">$</span>PRS, ptrs[,<span class="dv">36</span>])</span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(pheno_height<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> prs<span class="sc">$</span>PRS <span class="sc">+</span> ptrs[,<span class="dv">36</span>]))</span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">formula =</span> pheno_height<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> prs<span class="sc">$</span>PRS))</span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">formula =</span> pheno_height<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> ptrs[,<span class="dv">36</span>]))</span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(bodylength_w_tail<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_height))), ]</span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a>all_ptrs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">PTRS =</span> tempo[,<span class="dv">36</span>], <span class="at">pheno =</span> bodylength_w_tail<span class="sc">$</span>bodylength_w_tail)</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>all_ptrs <span class="ot">&lt;-</span> all_ptrs <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">test_set =</span> <span class="fu">ifelse</span>(<span class="fu">rownames</span>(all_ptrs) <span class="sc">%in%</span> pheno_height<span class="sc">$</span>rat_rfid, <span class="st">"TRUE"</span>, <span class="st">"FALSE"</span>))</span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_ptrs, <span class="fu">aes</span>(PTRS, pheno)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="fu">ifelse</span>(all_ptrs<span class="sc">$</span>test_set <span class="sc">==</span> <span class="st">"TRUE"</span>, <span class="st">"blue"</span>, <span class="st">"black"</span>)) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">color =</span> <span class="st">"darkgrey"</span>) </span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>prs <span class="ot">&lt;-</span> prs <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(FID, PRS))</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>ptrs_best_genes <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pred_height) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> <span class="fu">rownames</span>(pred_height), <span class="at">.before =</span> <span class="st">"model_0"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(FID, <span class="st">"model_34"</span>)) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">PTRS_best_genes =</span> model_34)</span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>bodylength <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">FID =</span> rat_rfid)</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>ptrs_all_genes <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_PTRS.RDS"</span>) </span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>ptrs_all_genes <span class="ot">&lt;-</span> ptrs_all_genes <span class="sc">%&gt;%</span> <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">FID =</span> <span class="fu">rownames</span>(ptrs_all_genes), <span class="at">.before =</span> <span class="st">"model_0"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(FID, <span class="st">"model_34"</span>)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(FID  <span class="sc">%in%</span> all_rats<span class="sc">$</span>ID)) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">PTRS_all_genes=</span> model_34)</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>all_ptrs <span class="ot">&lt;-</span> <span class="fu">full_join</span>(ptrs_all_genes, ptrs_best_genes, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>prs_pheno <span class="ot">&lt;-</span> <span class="fu">full_join</span>(prs, bodylength, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a>all_tibbles <span class="ot">&lt;-</span> <span class="fu">full_join</span>(all_ptrs, prs_pheno, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

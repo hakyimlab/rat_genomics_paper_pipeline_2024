@@ -1,0 +1,14 @@
+{
+  "hash": "514e645b98b3f6104bc355d72f2e7528",
+  "result": {
+    "markdown": "---\ntitle: \"About\"\noutput:\n  workflowr::wflow_html:\n    toc: false\neditor_options:\n  chunk_output_type: console\n---\n\n\nDescribe your project.\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

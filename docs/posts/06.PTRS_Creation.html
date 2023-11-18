@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Natasha Santhanam">
+<meta name="dcterms.date" content="2022-02-07">
+
+<title>Rat Genomics Pipeline Rendered - 06.PTRS_Creation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#individual-ptrs-creation" id="toc-individual-ptrs-creation" class="nav-link active" data-scroll-target="#individual-ptrs-creation">Individual PTRS creation</a></li>
+  <li><a href="#plot-results" id="toc-plot-results" class="nav-link" data-scroll-target="#plot-results">Plot Results</a></li>
+  <li><a href="#create-and-plot-negative-control" id="toc-create-and-plot-negative-control" class="nav-link" data-scroll-target="#create-and-plot-negative-control">Create and Plot Negative Control</a></li>
+  <li><a href="#test-ptrs-top-genes-for-enrichment" id="toc-test-ptrs-top-genes-for-enrichment" class="nav-link" data-scroll-target="#test-ptrs-top-genes-for-enrichment">Test PTRS top genes for Enrichment</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">06.PTRS_Creation</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Natasha Santhanam </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 7, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The <code>orth.rats</code> file contains gives a dictionary between human genes and the corresponding gene in rats.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data.dir <span class="ot">&lt;-</span> <span class="st">"/Users/sabrinami/Box/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline/data/"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>orth.rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"expression/ortholog_genes_rats_humans.tsv"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="individual-ptrs-creation" class="level1">
+<h1>Individual PTRS creation</h1>
+<p>Yanyu’s PTRS weights estimate the effect of genes on a given trait, in this case we pick height and BMI.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>traits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"height"</span>, <span class="st">"bmi"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>base.dir <span class="ot">&lt;-</span> <span class="st">"~/Box/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline/Results/"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We first replace rat genes in the predicted expression results with their corresponding human genes, so that it could be compatible with Yanyu’s PTRS weights.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pred_expr <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(base.dir <span class="sc">%&amp;%</span> <span class="st">"prediXcan/metabolic_traits/rat_metabolic_Ac_best__predict.txt"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(FID))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#filter only for genes that have a human ortholog</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>pred_expr <span class="ot">&lt;-</span> pred_expr <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(IID, <span class="fu">intersect</span>(<span class="fu">colnames</span>(pred_expr), orth.rats<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene) ))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#change name to human ensembl id in humans</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pred_expr)[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(pred_expr)] <span class="ot">&lt;-</span> orth.rats[<span class="fu">match</span>(<span class="fu">colnames</span>(pred_expr)[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(pred_expr)], orth.rats<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene), <span class="dv">1</span>] <span class="sc">%&gt;%</span> .[[<span class="st">"ensembl_gene_id"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then we reformat the PTRS weight files, removing the Ensembl version from gene names.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fn_weights <span class="ot">=</span> <span class="cf">function</span>(trait)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/weight_files/elastic_net_alpha_0.1_British.export_model/weights."</span> <span class="sc">%&amp;%</span> trait <span class="sc">%&amp;%</span> <span class="st">".tsv.gz"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  weights<span class="sc">$</span>gene_id <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(weights<span class="sc">$</span>gene_id, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(weights) <span class="ot">&lt;-</span> weights<span class="sc">$</span>gene_id</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> weights <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">gene_name =</span> gene_id)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(weights)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We converted the predicted expression for rat genes to corresponding human gene names, matching the PTRS gene names. This lets us combine PTRS weights, trained from human transcriptomic data, with predicted transciptome of the rats using the fn_generate_trait function below. The output is the predicted height for individual rats.</p>
+<p>In some ways, we can interpret generate_trait as the opposite of PrediXcan. Both start from the predicted transcriptome of a group of individuals, PrediXcan works backwards from values of their observed trait to compute association between genes and the trait, whereas fn_generate_trait assumes those associations to predict the trait for each individual. PTRS is particularly insightful in this case, because of its portability across different population groups. We hope this extends across species, motivating our final goal of comparing the performance of PTRS in humans and rats.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(trait <span class="cf">in</span> traits) {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> <span class="fu">fn_weights</span>(trait)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  pred_trait <span class="ot">&lt;-</span> <span class="fu">fn_generate_trait</span>(pred_expr, weights)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(pred_trait, dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_"</span> <span class="sc">%&amp;%</span> trait <span class="sc">%&amp;%</span> <span class="st">"_w_Human_best_PTRS.RDS"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Compare all values across different models to actual BMI and Height</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pred_height <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_w_Human_best_PTRS.RDS"</span>) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pred_BMI <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_bmi_w_Human_best_PTRS.RDS"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>all_rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"all_names.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"processed_obesity_rat_Palmer_phenotypes.csv"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(rat_rfid  <span class="sc">%in%</span> all_rats<span class="sc">$</span>ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>weights_bmi <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"/Users/natashasanthanam/Downloads/weights.bmi.annot.tsv"</span>) </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>weights_height <span class="ot">&lt;-</span>  <span class="fu">fread</span>(<span class="st">"/Users/natashasanthanam/Downloads/weights.height.annot.tsv"</span>)  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>n_genes_bmi <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">apply</span>(weights_bmi[,<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(weights_bmi)], <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">!=</span> <span class="dv">0</span> )))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>n_genes_height <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">apply</span>(weights_height[,<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(weights_height)], <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">!=</span> <span class="dv">0</span> )))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#Create Dataframes with the correlation coefficient between trait in rats and ones predicted using PTRS from Humans</p>
+<p>BMI with predicted BMI</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bmi_with_tail <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bmi_bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_BMI[<span class="fu">na.omit</span>(<span class="fu">match</span>(bmi_with_tail<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_BMI))), ]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>bmi_w_tail_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">R2 =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> <span class="fu">lm</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail <span class="sc">~</span> tempo[,i])</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">glance</span>(fit)<span class="sc">$</span>p.value</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">4</span>] <span class="ot">&lt;-</span> n_genes_bmi[i,<span class="dv">1</span>]</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">1</span>] </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">2</span>]</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>bmi_w_tail_cor <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cor =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>estimate</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>p.value</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">4</span>] <span class="ot">&lt;-</span> n_genes_bmi[i,<span class="dv">1</span>]</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>total_bmi_df <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(bmi_w_tail_cor, bmi_w_tail_df, <span class="at">by =</span> <span class="st">"model"</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>total_bmi_df <span class="ot">&lt;-</span> total_bmi_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(model, n_genes_in_model.x, cor, R2, pvalue.x, conf.int.min.x, conf.int.max.x ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bodylength with Predicted Height</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bodylength wit Tail vs predicted Height from Human PTRS weights</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(bodylength_w_tail<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_height))), ]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">R2 =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> <span class="fu">lm</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> tempo[,i])</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">glance</span>(fit)<span class="sc">$</span>p.value</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">4</span>]<span class="ot">&lt;-</span> n_genes_height[i,<span class="dv">1</span>]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">1</span>] </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">2</span>] </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail_cor <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cor =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>estimate</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>p.value</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">4</span>]<span class="ot">&lt;-</span> n_genes_height[i,<span class="dv">1</span>]</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail_cor <span class="ot">&lt;-</span> bodylength_w_tail_cor <span class="sc">%&gt;%</span> <span class="fu">filter</span>(n_genes_in_model <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>total_height_df <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(bodylength_w_tail_cor, bodylength_w_tail_df, <span class="at">by =</span> <span class="st">"model"</span>)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>total_height_df <span class="ot">&lt;-</span> total_height_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(model, n_genes_in_model.x, cor, R2, pvalue.x, conf.int.min.x, conf.int.max.x ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-results" class="level1">
+<h1>Plot Results</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bodylength_w_tail_cor, <span class="fu">aes</span>(n_genes_in_model, cor)) <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">position=</span><span class="st">"jitter"</span>) <span class="sc">+</span><span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Number of genes in each model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bmi_w_tail_cor, <span class="fu">aes</span>(n_genes_in_model, cor)) <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span> ,<span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">position=</span><span class="st">"jitter"</span>) <span class="sc">+</span><span class="fu">geom_line</span>() <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">"Number of genes in each model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Violin plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ptrs_hum <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"/Users/natashasanthanam/Downloads/13059_2021_2591_MOESM5_ESM.xlsx"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ptrs_hum <span class="ot">&lt;-</span> ptrs_hum[<span class="dv">7</span><span class="sc">:</span><span class="fu">nrow</span>(ptrs_hum),]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ptrs_hum) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"trait"</span>, <span class="st">"population"</span>, <span class="st">"PTRS_MESA_EUR"</span>, <span class="st">"PTRS_MESA_AFR"</span>, <span class="st">"PTRS_MESA_ALL"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>ptrs_hum_height <span class="ot">&lt;-</span> ptrs_hum <span class="sc">%&gt;%</span> <span class="fu">filter</span>(trait <span class="sc">==</span> <span class="st">"height"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>ptrs_hum_height <span class="ot">&lt;-</span> ptrs_hum_height <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"PTRS_MESA_EUR"</span>, <span class="st">"PTRS_MESA_AFR"</span>, <span class="st">"PTRS_MESA_ALL"</span>), <span class="at">names_to =</span> <span class="st">"PTRS"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(trait))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bodylength_w_tail_cor, <span class="fu">aes</span>(<span class="at">x=</span>n_genes_in_model, <span class="at">y=</span>cor)) <span class="sc">+</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bmi_w_tail_cor, <span class="fu">aes</span>(<span class="at">x=</span>n_genes_in_model, <span class="at">y=</span>cor)) <span class="sc">+</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-and-plot-negative-control" class="level1">
+<h1>Create and Plot Negative Control</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fasting_glucose <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, fasting_glucose)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(fasting_glucose<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_height))), ]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>neg_control_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">estimate =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>estimate</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>p.value</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">4</span>]<span class="ot">&lt;-</span> n_genes_height[i,<span class="dv">1</span>]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(neg_control_df, <span class="fu">aes</span>(n_genes_in_model, estimate)) <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">position=</span><span class="st">"jitter"</span>) <span class="sc">+</span><span class="fu">geom_line</span>() <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">"Number of genes in each model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="test-ptrs-top-genes-for-enrichment" class="level1">
+<h1>Test PTRS top genes for Enrichment</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>top_ptrs_genes <span class="ot">&lt;-</span> weights_height <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene_name, model_5)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(model_5 <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene_name))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>top_ptrs_genes<span class="sc">$</span>gene_name <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(top_ptrs_genes<span class="sc">$</span>gene_name , <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>top_ptrs_genes <span class="ot">&lt;-</span> top_ptrs_genes <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">rat_gene =</span> orth.rats[<span class="fu">match</span>(top_ptrs_genes<span class="sc">$</span>gene_name, orth.rats<span class="sc">$</span>ensembl_gene_id), <span class="dv">3</span>]<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>full_df <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/Users/natashasanthanam/Github/rat-genomic-analysis/data/rat_metabolic_traits_best_Ac_full_assocs.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>pheno_Multi_rat <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/Users/natashasanthanam/Downloads/rat_metabolic_MultiXcan_pval_assoc.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqunif</span>(full_df<span class="sc">$</span>pvalue, <span class="at">col=</span> <span class="st">"dodgerblue4"</span> )</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqpoints</span>(full_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue"</span>]],<span class="at">pch=</span><span class="st">'+'</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>) </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqunif</span>(pheno_Multi_rat<span class="sc">$</span>pvalue.bodylength_w_tail, <span class="at">col=</span> <span class="st">"dodgerblue4"</span> )</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqpoints</span>(pheno_Multi_rat <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue.bodylength_w_tail"</span>]],<span class="at">pch=</span><span class="st">'+'</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>) </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>all_ptrs_genes <span class="ot">&lt;-</span> weights_height <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span>(gene_name <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>gene_name)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene_name))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>all_ptrs_genes <span class="ot">&lt;-</span>  all_ptrs_genes <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">rat_gene =</span> orth.rats[<span class="fu">match</span>(all_ptrs_genes<span class="sc">$</span>gene_name, orth.rats<span class="sc">$</span>ensembl_gene_id), <span class="dv">3</span>]<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">qqunif</span>(full_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> all_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue"</span>]])</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">qqpoints</span>(full_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue"</span>]],<span class="at">pch=</span><span class="st">'+'</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>) </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>full_df <span class="ot">&lt;-</span> full_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">human_gene =</span> orth.rats[<span class="fu">match</span>(full_df<span class="sc">$</span>gene, orth.rats<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene), <span class="dv">1</span>]<span class="sc">$</span>ensembl_gene_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+<!-- -->
+
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "06.PTRS_Creation"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Natasha Santhanam"</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2/7/2022"</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="an">output:</span><span class="co"> html_document</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RSQLite)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="st">"%&amp;%"</span> <span class="ot">=</span> <span class="cf">function</span>(a,b) <span class="fu">paste</span>(a,b,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">source_gist</span>(<span class="st">"ee5f67abddd0b761ee24410ea71c41aa"</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">source_gist</span>(<span class="st">"38431b74c6c0bf90c12f"</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">source_gist</span>(<span class="st">"1e9053c8f35c30396429350a08f33ea7"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>The <span class="in">`orth.rats`</span> file contains gives a dictionary between human genes and the corresponding gene in rats. </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r file dir, eval=FALSE}</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>data.dir <span class="ot">&lt;-</span> <span class="st">"/Users/sabrinami/Box/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline/data/"</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>orth.rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"expression/ortholog_genes_rats_humans.tsv"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># Individual PTRS creation</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>Yanyu's PTRS weights estimate the effect of genes on a given trait, in this case we pick height and BMI. </span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r tissues}</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>traits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"height"</span>, <span class="st">"bmi"</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>base.dir <span class="ot">&lt;-</span> <span class="st">"~/Box/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline/Results/"</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>We first replace rat genes in the predicted expression results with their corresponding human genes, so that it could be compatible with Yanyu's PTRS weights.</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r add human ensembl id}</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>pred_expr <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(base.dir <span class="sc">%&amp;%</span> <span class="st">"prediXcan/metabolic_traits/rat_metabolic_Ac_best__predict.txt"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(FID))</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="co">#filter only for genes that have a human ortholog</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>pred_expr <span class="ot">&lt;-</span> pred_expr <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(IID, <span class="fu">intersect</span>(<span class="fu">colnames</span>(pred_expr), orth.rats<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene) ))</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="co">#change name to human ensembl id in humans</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pred_expr)[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(pred_expr)] <span class="ot">&lt;-</span> orth.rats[<span class="fu">match</span>(<span class="fu">colnames</span>(pred_expr)[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(pred_expr)], orth.rats<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene), <span class="dv">1</span>] <span class="sc">%&gt;%</span> .[[<span class="st">"ensembl_gene_id"</span>]]</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>Then we reformat the PTRS weight files, removing the Ensembl version from gene names.</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read weights, eval=FALSE}</span></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>fn_weights <span class="ot">=</span> <span class="cf">function</span>(trait)</span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"PTRS_weights/weight_files/elastic_net_alpha_0.1_British.export_model/weights."</span> <span class="sc">%&amp;%</span> trait <span class="sc">%&amp;%</span> <span class="st">".tsv.gz"</span>)</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>  weights<span class="sc">$</span>gene_id <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(weights<span class="sc">$</span>gene_id, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(weights) <span class="ot">&lt;-</span> weights<span class="sc">$</span>gene_id</span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> weights <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">gene_name =</span> gene_id)</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(weights)</span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>We converted the predicted expression for rat genes to corresponding human gene names, matching the PTRS gene names. This lets us combine PTRS weights, trained from human transcriptomic data, with predicted transciptome of the rats using the fn_generate_trait function below. The output is the predicted height for individual rats. </span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>In some ways, we can interpret generate_trait as the opposite of PrediXcan. Both start from the predicted transcriptome of a group of individuals, PrediXcan works backwards from values of their observed trait to compute association between genes and the trait, whereas fn_generate_trait assumes those associations to predict the trait for each individual. PTRS is particularly insightful in this case, because of its portability across different population groups. We hope this extends across species, motivating our final goal of comparing the performance of PTRS in humans and rats.</span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r generate predicted trait, eval=FALSE}</span></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>dir <span class="ot">&lt;-</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/"</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(trait <span class="cf">in</span> traits) {</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> <span class="fu">fn_weights</span>(trait)</span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>  pred_trait <span class="ot">&lt;-</span> <span class="fu">fn_generate_trait</span>(pred_expr, weights)</span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(pred_trait, dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_"</span> <span class="sc">%&amp;%</span> trait <span class="sc">%&amp;%</span> <span class="st">"_w_Human_best_PTRS.RDS"</span>)</span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>Compare all values across different models to actual BMI and Height</span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read in pred trait}</span></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>pred_height <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_height_w_Human_best_PTRS.RDS"</span>) </span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>pred_BMI <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(dir <span class="sc">%&amp;%</span> <span class="st">"rat_pred_bmi_w_Human_best_PTRS.RDS"</span>)</span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>all_rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"all_names.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(dir <span class="sc">%&amp;%</span> <span class="st">"processed_obesity_rat_Palmer_phenotypes.csv"</span>)</span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span>(rat_rfid  <span class="sc">%in%</span> all_rats<span class="sc">$</span>ID))</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{r check number of genes in each model}</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>weights_bmi <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"/Users/natashasanthanam/Downloads/weights.bmi.annot.tsv"</span>) </span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>weights_height <span class="ot">&lt;-</span>  <span class="fu">fread</span>(<span class="st">"/Users/natashasanthanam/Downloads/weights.height.annot.tsv"</span>)  </span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a>n_genes_bmi <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">apply</span>(weights_bmi[,<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(weights_bmi)], <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">!=</span> <span class="dv">0</span> )))</span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a>n_genes_height <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">apply</span>(weights_height[,<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(weights_height)], <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">!=</span> <span class="dv">0</span> )))</span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>#Create Dataframes with the correlation coefficient between trait in rats and ones predicted using PTRS from Humans</span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>BMI with predicted BMI</span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a><span class="in">```{r check correlation for BMI }</span></span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>bmi_with_tail <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bmi_bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_BMI[<span class="fu">na.omit</span>(<span class="fu">match</span>(bmi_with_tail<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_BMI))), ]</span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a>bmi_w_tail_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">R2 =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> <span class="fu">lm</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail <span class="sc">~</span> tempo[,i])</span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">glance</span>(fit)<span class="sc">$</span>p.value</span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">4</span>] <span class="ot">&lt;-</span> n_genes_bmi[i,<span class="dv">1</span>]</span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">1</span>] </span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_df[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">2</span>]</span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a>bmi_w_tail_cor <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cor =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>estimate</span>
+<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>p.value</span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">4</span>] <span class="ot">&lt;-</span> n_genes_bmi[i,<span class="dv">1</span>]</span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>  bmi_w_tail_cor[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bmi_with_tail<span class="sc">$</span>bmi_bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>total_bmi_df <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(bmi_w_tail_cor, bmi_w_tail_df, <span class="at">by =</span> <span class="st">"model"</span>)</span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a>total_bmi_df <span class="ot">&lt;-</span> total_bmi_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(model, n_genes_in_model.x, cor, R2, pvalue.x, conf.int.min.x, conf.int.max.x ))</span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a>Bodylength with Predicted Height</span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r check correlation for height}</span></span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a><span class="co">#Bodylength wit Tail vs predicted Height from Human PTRS weights</span></span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, bodylength_w_tail)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(bodylength_w_tail<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_height))), ]</span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">R2 =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> <span class="fu">lm</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail <span class="sc">~</span> tempo[,i])</span>
+<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">glance</span>(fit)<span class="sc">$</span>p.value</span>
+<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">4</span>]<span class="ot">&lt;-</span> n_genes_height[i,<span class="dv">1</span>]</span>
+<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">1</span>] </span>
+<span id="cb17-148"><a href="#cb17-148" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_df[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)[<span class="dv">2</span>] </span>
+<span id="cb17-149"><a href="#cb17-149" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail_cor <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cor =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>estimate</span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>p.value</span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">4</span>]<span class="ot">&lt;-</span> n_genes_height[i,<span class="dv">1</span>]</span>
+<span id="cb17-157"><a href="#cb17-157" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb17-158"><a href="#cb17-158" aria-hidden="true" tabindex="-1"></a>  bodylength_w_tail_cor[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(bodylength_w_tail<span class="sc">$</span>bodylength_w_tail, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a>bodylength_w_tail_cor <span class="ot">&lt;-</span> bodylength_w_tail_cor <span class="sc">%&gt;%</span> <span class="fu">filter</span>(n_genes_in_model <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a>total_height_df <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(bodylength_w_tail_cor, bodylength_w_tail_df, <span class="at">by =</span> <span class="st">"model"</span>)</span>
+<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a>total_height_df <span class="ot">&lt;-</span> total_height_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(model, n_genes_in_model.x, cor, R2, pvalue.x, conf.int.min.x, conf.int.max.x ))</span>
+<span id="cb17-165"><a href="#cb17-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a><span class="fu"># Plot Results</span></span>
+<span id="cb17-168"><a href="#cb17-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-169"><a href="#cb17-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{r plot pred height grapsh}</span></span>
+<span id="cb17-170"><a href="#cb17-170" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bodylength_w_tail_cor, <span class="fu">aes</span>(n_genes_in_model, cor)) <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">position=</span><span class="st">"jitter"</span>) <span class="sc">+</span><span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Number of genes in each model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) </span>
+<span id="cb17-171"><a href="#cb17-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bmi_w_tail_cor, <span class="fu">aes</span>(n_genes_in_model, cor)) <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span> ,<span class="fl">0.1</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">position=</span><span class="st">"jitter"</span>) <span class="sc">+</span><span class="fu">geom_line</span>() <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">"Number of genes in each model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) </span>
+<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a>Violin plot</span>
+<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read in PTRS results}</span></span>
+<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a>ptrs_hum <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"/Users/natashasanthanam/Downloads/13059_2021_2591_MOESM5_ESM.xlsx"</span>)</span>
+<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a>ptrs_hum <span class="ot">&lt;-</span> ptrs_hum[<span class="dv">7</span><span class="sc">:</span><span class="fu">nrow</span>(ptrs_hum),]</span>
+<span id="cb17-181"><a href="#cb17-181" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ptrs_hum) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"trait"</span>, <span class="st">"population"</span>, <span class="st">"PTRS_MESA_EUR"</span>, <span class="st">"PTRS_MESA_AFR"</span>, <span class="st">"PTRS_MESA_ALL"</span>)</span>
+<span id="cb17-182"><a href="#cb17-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a>ptrs_hum_height <span class="ot">&lt;-</span> ptrs_hum <span class="sc">%&gt;%</span> <span class="fu">filter</span>(trait <span class="sc">==</span> <span class="st">"height"</span>)</span>
+<span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a>ptrs_hum_height <span class="ot">&lt;-</span> ptrs_hum_height <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"PTRS_MESA_EUR"</span>, <span class="st">"PTRS_MESA_AFR"</span>, <span class="st">"PTRS_MESA_ALL"</span>), <span class="at">names_to =</span> <span class="st">"PTRS"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(trait))</span>
+<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-188"><a href="#cb17-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{r violin plot}</span></span>
+<span id="cb17-189"><a href="#cb17-189" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bodylength_w_tail_cor, <span class="fu">aes</span>(<span class="at">x=</span>n_genes_in_model, <span class="at">y=</span>cor)) <span class="sc">+</span> </span>
+<span id="cb17-190"><a href="#cb17-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span>
+<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bmi_w_tail_cor, <span class="fu">aes</span>(<span class="at">x=</span>n_genes_in_model, <span class="at">y=</span>cor)) <span class="sc">+</span> </span>
+<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>()</span>
+<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-195"><a href="#cb17-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-196"><a href="#cb17-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a><span class="fu"># Create and Plot Negative Control</span></span>
+<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r create negative control df}</span></span>
+<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a>fasting_glucose <span class="ot">&lt;-</span> pheno <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(rat_rfid, fasting_glucose)) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>()</span>
+<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> pred_height[<span class="fu">na.omit</span>(<span class="fu">match</span>(fasting_glucose<span class="sc">$</span>rat_rfid, <span class="fu">rownames</span>(pred_height))), ]</span>
+<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-202"><a href="#cb17-202" aria-hidden="true" tabindex="-1"></a>neg_control_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">estimate =</span> <span class="fu">numeric</span>(), <span class="at">pvalue =</span> <span class="fu">numeric</span>(), <span class="at">model =</span> <span class="fu">character</span>(), <span class="at">n_genes_in_model =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.min =</span> <span class="fu">numeric</span>(), <span class="at">conf.int.max =</span> <span class="fu">numeric</span>())</span>
+<span id="cb17-203"><a href="#cb17-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(tempo)){</span>
+<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>estimate</span>
+<span id="cb17-206"><a href="#cb17-206" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>p.value</span>
+<span id="cb17-207"><a href="#cb17-207" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"model"</span>, i, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb17-208"><a href="#cb17-208" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">4</span>]<span class="ot">&lt;-</span> n_genes_height[i,<span class="dv">1</span>]</span>
+<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">1</span>]</span>
+<span id="cb17-210"><a href="#cb17-210" aria-hidden="true" tabindex="-1"></a>  neg_control_df[i,<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(fasting_glucose<span class="sc">$</span>fasting_glucose, tempo[,i])<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb17-211"><a href="#cb17-211" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-212"><a href="#cb17-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-213"><a href="#cb17-213" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(neg_control_df, <span class="fu">aes</span>(n_genes_in_model, estimate)) <span class="sc">+</span> <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.int.min, <span class="at">ymax =</span> conf.int.max ), <span class="at">width=</span><span class="fl">0.2</span>,  <span class="at">color=</span><span class="st">"gray48"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">position=</span><span class="st">"jitter"</span>) <span class="sc">+</span><span class="fu">geom_line</span>() <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">"Number of genes in each model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Correlation Coefficient (r)"</span>) </span>
+<span id="cb17-214"><a href="#cb17-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-215"><a href="#cb17-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-216"><a href="#cb17-216" aria-hidden="true" tabindex="-1"></a><span class="fu"># Test PTRS top genes for Enrichment</span></span>
+<span id="cb17-219"><a href="#cb17-219" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-220"><a href="#cb17-220" aria-hidden="true" tabindex="-1"></a>top_ptrs_genes <span class="ot">&lt;-</span> weights_height <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene_name, model_5)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(model_5 <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene_name))</span>
+<span id="cb17-221"><a href="#cb17-221" aria-hidden="true" tabindex="-1"></a>top_ptrs_genes<span class="sc">$</span>gene_name <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">strsplit</span>(top_ptrs_genes<span class="sc">$</span>gene_name , <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>), <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">1</span>)</span>
+<span id="cb17-222"><a href="#cb17-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-223"><a href="#cb17-223" aria-hidden="true" tabindex="-1"></a>top_ptrs_genes <span class="ot">&lt;-</span> top_ptrs_genes <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">rat_gene =</span> orth.rats[<span class="fu">match</span>(top_ptrs_genes<span class="sc">$</span>gene_name, orth.rats<span class="sc">$</span>ensembl_gene_id), <span class="dv">3</span>]<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene)</span>
+<span id="cb17-224"><a href="#cb17-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-225"><a href="#cb17-225" aria-hidden="true" tabindex="-1"></a>full_df <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/Users/natashasanthanam/Github/rat-genomic-analysis/data/rat_metabolic_traits_best_Ac_full_assocs.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-226"><a href="#cb17-226" aria-hidden="true" tabindex="-1"></a>pheno_Multi_rat <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/Users/natashasanthanam/Downloads/rat_metabolic_MultiXcan_pval_assoc.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-227"><a href="#cb17-227" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-228"><a href="#cb17-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-231"><a href="#cb17-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-232"><a href="#cb17-232" aria-hidden="true" tabindex="-1"></a><span class="fu">qqunif</span>(full_df<span class="sc">$</span>pvalue, <span class="at">col=</span> <span class="st">"dodgerblue4"</span> )</span>
+<span id="cb17-233"><a href="#cb17-233" aria-hidden="true" tabindex="-1"></a><span class="fu">qqpoints</span>(full_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue"</span>]],<span class="at">pch=</span><span class="st">'+'</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>) </span>
+<span id="cb17-234"><a href="#cb17-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-235"><a href="#cb17-235" aria-hidden="true" tabindex="-1"></a><span class="fu">qqunif</span>(pheno_Multi_rat<span class="sc">$</span>pvalue.bodylength_w_tail, <span class="at">col=</span> <span class="st">"dodgerblue4"</span> )</span>
+<span id="cb17-236"><a href="#cb17-236" aria-hidden="true" tabindex="-1"></a><span class="fu">qqpoints</span>(pheno_Multi_rat <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue.bodylength_w_tail"</span>]],<span class="at">pch=</span><span class="st">'+'</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>) </span>
+<span id="cb17-237"><a href="#cb17-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-238"><a href="#cb17-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-239"><a href="#cb17-239" aria-hidden="true" tabindex="-1"></a>all_ptrs_genes <span class="ot">&lt;-</span> weights_height <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span>(gene_name <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>gene_name)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene_name))</span>
+<span id="cb17-240"><a href="#cb17-240" aria-hidden="true" tabindex="-1"></a>all_ptrs_genes <span class="ot">&lt;-</span>  all_ptrs_genes <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">rat_gene =</span> orth.rats[<span class="fu">match</span>(all_ptrs_genes<span class="sc">$</span>gene_name, orth.rats<span class="sc">$</span>ensembl_gene_id), <span class="dv">3</span>]<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene)</span>
+<span id="cb17-241"><a href="#cb17-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-242"><a href="#cb17-242" aria-hidden="true" tabindex="-1"></a><span class="fu">qqunif</span>(full_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> all_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue"</span>]])</span>
+<span id="cb17-243"><a href="#cb17-243" aria-hidden="true" tabindex="-1"></a><span class="fu">qqpoints</span>(full_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(gene <span class="sc">%in%</span> top_ptrs_genes<span class="sc">$</span>rat_gene) <span class="sc">%&gt;%</span> .[[<span class="st">"pvalue"</span>]],<span class="at">pch=</span><span class="st">'+'</span>, <span class="at">col =</span> <span class="st">"dodgerblue"</span>) </span>
+<span id="cb17-244"><a href="#cb17-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-245"><a href="#cb17-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-246"><a href="#cb17-246" aria-hidden="true" tabindex="-1"></a>full_df <span class="ot">&lt;-</span> full_df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">human_gene =</span> orth.rats[<span class="fu">match</span>(full_df<span class="sc">$</span>gene, orth.rats<span class="sc">$</span>rnorvegicus_homolog_ensembl_gene), <span class="dv">1</span>]<span class="sc">$</span>ensembl_gene_id)</span>
+<span id="cb17-247"><a href="#cb17-247" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
