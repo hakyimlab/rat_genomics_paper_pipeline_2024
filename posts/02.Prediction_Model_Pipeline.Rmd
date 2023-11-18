@@ -6,6 +6,7 @@ output: html_document
 ---
 
 # Definitions
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -17,8 +18,7 @@ library(broom)
 library(data.table)
 ```
 
-Data from [here](https://uchicago.app.box.com/folder/102043737114) - genoGex.Rdata has everything we need in it
-There are 5 'gex' RDS files which are the gene expressions for the 5 different tissues, the 'gtf' is the gene annotation, 'phyMap' is the snp annotation, and 'geno' is the genotype matrix
+Data from [here](https://uchicago.app.box.com/folder/102043737114) - genoGex.Rdata has everything we need in it There are 5 'gex' RDS files which are the gene expressions for the 5 different tissues, the 'gtf' is the gene annotation, 'phyMap' is the snp annotation, and 'geno' is the genotype matrix
 
 Our pipeline predicts expressions from the gene expression data and genotypes of the rats from the study.
 
@@ -27,7 +27,9 @@ load("~/Box/imlab-data/Projects/PTRS-PGRS-Rosetta/Data-From-Abe-Palmer-Lab/Rdata
 ```
 
 # Gene Expression Files
+
 First, we transpose each tissue's gene expression file to fit the format expected by the PrediXcan pipeline scripts.
+
 ```{r transpose}
 #transposing gene expression files for the 5 tissues 
 n = gexAc$EnsemblGeneID
@@ -46,6 +48,7 @@ n = gexVo$EnsemblGeneID
 gexVo_transpose <- as.data.frame(t(gexVo[,-1]))
 colnames(gexVo_transpose) <- n
 ```
+
 ```{r invnorm function}
 # Running inverse normalization on each gene expression
 invnorm = function(x) {
@@ -60,7 +63,9 @@ gexLh_transpose = invnorm(gexLh_transpose)
 gexPl_transpose = invnorm(gexPl_transpose)
 gexVo_transpose = invnorm(gexVo_transpose)
 ```
+
 Write to file.
+
 ```{r}
 # Writing the gene expression files to csv files to be used for PEER Factor analysis
 write.table(gexAc_transpose, file = '/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexAc.csv', sep = ",", col.names = TRUE, row.names = FALSE)
@@ -69,8 +74,11 @@ write.table(gexLh_transpose, file = '/Users/sabrinami/Github/Rat_Genomics_Paper_
 write.table(gexPl_transpose, file = '/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexPl.csv', sep = ",", col.names = TRUE, row.names = FALSE)
 write.table(gexVo_transpose, file = '/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexVo.csv', sep = ",", col.names = TRUE, row.names = FALSE)
 ```
-## PEER analysis 
+
+## PEER analysis
+
 Now we are performing PEER factor analysis on each tissue, choosing 7 factors.
+
 ```{bash}
 peertool -f data/"gexAc.csv" -n 7 -o peer_Ac --has_header
 peertool -f data/"gexIl.csv" -n 7 -o peer_Il --has_header
@@ -78,9 +86,9 @@ peertool -f data/"gexLh.csv" -n 7 -o peer_Lh --has_header
 peertool -f data/"gexPl.csv" -n 7 -o peer_Pl --has_header
 peertool -f data/"gexVo.csv" -n 7 -o peer_Vo --has_header
 ```
-Later on, we examine these 7 factors, as well as other covariates, to interpret expression variability.
-# Gene, snp annotation files
-The prediction model pipeline also requires a gene annotation file as input. The code below generates it from the gene annotations provided by Palmer lab in 'gtf'. We also collect snp info.
+
+Later on, we examine these 7 factors, as well as other covariates, to interpret expression variability. \# Gene, snp annotation files The prediction model pipeline also requires a gene annotation file as input. The code below generates it from the gene annotations provided by Palmer lab in 'gtf'. We also collect snp info.
+
 ```{r annotation file}
 gtf$gene_type = sub(".*?gene_biotype(.*?);.*", "\\1", gtf$Attr)
 gtf$gene_name = sub(".*?gene_name(.*?);.*", "\\1", gtf$Attr)
@@ -89,7 +97,9 @@ gene_annotation = gene_annotation[, c("Chr","Gene", "gene_name", "Start", "End",
 colnames(gene_annotation) = c("chr", "gene_id", "gene_name", "start", "end")
 rownames(gene_annotation) = gene_annotation$gene_id
 ```
+
 We have all the information needed to generate the predictions models. We are left to reorganize it to fit the pipeline. The specifics of each step is commented at the top of each block.
+
 ```{r}
 # Making the snp annotation in the correct format for the pipeline
 phyMap <- within(phyMap,  varID <- paste(Chr, Pos, Ref, Alt, sep="_"))
@@ -97,24 +107,32 @@ rownames(phyMap) = phyMap$varID
 phyMap$rsid = phyMap$varID
 colnames(phyMap) = c("snp", "chr", "pos", "refAllele", "effectAllele", 'varID', "rsid")
 ```
+
 ```{r}
 # Splitting the snp annotation file by chromosome
 s <- setNames(split(phyMap, phyMap$chr), paste0("snp_annot.chr", unique(phyMap$chr)))
 list2env(s, globalenv())
 ```
+
 The new genotype file combines the provided `geno` file and combines information from the provided snp annotation file, `phyMap`.
+
 ```{r write geno file}
 # writing the genotype file to a .txt file so that we can separate it by chromosome using our geneotype parse script.
 rownames(geno) = rownames(phyMap)
 write.table(geno, file = "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/genotype.txt", sep = "\t", col.names = TRUE, row.names = TRUE)
 ```
+
 This python script separates the genotype file by chromosome.
+
 ```{bash}
 #Splitting the genotype file by chromosome - run this from the rat_genomic_alaysis directory
 python scripts/split_genotype_by_chr.py data/genotype.txt data/geno_by_chr/'genotype'
 ```
+
 # Covariate Files
+
 We analyze sex, batch number, and batch center, as possible covariates, along with the 7 PEER factors.
+
 ```{r}
 # Loading the phenotype file in to create covariate files. For this we are selecting sex, batch number, and batch center as covariates as well as the 7 PEER factors we generate
 load("~/Box/imlab-data/Projects/PTRS-PGRS-Rosetta/Data-From-Abe-Palmer-Lab/Final_P50_traits/P50_raw_trait_values.RData")
@@ -129,6 +147,7 @@ covariatesPl = subset(covariatesPl, select = c(rfid, sex, batchnumber, center))
 covariatesVo = raw_traits[match(rownames(gexVo_transpose), raw_traits$rfid), ]
 covariatesVo = subset(covariatesVo, select = c(rfid, sex, batchnumber, center))
 ```
+
 ```{r reed peer factor outputs}
 # Reading the PEER factor output files to be appended to the covariate file and eventually regressed out of the expression files
 peer_factorsAc = read.csv(file = "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Ac/X.csv", header = FALSE)
@@ -137,6 +156,7 @@ peer_factorsLh = read.csv(file = "/Users/sabrinami/Github/Rat_Genomics_Paper_Pip
 peer_factorsPl = read.csv(file = "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Pl/X.csv", header = FALSE)
 peer_factorsVo = read.csv(file = "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Vo/X.csv", header = FALSE)
 ```
+
 For each tissue's PEER factor output, set individual IDs as rownames and enumerate the PEER factors in the columns.
 
 ```{r}
@@ -157,7 +177,6 @@ rownames(peer_factorsPl) = rownames(gexPl_transpose)
 colnames(peer_factorsVo) = c('PF1', 'PF2', 'PF3', 'PF4', 'PF5', 'PF6', 'PF7')
 rownames(peer_factorsVo) = rownames(gexVo_transpose)
 ```
-
 
 ```{r}
 #initializing matrices to be filled with t-stats, p_vals, and residuals of the regression of each gene vs. the covariates for each tissue. t-stat and p-val matrices are just for diagnostics
@@ -249,6 +268,7 @@ write_tsv(l, "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/"
 ```
 
 Save the expression RDS objects to be used as arguments in the script.
+
 ```{r}
 
 saveRDS(as.matrix(expressionAc), "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Ac_expression_transformed.RDS")
@@ -281,7 +301,6 @@ saveRDS(gene_annotation, "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/da
 
 # Metadata Files
 
-
 ```{bash}
 # Creating the meta data file for each tissue 
 python scripts/create_meta_data.py --geno "data/genotype.txt" --expr "Ac_expression_transformed.tsv" --alpha 1 --snpset "1KG" --rsid_label 1 --window 1000000 --out_prefix "Results/allMetaData/Ac"
@@ -294,7 +313,6 @@ python scripts/create_meta_data.py --geno "data/genotype.txt" --expr "Pl_express
 
 python scripts/create_meta_data.py --geno "data/genotype.txt" --expr "Vo_expression_transformed.tsv" --alpha 1 --snpset "1KG" --rsid_label 1 --window 1000000 --out_prefix "Results/allMetaData/Vo"
 ```
-
 
 ```{bash}
 # Running the model training script for each tissue/chromosome pair
@@ -309,7 +327,6 @@ do
 done
   
 ```
-
 
 ```{bash}
 # Concatenating all of the results files for each tissue
