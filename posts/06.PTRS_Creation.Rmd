@@ -1,0 +1,242 @@
+---
+title: "06.PTRS_Creation"
+author: "Natasha Santhanam"
+date: "2/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(data.table)
+library(RSQLite)
+library(glmnet)
+"%&%" = function(a,b) paste(a,b,sep="")
+devtools::source_gist("ee5f67abddd0b761ee24410ea71c41aa")
+devtools::source_gist("38431b74c6c0bf90c12f")
+devtools::source_gist("1e9053c8f35c30396429350a08f33ea7")
+```
+
+The `orth.rats` file contains gives a dictionary between human genes and the corresponding gene in rats. 
+```{r file dir, eval=FALSE}
+data.dir <- "/Users/sabrinami/Box/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline/data/"
+orth.rats <- read_tsv(data.dir %&% "expression/ortholog_genes_rats_humans.tsv", col_names = TRUE)
+```
+
+# Individual PTRS creation
+
+Yanyu's PTRS weights estimate the effect of genes on a given trait, in this case we pick height and BMI. 
+
+```{r tissues}
+traits <- c("height", "bmi")
+```
+
+```{r}
+base.dir <- "~/Box/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline/Results/"
+```
+We first replace rat genes in the predicted expression results with their corresponding human genes, so that it could be compatible with Yanyu's PTRS weights.
+
+```{r add human ensembl id}
+pred_expr <- read_tsv(base.dir %&% "prediXcan/metabolic_traits/rat_metabolic_Ac_best__predict.txt") %>% select(-c(FID))
+
+#filter only for genes that have a human ortholog
+pred_expr <- pred_expr %>% select(c(IID, intersect(colnames(pred_expr), orth.rats$rnorvegicus_homolog_ensembl_gene) ))
+
+#change name to human ensembl id in humans
+colnames(pred_expr)[2:ncol(pred_expr)] <- orth.rats[match(colnames(pred_expr)[2:ncol(pred_expr)], orth.rats$rnorvegicus_homolog_ensembl_gene), 1] %>% .[["ensembl_gene_id"]]
+  
+```
+
+Then we reformat the PTRS weight files, removing the Ensembl version from gene names.
+
+
+```{r read weights, eval=FALSE}
+fn_weights = function(trait)
+{
+  weights <- read_tsv(data.dir %&% "PTRS_weights/weight_files/elastic_net_alpha_0.1_British.export_model/weights." %&% trait %&% ".tsv.gz")
+  weights$gene_id <- sapply(strsplit(weights$gene_id, "\\."), `[`, 1)
+  rownames(weights) <- weights$gene_id
+  weights <- weights %>% rename(gene_name = gene_id)
+  return(weights)
+}
+
+```
+
+We converted the predicted expression for rat genes to corresponding human gene names, matching the PTRS gene names. This lets us combine PTRS weights, trained from human transcriptomic data, with predicted transciptome of the rats using the fn_generate_trait function below. The output is the predicted height for individual rats. 
+
+In some ways, we can interpret generate_trait as the opposite of PrediXcan. Both start from the predicted transcriptome of a group of individuals, PrediXcan works backwards from values of their observed trait to compute association between genes and the trait, whereas fn_generate_trait assumes those associations to predict the trait for each individual. PTRS is particularly insightful in this case, because of its portability across different population groups. We hope this extends across species, motivating our final goal of comparing the performance of PTRS in humans and rats.
+
+```{r generate predicted trait, eval=FALSE}
+dir <- "/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/"
+
+for(trait in traits) {
+  weights <- fn_weights(trait)
+  pred_trait <- fn_generate_trait(pred_expr, weights)
+  saveRDS(pred_trait, dir %&% "rat_pred_" %&% trait %&% "_w_Human_best_PTRS.RDS")
+}
+
+```
+
+Compare all values across different models to actual BMI and Height
+```{r read in pred trait}
+pred_height <- readRDS(dir %&% "rat_pred_height_w_Human_best_PTRS.RDS") 
+pred_BMI <- readRDS(dir %&% "rat_pred_bmi_w_Human_best_PTRS.RDS")
+
+all_rats <- read_tsv(dir %&% "all_names.txt", col_names = TRUE)
+
+pheno <- read_csv(dir %&% "processed_obesity_rat_Palmer_phenotypes.csv")
+pheno <- pheno %>% filter(!(rat_rfid  %in% all_rats$ID))
+```
+
+
+```{r check number of genes in each model}
+weights_bmi <- fread("/Users/natashasanthanam/Downloads/weights.bmi.annot.tsv") 
+weights_height <-  fread("/Users/natashasanthanam/Downloads/weights.height.annot.tsv")  
+
+n_genes_bmi = as.matrix(apply(weights_bmi[,2:ncol(weights_bmi)], 2, function(x) sum(x != 0 )))
+n_genes_height = as.matrix(apply(weights_height[,2:ncol(weights_height)], 2, function(x) sum(x != 0 )))
+```
+
+
+#Create Dataframes with the correlation coefficient between trait in rats and ones predicted using PTRS from Humans
+
+BMI with predicted BMI
+```{r check correlation for BMI }
+bmi_with_tail <- pheno %>% dplyr::select(c(rat_rfid, bmi_bodylength_w_tail)) %>% na.omit()
+tempo <- pred_BMI[na.omit(match(bmi_with_tail$rat_rfid, rownames(pred_BMI))), ]
+
+bmi_w_tail_df <- data.frame(R2 = numeric(), pvalue = numeric(), model = character(), n_genes_in_model = numeric(), conf.int.min = numeric(), conf.int.max = numeric())
+for(i in 1:ncol(tempo)){
+  fit = lm(bmi_with_tail$bmi_bodylength_w_tail ~ tempo[,i])
+  bmi_w_tail_df[i,1] <- summary(fit)$r.squared
+  bmi_w_tail_df[i,2] <- glance(fit)$p.value
+  bmi_w_tail_df[i,3] <- paste("model", i, sep = "_")
+  bmi_w_tail_df[i,4] <- n_genes_bmi[i,1]
+  bmi_w_tail_df[i,5] <- confint(fit)[1] 
+  bmi_w_tail_df[i,6] <- confint(fit)[2]
+}
+
+bmi_w_tail_cor <- data.frame(cor = numeric(), pvalue = numeric(), model = character(), n_genes_in_model = numeric(), conf.int.min = numeric(), conf.int.max = numeric())
+for(i in 1:ncol(tempo)){
+  bmi_w_tail_cor[i,1] <- cor.test(bmi_with_tail$bmi_bodylength_w_tail, tempo[,i])$estimate
+  bmi_w_tail_cor[i,2] <- cor.test(bmi_with_tail$bmi_bodylength_w_tail, tempo[,i])$p.value
+  bmi_w_tail_cor[i,3] <- paste("model", i, sep = "_")
+  bmi_w_tail_cor[i,4] <- n_genes_bmi[i,1]
+  bmi_w_tail_cor[i,5] <- cor.test(bmi_with_tail$bmi_bodylength_w_tail, tempo[,i])$conf.int[1]
+  bmi_w_tail_cor[i,6] <- cor.test(bmi_with_tail$bmi_bodylength_w_tail, tempo[,i])$conf.int[2]
+}
+
+total_bmi_df <- inner_join(bmi_w_tail_cor, bmi_w_tail_df, by = "model")
+total_bmi_df <- total_bmi_df %>% select(c(model, n_genes_in_model.x, cor, R2, pvalue.x, conf.int.min.x, conf.int.max.x ))
+```
+
+Bodylength with Predicted Height
+```{r check correlation for height}
+#Bodylength wit Tail vs predicted Height from Human PTRS weights
+bodylength_w_tail <- pheno %>% dplyr::select(c(rat_rfid, bodylength_w_tail)) %>% na.omit()
+tempo <- pred_height[na.omit(match(bodylength_w_tail$rat_rfid, rownames(pred_height))), ]
+
+bodylength_w_tail_df <- data.frame(R2 = numeric(), pvalue = numeric(), model = character(), n_genes_in_model = numeric(), conf.int.min = numeric(), conf.int.max = numeric())
+for(i in 1:ncol(tempo)){
+  fit = lm(bodylength_w_tail$bodylength_w_tail ~ tempo[,i])
+  bodylength_w_tail_df[i,1] <- summary(fit)$r.squared
+  bodylength_w_tail_df[i,2] <- glance(fit)$p.value
+  bodylength_w_tail_df[i,3] <- paste("model", i, sep = "_")
+  bodylength_w_tail_df[i,4]<- n_genes_height[i,1]
+  bodylength_w_tail_df[i,5] <- confint(fit)[1] 
+  bodylength_w_tail_df[i,6] <- confint(fit)[2] 
+}
+
+bodylength_w_tail_cor <- data.frame(cor = numeric(), pvalue = numeric(), model = character(), n_genes_in_model = numeric(), conf.int.min = numeric(), conf.int.max = numeric())
+for(i in 1:ncol(tempo)){
+  bodylength_w_tail_cor[i,1] <- cor.test(bodylength_w_tail$bodylength_w_tail, tempo[,i])$estimate
+  bodylength_w_tail_cor[i,2] <- cor.test(bodylength_w_tail$bodylength_w_tail, tempo[,i])$p.value
+  bodylength_w_tail_cor[i,3] <- paste("model", i, sep = "_")
+  bodylength_w_tail_cor[i,4]<- n_genes_height[i,1]
+  bodylength_w_tail_cor[i,5] <- cor.test(bodylength_w_tail$bodylength_w_tail, tempo[,i])$conf.int[1]
+  bodylength_w_tail_cor[i,6] <- cor.test(bodylength_w_tail$bodylength_w_tail, tempo[,i])$conf.int[2]
+}
+
+bodylength_w_tail_cor <- bodylength_w_tail_cor %>% filter(n_genes_in_model != 0)
+
+total_height_df <- inner_join(bodylength_w_tail_cor, bodylength_w_tail_df, by = "model")
+total_height_df <- total_height_df %>% select(c(model, n_genes_in_model.x, cor, R2, pvalue.x, conf.int.min.x, conf.int.max.x ))
+```
+
+# Plot Results
+
+```{r plot pred height grapsh}
+ggplot(bodylength_w_tail_cor, aes(n_genes_in_model, cor)) + geom_errorbar(aes(ymin = conf.int.min, ymax = conf.int.max ), width=0.2,  color="gray48") + ylim(c(0,0.1)) + geom_point(position="jitter") +geom_line() + xlab("Number of genes in each model") + ylab("Correlation Coefficient (r)") 
+
+
+ggplot(bmi_w_tail_cor, aes(n_genes_in_model, cor)) + geom_errorbar(aes(ymin = conf.int.min, ymax = conf.int.max ), width=0.2,  color="gray48") + ylim(c(0 ,0.1)) + geom_point(position="jitter") +geom_line() +  xlab("Number of genes in each model") + ylab("Correlation Coefficient (r)") 
+```
+
+Violin plot
+
+```{r read in PTRS results}
+ptrs_hum <- read_excel("/Users/natashasanthanam/Downloads/13059_2021_2591_MOESM5_ESM.xlsx")
+ptrs_hum <- ptrs_hum[7:nrow(ptrs_hum),]
+colnames(ptrs_hum) = c("trait", "population", "PTRS_MESA_EUR", "PTRS_MESA_AFR", "PTRS_MESA_ALL")
+
+ptrs_hum_height <- ptrs_hum %>% filter(trait == "height")
+ptrs_hum_height <- ptrs_hum_height %>% pivot_longer(c("PTRS_MESA_EUR", "PTRS_MESA_AFR", "PTRS_MESA_ALL"), names_to = "PTRS") %>% select(-c(trait))
+```
+
+
+```{r violin plot}
+ggplot(bodylength_w_tail_cor, aes(x=n_genes_in_model, y=cor)) + 
+  geom_violin()
+
+ggplot(bmi_w_tail_cor, aes(x=n_genes_in_model, y=cor)) + 
+  geom_violin()
+```
+
+
+# Create and Plot Negative Control
+```{r create negative control df}
+fasting_glucose <- pheno %>% dplyr::select(c(rat_rfid, fasting_glucose)) %>% na.omit()
+tempo <- pred_height[na.omit(match(fasting_glucose$rat_rfid, rownames(pred_height))), ]
+
+neg_control_df <- data.frame(estimate = numeric(), pvalue = numeric(), model = character(), n_genes_in_model = numeric(), conf.int.min = numeric(), conf.int.max = numeric())
+
+for(i in 1:ncol(tempo)){
+  neg_control_df[i,1] <- cor.test(fasting_glucose$fasting_glucose, tempo[,i])$estimate
+  neg_control_df[i,2] <- cor.test(fasting_glucose$fasting_glucose, tempo[,i])$p.value
+  neg_control_df[i,3] <- paste("model", i, sep = "_")
+  neg_control_df[i,4]<- n_genes_height[i,1]
+  neg_control_df[i,5] <- cor.test(fasting_glucose$fasting_glucose, tempo[,i])$conf.int[1]
+  neg_control_df[i,6] <- cor.test(fasting_glucose$fasting_glucose, tempo[,i])$conf.int[2]
+}
+
+ggplot(neg_control_df, aes(n_genes_in_model, estimate)) + geom_errorbar(aes(ymin = conf.int.min, ymax = conf.int.max ), width=0.2,  color="gray48") + geom_point(position="jitter") +geom_line() +  xlab("Number of genes in each model") + ylab("Correlation Coefficient (r)") 
+```
+
+# Test PTRS top genes for Enrichment
+```{r}
+top_ptrs_genes <- weights_height %>% select(c(gene_name, model_5)) %>% filter(model_5 != 0) %>% select(c(gene_name))
+top_ptrs_genes$gene_name = sapply(strsplit(top_ptrs_genes$gene_name , "\\."), `[`, 1)
+
+top_ptrs_genes <- top_ptrs_genes %>% mutate(rat_gene = orth.rats[match(top_ptrs_genes$gene_name, orth.rats$ensembl_gene_id), 3]$rnorvegicus_homolog_ensembl_gene)
+
+full_df <- read_tsv("/Users/natashasanthanam/Github/rat-genomic-analysis/data/rat_metabolic_traits_best_Ac_full_assocs.txt", col_names = TRUE)
+pheno_Multi_rat <- read_tsv("/Users/natashasanthanam/Downloads/rat_metabolic_MultiXcan_pval_assoc.txt", col_names = TRUE)
+```
+
+```{r}
+qqunif(full_df$pvalue, col= "dodgerblue4" )
+qqpoints(full_df %>% filter(gene %in% top_ptrs_genes$rat_gene) %>% .[["pvalue"]],pch='+', col = "dodgerblue") 
+
+qqunif(pheno_Multi_rat$pvalue.bodylength_w_tail, col= "dodgerblue4" )
+qqpoints(pheno_Multi_rat %>% filter(gene %in% top_ptrs_genes$rat_gene) %>% .[["pvalue.bodylength_w_tail"]],pch='+', col = "dodgerblue") 
+
+
+all_ptrs_genes <- weights_height %>%  filter(!(gene_name %in% top_ptrs_genes$gene_name)) %>% select(c(gene_name))
+all_ptrs_genes <-  all_ptrs_genes %>% mutate(rat_gene = orth.rats[match(all_ptrs_genes$gene_name, orth.rats$ensembl_gene_id), 3]$rnorvegicus_homolog_ensembl_gene)
+
+qqunif(full_df %>% filter(gene %in% all_ptrs_genes$rat_gene) %>% .[["pvalue"]])
+qqpoints(full_df %>% filter(gene %in% top_ptrs_genes$rat_gene) %>% .[["pvalue"]],pch='+', col = "dodgerblue") 
+
+
+full_df <- full_df %>% mutate(human_gene = orth.rats[match(full_df$gene, orth.rats$rnorvegicus_homolog_ensembl_gene), 1]$ensembl_gene_id)
+```
+

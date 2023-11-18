@@ -1,0 +1,19 @@
+# options specified here will apply to all posts in this folder
+
+# freeze computational output
+# (see https://quarto.org/docs/projects/code-execution.html#freeze)
+freeze: true
+
+# Disable banner style title blocks
+title-block-banner: false
+
+
+format:
+  html:
+    code-fold: false
+    code-summary: "Show the code"
+    code-tools: true
+    code-overflow: wrap
+    
+execute:
+  eval: false

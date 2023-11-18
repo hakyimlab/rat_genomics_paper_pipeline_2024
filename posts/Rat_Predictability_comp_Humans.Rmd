@@ -1,0 +1,343 @@
+---
+title: "Rat_Predictability_comp_Humans"
+author: "Natasha Santhanam"
+date: "2/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(data.table)
+library(RSQLite)
+library(glue)
+library(ggpubr)
+library(grid)
+library(ggrepel)
+library(GGally)
+```
+
+## Script to compare Heritability and Predictability Between Rats and Humans
+
+#Figure comparing pred R2 vs obs R2 in Ac tissue in Rats
+
+First find well expressed genes in Rats
+
+```{r find well expressed genes in rats, eval=FALSE}
+fila <- "/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/models//Ac_output_db.db"
+sqlite.driver <- dbDriver("SQLite")
+conn <- dbConnect(RSQLite::SQLite(), fila)
+tempo <- dbGetQuery(conn, 'select * from extra')
+
+tempo <- tempo[order(-tempo$R2),]    
+```
+
+Find Predicted Expression with separate Rat Genotypes
+
+```{bash calculate pred expr with models, eval=FALSE}
+conda activate imlabtools 
+export METAXCAN=/gpfs/data/im-lab/nas40t2/natasha/GTEX_Analysis/MetaXcan/software
+export GENO=/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files
+export MODEL=/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/models
+
+python3 $METAXCAN/Predict.py \
+--model_db_path $MODEL/Ac_output_db.db  \
+--model_db_snp_key varID \
+--vcf_genotypes $GENO/BLA_NAcc2_PL2.vcf.gz \
+--vcf_mode genotyped \
+--on_the_fly_mapping METADATA "{}_{}_{}_{}" \
+--prediction_output Ac_NAcc2__predict.txt  \
+--prediction_summary_output Ac_NAcc2__summary.txt \
+--verbosity 9 \
+--throw
+```
+
+Mgmt
+
+```{r check correlation between predicted and observed expression, eval=FALSE}
+pred_expr <- fread("/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/prediXcan/Ac_NAcc2__predict.txt")
+obs_expr <- fread("/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files/NAcc2.expr.iqn.bed.gz")
+
+obs_expr <- obs_expr %>% select(-c(`#chr`, start, end)) %>% pivot_longer(!gene_id, names_to = "FID", values_to = "count") %>% pivot_wider(names_from = gene_id, values_from = count)
+
+Mgmt_pred <- as.data.frame(pred_expr[, c("FID", "ENSRNOG00000016038")])
+Mgmt_obs <- as.data.frame(obs_expr[,  c("FID", "ENSRNOG00000016038")]) 
+Mgmt_pred$FID = as.character(Mgmt_pred$FID)
+
+Mgmt_pred <- Mgmt_pred[match(Mgmt_obs$FID, Mgmt_pred$FID),]
+Mgmt_obs <- Mgmt_obs[match(Mgmt_pred$FID, Mgmt_obs$FID ), ]
+
+Mgmt_pred$FID = as.character(Mgmt_pred$FID)
+Mgmt <- inner_join(Mgmt_pred, Mgmt_obs, by = "FID")
+```
+
+Polr3k
+
+```{r polr3k, eval=FALSE}
+Polr3k_pred <- as.data.frame(pred_expr[, c("FID", "ENSRNOG00000017843")])
+Polr3k_obs <- as.data.frame(obs_expr[,  c("FID", "ENSRNOG00000017843")]) 
+Polr3k_pred$FID = as.character(Polr3k_pred$FID)
+
+Polr3k_pred <- Polr3k_pred[match(Polr3k_obs$FID, Polr3k_pred$FID),]
+Polr3k_obs <- Polr3k_obs[match(Polr3k_pred$FID, Polr3k_obs$FID ), ]
+
+Polr3k_pred$FID = as.character(Polr3k_pred$FID)
+Polr3k <- inner_join(Polr3k_pred, Polr3k_obs, by = "FID")
+```
+
+Dhfr
+
+```{r Eno1, eval=FALSE}
+Dhfr_pred <- as.data.frame(pred_expr[, c("FID", "ENSRNOG00000013521")])
+Dhfr_obs <- as.data.frame(obs_expr[,  c("FID", "ENSRNOG00000013521")]) 
+Dhfr_pred$FID = as.character(Dhfr_pred$FID)
+
+Dhfr_pred <- Dhfr_pred[match(Dhfr_obs$FID, Dhfr_pred$FID),]
+Dhfr_obs <- Dhfr_obs[match(Dhfr_pred$FID, Dhfr_obs$FID ), ]
+
+Dhfr_pred$FID = as.character(Dhfr_pred$FID)
+Dhfr <- inner_join(Dhfr_pred, Dhfr_obs, by = "FID")
+```
+
+Plot pred vs obs expression with our models in NcAcc2 tissue
+
+```{r compare model performance in NcAcc2}
+Mgmt <- read_tsv("/Users/natashasanthanam/Downloads/model_perf_Mgmt.txt")
+Polr3k <- read_tsv("/Users/natashasanthanam/Downloads/model_perf_Polr3k.txt")
+Dhfr <- read_tsv("/Users/natashasanthanam/Downloads/model_perf_Dhfr.txt")
+
+g1 <- ggplot(Mgmt, aes(pred, obs)) + geom_point() + annotate("text", x = 0.4, y = 2.5, label = "Mgmt", size = 10, fontface ="bold.italic") + annotate("text", x = 0.53, y = 2, label = "R2 =  0.724", size = 8) + theme(aspect.ratio=1) + xlab("Predicted expression") + ylab("Observed Expression")
+
+g2 <- ggplot(Polr3k, aes(pred, obs)) + geom_smooth(size = 1) + geom_point() + ggtitle("Polr3k") + annotate("text", x = -1.8, y = 2, label = "r2 =  0.796", size = 3)  + theme(aspect.ratio=1)
+
+g3 <- ggplot(Dhfr, aes(pred, obs))  + geom_point() + annotate("text", x = -0.4, y = 2.5, label = "Dhfr", size = 10, fontface =2) + annotate("text", x = -0.25, y = 2, label = "r2 =  0.554", size = 8) + theme(aspect.ratio=1) + xlab("Predicted expression") + ylab("Observed Expression") + coord_cartesian(xlim = c(NA, 1.25)) 
+
+```
+
+Calculate Predicted vs Observed Expression for Mgmt in Humans using GTEx NA predictDB with Geuvadis genotypes (hg38) as well
+
+```{bash calculate pred expr with models 2, eval=FALSE}
+conda activate imlabtools 
+export METAXCAN=/gpfs/data/im-lab/nas40t2/natasha/GTEX_Analysis/MetaXcan/software
+export GENO=/gpfs/data/im-lab/nas40t2/Data/1000G/vcf_hg38/geuvadis
+export MODEL=/gpfs/data/im-lab/nas40t2/Data/PredictDB/GTEx_v8/models_v1/eqtl/elastic_net_models
+export DATA=/gpfs/data/im-lab/nas40t2/natasha/GTEX_Analysis/predixcan
+
+python3 $METAXCAN/Predict.py \
+--model_db_path $MODEL/en_Brain_Nucleus_accumbens_basal_ganglia.db  \
+--model_db_snp_key varID \
+--vcf_genotypes $GENO/ALL.chr*.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz \
+--vcf_mode genotyped \
+--on_the_fly_mapping METADATA "{}_{}_{}_{}_b38" \
+--prediction_output 1000G_NAcc2__predict.txt  \
+--prediction_summary_output 1000G_NAcc2__summary.txt  \
+--verbosity 9 \
+--throw
+```
+
+RPS26 r2= 0.7352744
+
+```{r check correlation between predicted and observed expression 2, eval=FALSE}
+pred_expr <- fread("/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/comp_to_GTEx/1000G_NAcc2__predict.txt")
+obs_expr <- fread("/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/comp_to_GTEx/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz")
+
+obs_expr <- obs_expr %>% select(-c(Chr, Gene_Symbol, Coord)) %>% pivot_longer(!TargetID, names_to = "FID", values_to = "count") %>% pivot_wider(names_from = TargetID, values_from = count)
+colnames(obs_expr)[2:ncol(obs_expr)] = sapply(strsplit(colnames(obs_expr)[2:ncol(obs_expr)], "\\."), `[`, 1)
+
+RPS26_pred <- as.data.frame(pred_expr[, c("FID", "ENSG00000197728.9")])
+RPS26_obs <- as.data.frame(obs_expr[,  c("FID", "ENSG00000197728")]) 
+
+RPS26_pred <- RPS26_pred[match(RPS26_obs$FID, RPS26_pred$FID),]
+RPS26_obs <- RPS26_obs[match(RPS26_pred$FID, RPS26_obs$FID ), ]
+
+
+RPS26 <- inner_join(RPS26_pred, RPS26_obs, by = "FID")
+colnames(RPS26) = c("FID", "pred", "obs")
+
+RPS26_GTEx <- read_tsv("/Users/natashasanthanam/Downloads/GTEx_RPS26.txt", col_names = TRUE)
+DHFR_GTEx <- read_tsv("/Users/natashasanthanam/Downloads/GTEx_DHFR_results.txt", col_names = TRUE)
+
+
+g4 <- ggplot(DHFR_GTEx, aes(pred, obs)) + geom_point() + annotate("text", x = -0.45, y = 55, label = "DHFR", size = 10, fontface =2) + annotate("text", x = -0.4, y = 51, label = "r2 =  0.506", size = 8) + theme(aspect.ratio=1) + xlab("Predicted expression") + ylab("Observed Expression")
+
+g5 <- ggplot(RPS26_GTEx, aes(pred, obs)) + geom_point() + annotate("text", x = -0.5, y = 385, label = "RPS26", size = 10, fontface ="bold.italic") + annotate("text", x = -0.45, y = 355, label = "R2 =  0.735", size = 8) + theme(aspect.ratio=1) + xlab("Predicted expression") + ylab("Observed Expression")
+```
+
+# Correlation of predicted R2 between tissues in GTEx
+
+We use Nucleus Accumbens, Hippocampus, Cerebellum, Cortex and Anterior Cingulate Cortex in GTEx
+
+```{r compile all R2 for tissues}
+filelist <- list( "en_Brain_Nucleus_accumbens_basal_ganglia.db", "en_Brain_Hippocampus.db", "en_Brain_Cerebellum.db", "en_Brain_Cortex.db", "en_Brain_Anterior_cingulate_cortex_BA24.db")
+dir <- "/gpfs/data/im-lab/nas40t2/Data/PredictDB/GTEx_v8/models_v1/eqtl/elastic_net_models/"
+
+pred_tis <- data.frame(gene = as.character())
+for(fila in filelist) {
+  filename <- dir %&% fila
+  sqlite.driver <- dbDriver("SQLite")
+  conn <- dbConnect(RSQLite::SQLite(), filename)
+  tis <- substr(fila, 4, str_length(fila)-3)
+  extra <- dbGetQuery(conn, 'select * from extra') %>% select(c(gene, test_R2_avg)) 
+  colnames(extra)[2] = tis
+  pred_tis <- full_join(pred_tis, extra, by = "gene") 
+  dbDisconnect(conn)
+}
+
+rownames(pred_tis) <- pred_tis$gene
+pred_tis <- pred_tis %>% select(-c(gene))
+saveRDS(pred_tis, "/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/comp_to_GTEx/pred_R2_betw_GTEx_brain_tissues.RDS")
+```
+
+```{r make pairs plot}
+pred_tis <- readRDS("/Users/natashasanthanam/Downloads/pred_R2_betw_GTEx_brain_tissues.RDS")
+pairs(pred_tis)
+```
+
+# Compare Heritability and Predictability in Humans and Rats
+
+Get R2 and H2 from Heather's Models for Brain
+
+```{sql connection, eval=FALSE}
+sqlite3 genarch.db
+.headers on
+.mode csv
+.output human_h2.csv
+select gene, ensid, en_r2 ,h2,h2_ci from results where tissue = "DGN-WB";
+.quit
+```
+
+```{r read in herit for humans and rats }
+rat_h2 <- read_tsv("/Users/natashasanthanam/Github/rat-genomic-analysis/data/Ac_PVE_estimates.txt", col_names = FALSE) %>% dplyr::rename(rat_herit = X2)
+
+
+human_h2 <- read_csv("/Users/natashasanthanam/Github/rat-genomic-analysis/data/human_h2.csv")
+human_h2$ensid <- sapply(strsplit(human_h2$ensid, "\\."), `[`, 1)
+summary(rat_h2$rat_herit)
+summary(human_h2$h2)
+```
+
+Change gene names in rats
+
+```{r plot heritability in rats and humans}
+orth.rats <- read_tsv("/Users/natashasanthanam/Downloads/ortholog_genes_rats_humans.tsv")
+rat_h2 <- rat_h2 %>% mutate(ensid = orth.rats[match(rat_h2$X1, orth.rats$rnorvegicus_homolog_ensembl_gene), 1]$ensembl_gene_id)
+
+all_h2 <- inner_join(rat_h2, human_h2, by = "ensid")
+
+cor.test(all_h2$rat_herit, all_h2$h2)
+```
+
+Compare Predictability (R2) between Humans and Rats
+
+```{r comp r2 between humans and rats}
+fila <- "/Users/natashasanthanam/Box/imlab-data/data-Github/rat-genomic-analysis/sql/Ac_output_db.db"
+sqlite.driver <- dbDriver("SQLite")
+conn <- dbConnect(RSQLite::SQLite(), fila)
+rat_r2 <- dbGetQuery(conn, 'select * from extra')
+dbDisconnect(conn)
+
+rat_r2 <- rat_r2 %>% mutate(ensid = orth.rats[match(rat_r2$gene, orth.rats$rnorvegicus_homolog_ensembl_gene), 1]$ensembl_gene_id)
+all_r2 <- inner_join(rat_r2, human_h2, by = "ensid")
+cor.test(all_r2$R2, all_r2$en_r2)
+```
+
+Plot the Comparison between the two
+
+```{r save inner join of r2 and h2}
+Ac_h2 <- rat_h2 %>% dplyr::rename(gene.x = X1) %>% mutate(rat_ci = paste(round(Ac_h2$X3, digits = 5), round(Ac_h2$X4, digits = 5), sep = "-")) %>% dplyr::select(c(gene.x, rat_herit, rat_ci))
+
+lg_df <- inner_join(all_r2, Ac_h2, by = "gene.x")
+
+lg_df <- lg_df %>% dplyr::select(c(ensid, gene.x, genename, R2, en_r2,rat_herit,h2,  rat_ci, h2_ci))
+colnames(lg_df) = c("ensembl_id", "rat_ensembl_id", "genename", "rat_r2", "human_r2", "rat_h2", "human_h2", "rat_h2_ci", "human_h2_ci")
+
+# Plot h2 between rats and Humans with line for null 
+lg_df %>% mutate(human_shuffled_h2 = sample(human_h2, nrow(lg_df), replace=F)) %>% ggplot(aes(rat_h2, human_h2)) + geom_smooth(col = "darkgreen") + geom_smooth(aes(rat_h2, human_shuffled_h2),col="dark gray")+theme_bw()+ xlab("Rat Heritability") + ylab("Human Heritability")
+
+# Plot R2 between rats and Humans with line for null 
+lg_df %>% mutate(human_shuffled_r2 = sample(human_r2, nrow(lg_df), replace=F)) %>% ggplot(aes(rat_r2, human_r2)) + geom_smooth(col = "midnightblue") + xlab("Rat Predictability") + ylab("Human Predictability") + annotate("text", x = 0.1, y = 0.2, label = "R =  0.061", size = 8) 
+```
+
+Compare Predictability Between Tissues
+
+```{r compare predictability between rat tissue, eval=FALSE}
+box.dir <- "/Users/natashasanthanam/Box/imlab-data/data-Github/rat-genomic-analysis/sql/"
+filelist <- c("Il_output_db.db", "Lh_output_db.db", "Ac_output_db.db", "Vo_output_db.db", "Pl_output_db.db")
+tis.list <- c("Infralimbic Cortex", "Lateral Habenula", "Nucleus accumbens", "Orbitofrontal Cortex", "Prelimibic Cortex")
+
+pred_tis <- data.frame(gene = as.character())
+for(fila in filelist) {
+  filename <- box.dir %&% fila
+  sqlite.driver <- dbDriver("SQLite")
+  conn <- dbConnect(RSQLite::SQLite(), filename)
+  i <- match(fila, filelist)
+  tis <- tis.list[i]
+  extra <- dbGetQuery(conn, 'select * from extra') %>% select(c(gene, R2)) 
+  colnames(extra)[2] = tis
+  pred_tis <- full_join(pred_tis, extra, by = "gene") 
+  dbDisconnect(conn)
+}
+rownames(pred_tis) <- pred_tis$gene
+pred_tis <- pred_tis %>% select(-c(gene))
+
+
+d1 <- cor(pred_tis %>% na.omit)
+d1[lower.tri(d1)] <- NA
+d1 <- d1 %>%
+  as.data.frame %>%
+  rownames_to_column(var = 'var1') %>%
+  gather(var2, value, -var1) 
+d1 <- d1 %>% dplyr::rename(r = value) %>% na.omit() 
+
+
+ggplot(data = d1, aes(x = var1, y = var2, fill = r)) +
+ geom_tile(color = "white")+
+ scale_fill_gradient(low="dodgerblue", high="dodgerblue4") +
+  theme_minimal() +
+  theme(panel.grid = element_blank()) + ylab("") + xlab("") + theme(axis.text = element_text(size = 15), axis.text.x = element_text(angle = 90, hjust = 1)) + theme(aspect.ratio=1)   
+ 
+```
+
+Calculate R2 across GTEx Tissues
+
+```{r iterate GTEx models, eval=FALSE}
+model.dir <- "/gpfs/data/im-lab/nas40t2/Data/PredictDB/GTEx_v8/models_v1/eqtl/elastic_net_models/"
+
+filelist <- c("en_Brain_Amygdala.db", "en_Brain_Cerebellum.db", "en_Brain_Nucleus_accumbens_basal_ganglia.db", "en_Brain_Spinal_cord_cervical_c-1.db", "en_Brain_Substantia_nigra.db")
+```
+
+```{r plot R2 across GTEx tissues}
+#pred_tis <- read_tsv(dir %&% "pred_R2_betw_GTEx_brain_tissues.txt", col_names = TRUE) 
+rownames(pred_tis) <- pred_tis$gene
+pred_tis <- pred_tis %>% select(-c(gene))
+colnames(pred_tis) = c("Amygdala", "Cerebellum", "Nucleus accumbens",  "Spinal cord", "Substantia nigra")
+
+
+d2 <- cor(pred_tis %>% na.omit)
+d2[lower.tri(d2)] <- NA
+d2 <- d2 %>%
+  as.data.frame %>%
+  rownames_to_column(var = 'var1') %>%
+  gather(var2, value, -var1) 
+d2 <- d2 %>% dplyr::rename(r = value) %>% na.omit()
+
+ggplot(data = d2, aes(x = var1, y = var2, fill = r)) +
+ geom_tile(color = "white")+
+ scale_fill_gradient(low="maroon1", high="maroon4") +
+  theme_minimal() +
+  theme(panel.grid = element_blank()) + ylab("") + xlab("") + theme(axis.text = element_text(size = 15), axis.text.x = element_text(angle = 90, hjust = 1)) + theme(aspect.ratio=1)   
+
+```
+
+Check Number of SNPs used in Prediction in Rats vs Humans
+
+```{r check n.snps}
+summary(rat_r2$n.snps)
+
+#human NAcc models
+filename <- "/Users/natashasanthanam/Downloads/en_Brain_Nucleus_accumbens_basal_ganglia.db"
+sqlite.driver <- dbDriver("SQLite")
+conn <- dbConnect(RSQLite::SQLite(), filename)
+human_r2 <- dbGetQuery(conn, 'select * from extra') 
+
+summary(human_r2$n.snps.in.model)
+```
