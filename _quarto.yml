@@ -7,7 +7,7 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Home
+        text: paper_code
       - href: other_code.qmd
         text: more_code
 

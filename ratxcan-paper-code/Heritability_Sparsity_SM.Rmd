@@ -1,5 +1,5 @@
 ---
-title: "01.Heritability_Sparsity Sabrina"
+title: "Heritability_Sparsity Sabrina"
 author: ["natasha.santhanam", "Sabrina"]
 date: "2022-02-07"
 output: workflowr::wflow_html

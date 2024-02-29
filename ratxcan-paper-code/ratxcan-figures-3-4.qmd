@@ -1,5 +1,5 @@
 ---
-title: RatXcan tutorial
+title: RatXcan analysis Figure 3 to 4
 date: 2023-11-27
 author: Haky Im
 editor_options: 
@@ -943,6 +943,7 @@ for(ctrait in traitlist)
 ```
 
 ## enrichment of Crouse's consensus genes
+
 ```{r test enrichment with crouse systems genomics consensus genes}
 consensus_df <- readxl::read_excel(glue("{INPUT}/data/expression/Table S10 Fat_consensus_alpha_0.01 PG.xlsx"),skip=1)
 

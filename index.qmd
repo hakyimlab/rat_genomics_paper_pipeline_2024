@@ -1,5 +1,5 @@
 ---
-title: "rat_genomics_paper_pipeline_hki"
+title: "RatXcan Paper Code"
 listing:
   contents: ratxcan-paper-code
   sort: "title"
@@ -11,4 +11,4 @@ page-layout: full
 title-block-banner: true
 ---
 
-\[Other code\](other_code.html)
+[to Github repo](https://github.com/hakyimlab/rat_Genomics_Paper_Pipeline_hki)
