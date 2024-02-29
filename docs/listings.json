@@ -90,6 +90,16 @@
   {
     "listing": "/index.html",
     "items": [
+      "/ratxcan-paper-code/01.Heritability_Sparsity_SM.html",
+      "/ratxcan-paper-code/Coregualtion_across_Tissues_Species.html",
+      "/ratxcan-paper-code/generate_sparsity_figs.html",
+      "/ratxcan-paper-code/ratxcan-figures-3-4.html",
+      "/ratxcan-paper-code/train-brain-region-predictors.html"
+    ]
+  },
+  {
+    "listing": "/about.html",
+    "items": [
       "/posts/01.Heritability_Sparsity.html",
       "/posts/01.Heritability_Sparsity_SM.html",
       "/posts/02.Prediction_Model_Pipeline.html",
@@ -115,7 +125,27 @@
     ]
   },
   {
-    "listing": "/about.html",
+    "listing": "/ratxcan-paper-code/01.Heritability_Sparsity_SM.html",
+    "items": []
+  },
+  {
+    "listing": "/ratxcan-paper-code/Coregualtion_across_Tissues_Species.html",
+    "items": []
+  },
+  {
+    "listing": "/ratxcan-paper-code/train-brain-region-predictors.html",
+    "items": []
+  },
+  {
+    "listing": "/ratxcan-paper-code/ratxcan-figures-3-4.html",
+    "items": []
+  },
+  {
+    "listing": "/ratxcan-paper-code/generate_sparsity_figs.html",
+    "items": []
+  },
+  {
+    "listing": "/other_code.html",
     "items": [
       "/posts/01.Heritability_Sparsity.html",
       "/posts/01.Heritability_Sparsity_SM.html",

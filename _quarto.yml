@@ -8,6 +8,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: other_code.qmd
+        text: more_code
 
 format:
   html:
@@ -20,3 +22,6 @@ editor: visual
 listing:
   contents: posts
   sort: "title"
+  
+execute:
+  eval: false

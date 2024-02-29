@@ -1,7 +1,7 @@
 ---
-title: "rat_genomics_paper_pipeline_hki"
+title: "other code under posts"
 listing:
-  contents: ratxcan-paper-code
+  contents: posts
   sort: "title"
   type: default
   categories: true
@@ -10,5 +10,3 @@ listing:
 page-layout: full
 title-block-banner: true
 ---
-
-\[Other code\](other_code.html)

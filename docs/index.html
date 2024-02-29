@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,7 +17,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -57,7 +57,8 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script>
@@ -70,9 +71,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-description","listing-categories"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -90,6 +91,7 @@ ul.task-list li input[type="checkbox"] {
   })
   </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
@@ -106,17 +108,23 @@ ul.task-list li input[type="checkbox"] {
     <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page">
+    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
  <span class="menu-text">Home</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./other_code.html" rel="" target="">
+ <span class="menu-text">more_code</span></a>
+  </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -143,45 +151,26 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(22)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="ratxcan">ratxcan <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
 
+<p>[Other code](other_code.html)</p>
 
-<p>:::{#quarto-listing-pipeline .hidden} <span class="hidden" data-render-id="quarto-enable-math-inline"><span class="math inline">\(e = mC^2\)</span></span></p>
-<p>:::{.hidden render-id=“pipeline-listing-listing”}</p>
-:::{.list .quarto-listing-default}
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700328487980" data-listing-reading-time-sort="15.315">
-<div class="body">
-<a href="./posts/01.Heritability_Sparsity.html">
-<h3 class="no-anchor listing-title">
-01.Heritability_Sparsity
-</h3>
-<div class="listing-subtitle">
 
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1709138841914" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="thumbnail">
+<p><a href="./ratxcan-paper-code/01.Heritability_Sparsity_SM.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
 </div>
-<div class="listing-description">
-First…
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/01.Heritability_Sparsity.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-natasha.santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700329273541" data-listing-reading-time-sort="11.8">
 <div class="body">
-<a href="./posts/01.Heritability_Sparsity_SM.html">
+<a href="./ratxcan-paper-code/01.Heritability_Sparsity_SM.html">
 <h3 class="no-anchor listing-title">
 01.Heritability_Sparsity Sabrina
 </h3>
@@ -194,238 +183,22 @@ For each gene, we calculate heritability from its local GRM. Start with creating
 </a>
 </div>
 <div class="metadata">
-<a href="./posts/01.Heritability_Sparsity_SM.html">
+<a href="./ratxcan-paper-code/01.Heritability_Sparsity_SM.html">
 <div class="listing-date">
 Feb 7, 2022
 </div>
 <div class="listing-author">
-natasha.santhanam, Sabrina
+natasha.santhanam , Sabrina
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700332071497" data-listing-reading-time-sort="8.095">
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1709167087536" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<div class="thumbnail">
+<p><a href="./ratxcan-paper-code/Coregualtion_across_Tissues_Species.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+</div>
 <div class="body">
-<a href="./posts/02.Prediction_Model_Pipeline.html">
-<h3 class="no-anchor listing-title">
-<ol start="2" type="1">
-<li>Prediction_Model_Pipeline
-</li></ol></h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Data from here - genoGex.Rdata has everything we need in it There are 5 ‘gex’ RDS…
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/02.Prediction_Model_Pipeline.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-Tyson Miller
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700329032645" data-listing-reading-time-sort="9.98">
-<div class="body">
-<a href="./posts/03.PrediXcan.html">
-<h3 class="no-anchor listing-title">
-03.PrediXcan_MultiXcan
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Sabrina’s note: I have no idea what is going on here, I don’t know where bimbam file came from. I tried running this script from genotype files generated from previous steps…
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/03.PrediXcan.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1650517200000" data-listing-file-modified-sort="1700328025676" data-listing-reading-time-sort="1.68">
-<div class="body">
-<a href="./posts/04.GEMMA_LMM_analysis.html">
-<h3 class="no-anchor listing-title">
-04.GEMMA_LMM_analysis
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Gemma uses a LMM with…
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/04.GEMMA_LMM_analysis.html">
-<div class="listing-date">
-Apr 21, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700328025688" data-listing-reading-time-sort="5.25">
-<div class="body">
-<a href="./posts/06.PTRS_Creation.html">
-<h3 class="no-anchor listing-title">
-06.PTRS_Creation
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-The <code>orth.rats</code> file contains gives a dictionary between human genes and the corresponding gene in rats.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/06.PTRS_Creation.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700329030676" data-listing-reading-time-sort="3.43">
-<div class="body">
-<a href="./posts/07.SPTRS_Creation.html">
-<h3 class="no-anchor listing-title">
-07 SPTRS_Creation
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Set up the conda environment
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/07.SPTRS_Creation.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700329028979" data-listing-reading-time-sort="2.725">
-<div class="body">
-<a href="./posts/08.Compare_all_PTRS.html">
-<h3 class="no-anchor listing-title">
-08.Compare_all_PTRS
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Match genes in weights file in humans to Rat expression
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/08.Compare_all_PTRS.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-listing-date-sort="1651640400000" data-listing-file-modified-sort="1700328025704" data-listing-reading-time-sort="3.765">
-<div class="body">
-<a href="./posts/09.PRS_Rats.html">
-<h3 class="no-anchor listing-title">
-09.PRS_Rats
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-first extract out 500 random rats that we’ll use as baseline
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/09.PRS_Rats.html">
-<div class="listing-date">
-May 4, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="9" data-listing-date-sort="1656219600000" data-listing-file-modified-sort="1700328025709" data-listing-reading-time-sort="2.525">
-<div class="body">
-<a href="./posts/10.PTRS_simulation_weights.html">
-<h3 class="no-anchor listing-title">
-10.PTRS_simulation_weights
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Read in files
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/10.PTRS_simulation_weights.html">
-<div class="listing-date">
-Jun 26, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="10" data-listing-file-modified-sort="1700329024538" data-listing-reading-time-sort="0.015">
-<div class="body">
-<a href="./posts/about.html">
-<h3 class="no-anchor listing-title">
-About
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Describe your project.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/about.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="11" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700328025714" data-listing-reading-time-sort="4.225">
-<div class="body">
-<a href="./posts/Coregualtion_across_Tissues_Species.html">
+<a href="./ratxcan-paper-code/Coregualtion_across_Tissues_Species.html">
 <h3 class="no-anchor listing-title">
 Coregulation_across_Tissues_Species
 </h3>
@@ -438,7 +211,7 @@ Generate Correlation Matrices for 100 rats - compare predicted Expression across
 </a>
 </div>
 <div class="metadata">
-<a href="./posts/Coregualtion_across_Tissues_Species.html">
+<a href="./ratxcan-paper-code/Coregualtion_across_Tissues_Species.html">
 <div class="listing-date">
 Feb 14, 2022
 </div>
@@ -448,34 +221,12 @@ Natasha Santhanam
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700328025719" data-listing-reading-time-sort="6.345">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1646805600000" data-listing-file-modified-sort="1709138841918" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./ratxcan-paper-code/generate_sparsity_figs.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+</div>
 <div class="body">
-<a href="./posts/GTEx_n_genes_rat_comparison.html">
-<h3 class="no-anchor listing-title">
-GTEx_comparison_rat_n_genes
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Gather Genotype, Gene epression data, snp annotation file and gtf (made with ensembl notation)
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/GTEx_n_genes_rat_comparison.html">
-<div class="listing-date">
-Feb 14, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="13" data-listing-date-sort="1646805600000" data-listing-file-modified-sort="1700328025762" data-listing-reading-time-sort="1.77">
-<div class="body">
-<a href="./posts/generate_sparsity_figs.html">
+<a href="./ratxcan-paper-code/generate_sparsity_figs.html">
 <h3 class="no-anchor listing-title">
 Generate Sparsity Figures
 </h3>
@@ -488,7 +239,7 @@ we will use this for comparison later
 </a>
 </div>
 <div class="metadata">
-<a href="./posts/generate_sparsity_figs.html">
+<a href="./ratxcan-paper-code/generate_sparsity_figs.html">
 <div class="listing-date">
 Mar 9, 2022
 </div>
@@ -498,213 +249,74 @@ Natasha Santhanam
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700328025757" data-listing-reading-time-sort="3.875">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1701064800000" data-listing-file-modified-sort="1708653411433" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="24">
+<div class="thumbnail">
+<p><a href="./ratxcan-paper-code/ratxcan-figures-3-4.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+</div>
 <div class="body">
-<a href="./posts/generate_plink_format_genotypes.html">
+<a href="./ratxcan-paper-code/ratxcan-figures-3-4.html">
 <h3 class="no-anchor listing-title">
-Generate_plink_format_genotypes
+RatXcan tutorial
 </h3>
 <div class="listing-subtitle">
 
 </div>
 <div class="listing-description">
-Data from here - genoGex.Rdata has everything we need in it There are 5 ‘gex’ RDS…
+<p>tutorial for running ratxcan given genotype, phenotype, and prediction weights as input</p>
 </div>
 </a>
 </div>
 <div class="metadata">
-<a href="./posts/generate_plink_format_genotypes.html">
+<a href="./ratxcan-paper-code/ratxcan-figures-3-4.html">
 <div class="listing-date">
-Feb 14, 2022
+Nov 27, 2023
 </div>
 <div class="listing-author">
-Natasha Santhanam
+Haky Im
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-listing-date-sort="1645682400000" data-listing-file-modified-sort="1700328025724" data-listing-reading-time-sort="3.275">
+<div class="quarto-post image-right" data-index="4" data-categories="ratxcan" data-listing-date-sort="1706076000000" data-listing-file-modified-sort="1707245176049" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="thumbnail">
+<p><a href="./ratxcan-paper-code/train-brain-region-predictors.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+</div>
 <div class="body">
-<a href="./posts/Human_PTRS_Comparison.html">
+<a href="./ratxcan-paper-code/train-brain-region-predictors.html">
 <h3 class="no-anchor listing-title">
-Human_PTRS_Performance_Comparison
+Train brain region predictors with larger genotype file
 </h3>
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('ratxcan'); return false;">
+ratxcan
+</div>
+</div>
+<a href="./ratxcan-paper-code/train-brain-region-predictors.html">
 <div class="listing-description">
-Yanyu’s PTRS weights estimate the effect of genes on a given trait, in this case we pick height and BMI.
+preliminary definitions
 </div>
 </a>
 </div>
 <div class="metadata">
-<a href="./posts/Human_PTRS_Comparison.html">
+<a href="./ratxcan-paper-code/train-brain-region-predictors.html">
 <div class="listing-date">
-Feb 24, 2022
+Jan 24, 2024
 </div>
 <div class="listing-author">
-Natasha Santhanam
+Haky Im
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700329031662" data-listing-reading-time-sort="2.315">
-<div class="body">
-<a href="./posts/05.PhenomeXcan_MutliXcan.html">
-<h3 class="no-anchor listing-title">
-PhenomeXcan Query
-</h3>
-<div class="listing-subtitle">
-
 </div>
-<div class="listing-description">
-Generate a table of all human MultiXcan results
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/05.PhenomeXcan_MutliXcan.html">
-<div class="listing-date">
-Feb 14, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="17" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700328025735" data-listing-reading-time-sort="5.36">
-<div class="body">
-<a href="./posts/Rat_QC_Merging.html">
-<h3 class="no-anchor listing-title">
-Rat QC and Comparison Check
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Apurva sent bimbam files that I converted to map/ped and then bim/bed/fam files using my own pipeline. Pipeline is in rat_compare_genotypes_metabolic.Rmd file.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/Rat_QC_Merging.html">
-<div class="listing-date">
-Feb 14, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="18" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700328262150" data-listing-reading-time-sort="6.39">
-<div class="body">
-<a href="./posts/Rat_Predictability_comp_Humans.html">
-<h3 class="no-anchor listing-title">
-Rat_Predictability_comp_Humans
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-#Figure comparing pred R2 vs obs R2 in Ac tissue in Rats
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/Rat_Predictability_comp_Humans.html">
-<div class="listing-date">
-Feb 14, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="19" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1700328025741" data-listing-reading-time-sort="1.845">
-<div class="body">
-<a href="./posts/Sparsity_Badger_Template.html">
-<h3 class="no-anchor listing-title">
-Sparsity_Badger_Template
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/Sparsity_Badger_Template.html">
-<div class="listing-date">
-Feb 7, 2022
-</div>
-<div class="listing-author">
-natasha.santhanam
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="20" data-listing-date-sort="1645423200000" data-listing-file-modified-sort="1700328025751" data-listing-reading-time-sort="1.195">
-<div class="body">
-<a href="./posts/convert_genotypes_old.html">
-<h3 class="no-anchor listing-title">
-convert_genotypes_old
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-<strong>Note:</strong> This is old script to convert Palmer lab genotype data in an .Rdata object to plink format. For our analysis, we used a different process to reformat, documented here
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/convert_genotypes_old.html">
-<div class="listing-date">
-Feb 21, 2022
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="21" data-listing-date-sort="1644818400000" data-listing-file-modified-sort="1700328025772" data-listing-reading-time-sort="3.2">
-<div class="body">
-<a href="./posts/rat_compare_genotypes_metabolic.html">
-<h3 class="no-anchor listing-title">
-rat_compare_genotypes
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Min. 1st Qu. Median Mean 3rd Qu. Max. 0.6856 0.7511 0.7851 0.7833 0.8211 0.8801
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/rat_compare_genotypes_metabolic.html">
-<div class="listing-date">
-Feb 14, 2022
-</div>
-<div class="listing-author">
-Natasha Santhanam
-</div>
-</a>
-</div>
-</div>
-:::
-
 <div class="listing-no-matching d-none">
 No matching items
 </div>
-<p>:::</p>
-<p>:::</p>
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing"></div></main> <!-- /main -->
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -732,9 +344,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -799,6 +425,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

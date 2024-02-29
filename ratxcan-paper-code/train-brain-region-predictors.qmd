@@ -1,0 +1,507 @@
+---
+title: Train brain region predictors with larger genotype file
+author: Haky Im
+date: '2024-01-24'
+categories:
+  - ratxcan
+editor_options: 
+  chunk_output_type: console
+---
+
+preliminary definitions
+
+```{r preliminary}
+suppressMessages(library(tidyverse))
+suppressMessages(library(glue))
+suppressMessages(library(data.table))
+suppressMessages(library(R.utils))
+suppressMessages(library(stringr))
+suppressMessages(library(RSQLite))
+suppressMessages(library(vroom))
+suppressMessages(library(glmnet))
+
+"%&%" = function(a,b) paste(a,b,sep="")
+headleft <-function(x,nc=4,...) head(x[,1:nc],...)
+
+#USER="haky"
+#USER="haekyungim"
+#PRE = glue("/Users/{USER}/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/web-data")
+
+# PIPELINE=glue("/Users/{USER}/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/Rat_Genomics_Paper_Pipeline")
+# 
+# FROMHENG=glue("/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/rat-genomic-analysis/heng_rat_brain_data/from_heng")
+# 
+APURVA="/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/rat-genomic-analysis/Data-From-Abe-Palmer-Lab"
+
+WEBDATA = "/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/web-data"
+
+WORK=glue("{WEBDATA}/2022-10-16-debug-rat-ptrs-with-larger-brain-transcriptome")
+
+# PRE0="/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/web-data"
+# PRE1="/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/web-data/2023-11-27-ratxcan-tutorial"
+# 
+# PLINK="/Users/haekyungim/bin/plink_mac_20231211/plink"
+# GCTA="/Users/haekyungim/bin/gcta-1.94.2-MacOS-ARM-x86_64/gcta64"
+# 
+INPUT <- glue("{WEBDATA}/ratxcan-tutorial") ## this has the input data 
+# OUTPUT <- glue("{PRE1}/scratch") ## this has the output data, intermediate results
+```
+
+```{r annot data and other definitions}
+gene_annotation <- readRDS(glue("{INPUT}/data/expression/gene_annotation.RDS"))
+## glue("{INPUT}/data/expression/gene_annotation.RDS") is the same as {WORK}...
+```
+
+## train prediction models using nat training rats and Ac expression
+
+-   [x] split genotypes by chromosome
+-   [x] write genotype by chr with header
+-   [ ] TODO update path in this block
+
+```{r split genotype by chr, eval=FALSE}
+
+geno_file <- glue("{WORK}/data/genotype/nat/train_genotype_nat.txt")
+train_rat_id_file <- glue("{WORK}/data/genotype/nat/train_rat_ids_nat.txt")
+
+train_genotype <- vroom(geno_file,col_names=TRUE)
+rat_id_vec <- vroom(train_rat_id_file,col_names=FALSE)[[2]]
+##colnames(train_genotype) = c("chr","snp", "pos", "refAllele", "effectAllele", "maf", rat_id_vec)
+## check point
+identical(c("chr","snp", "pos", "refAllele", "effectAllele", "maf", rat_id_vec),colnames(train_genotype))
+## check point rat ids and genotype colnames
+length(rat_id_vec)+6 == ncol(train_genotype)
+## check point snp annot
+chrom=1
+tempo <- readRDS(glue("{WORK}/data/genotype/snp_annot/snp_annot.chr.{chrom}.RDS"))
+identical(tempo$snp,train_genotype%>% filter(chr==1) %>% .[["snp"]] )
+## create and write genotype by chr
+if(F){
+  genochr_dir <- glue("{WORK}/data/genotype/nat/geno_by_chr")
+  if(!file.exists(genochr_dir)) system(glue("mkdir {genochr_dir}"))
+  for(chrom in 1:20)
+  write_tsv(train_genotype %>% filter(chr==chrom), glue("{genochr_dir}/train_genotype_chr{chrom}.txt"))
+}
+## number of snps per chr
+train_genotype %>% count(chr)  %>% arrange(as.numeric(chr)) %>% knitr::kable()
+
+```
+
+-   [x] check snp_annot is the same
+-   [ ] TODO update path in this block
+
+```{r check snp_annot and genotype consistent, eval=FALSE}
+## check point snp annot
+for(chrom in 1:20)
+{  tempo <- readRDS(glue("{WORK}/data/genotype/snp_annot/snp_annot.chr.{chrom}.RDS"))
+  if(identical(tempo$snp,train_genotype%>% filter(chr==chrom) %>% .[["snp"]] )) print(glue("OK: chr {chrom} snp annot match"))
+}
+```
+
+-   [x] read gene expression files
+
+```{r read nat raw gene expression data, eval=FALSE}
+
+ACname = "fpkmEnsemblGene_AcbcOnly.2018-09-14.txt"
+ILname = "fpkmEnsemblGene_ILOnly.2018-09-14.txt"
+LHname = "fpkmEnsemblGene_LHBOnly.2018-09-14.txt"
+PLname = "fpkmEnsemblGene_PLOnly.2018-09-14.txt"
+VOname = "fpkmEnsemblGene_VoLoOnly.2018-09-14.txt"
+
+expr2mat = function(region_expr)
+{
+  kk=as.matrix(region_expr %>% select(-EnsemblGeneID))
+  kk=t(kk)
+  colnames(kk) = region_expr$EnsemblGeneID
+  kk
+}
+
+AC_expr=suppressMessages(vroom::vroom(glue("{WEBDATA}/ratxcan-tutorial/data/expression/{ACname}")))
+AC_expr = expr2mat(AC_expr)
+dim(AC_expr)
+
+IL_expr=suppressMessages(vroom::vroom(glue("{WEBDATA}/ratxcan-tutorial/data/expression/{ILname}")))
+IL_expr = expr2mat(IL_expr)
+dim(IL_expr)
+
+LH_expr=suppressMessages(vroom::vroom(glue("{WEBDATA}/ratxcan-tutorial/data/expression/{LHname}")))
+LH_expr = expr2mat(LH_expr)
+dim(LH_expr)
+
+PL_expr=suppressMessages(vroom::vroom(glue("{WEBDATA}/ratxcan-tutorial/data/expression/{PLname}")))
+PL_expr = expr2mat(PL_expr)
+dim(PL_expr)
+
+VO_expr=suppressMessages(vroom::vroom(glue("{WEBDATA}/ratxcan-tutorial/data/expression/{VOname}"),delim="\t"))
+VO_expr = expr2mat(VO_expr)
+dim(VO_expr)
+
+```
+
+-   [x] read covariates file
+
+```{r read covariates, eval=FALSE}
+cova_df = read_tsv(file = glue("{INPUT}/data/phenotype/covariates.txt"))
+#load(glue("{APURVA}/Final_P50_traits/P50_raw_trait_values.RData")) ## this will load raw_traits
+#cova_df=raw_traits
+#sort(names(cova_df))
+#cova_df %>% filter(cova_df$rfid %in% rownames(gexmat)) %>% dim()
+#write_tsv(cova_df %>% select(IID=rfid,sex,batchnumber,center) ,file = glue("{INPUT}/data/phenotype/covariates.txt"))
+## "Sample_Name" column is the rat ID in the expression file rownames gexmat
+## sex
+## Nat used sex, batch number, batch center and 7 PEER
+```
+
+-   [x] QC and process expression data
+
+```{r def QC function, eval=FALSE}
+
+QC_process_gexmat = function(gexmat,titulo="",plotpcs=FALSE,mPCs=7)
+{
+  genelist <- colnames(gexmat)
+  #gexmat <- expr_df %>% select(-EnsemblGeneID) %>% as.matrix %>% t()
+  #colnames(gexmat) <- genelist
+  
+  ## remove genes with no variation
+  ind = gexmat %>% apply(2,var) %>% (function(x) x!=0)
+  #if(!identical(names(ind),colnames(gexmat))) stop("gene names don't match")
+  gexmat <- gexmat[,ind]
+  
+  ## inverse normalize first, then check whether it passes shapiro test
+  ## def inverse normalization
+  invnorm = function(x) {
+    if(is.null(dim(x))) res = invnorm.vector(x) else
+      res=apply(x,2,invnorm.vector)
+    res
+  }
+  invnorm.vector = function(x) {yy = rank(x)/(length(x)+1); qnorm(yy)}
+  
+  #tempomat = gexmat
+  for(cc in 1:ncol(gexmat)) gexmat[,cc] <- invnorm(gexmat[,cc])
+  
+  ## genes that don't pass shapiro test of normality (these were forced to be normally distributed, if that doesn't happen, then they probably need to be excluded. could be low expression or other reasons for high number of ties)
+  res <- rep(NA,ncol(gexmat))
+  names(res) <- colnames(gexmat)
+  for(cc in 1:ncol(gexmat)) res[cc] <- shapiro.test(gexmat[,cc])$p.value
+  
+  cat("keeping",sum(res>0.8),"genes with shapiro p>0.8\n")
+  gexmat <- gexmat[,res > 0.8]
+  
+  ## adjust for PCs
+  prfit <- prcomp(t(gexmat))
+  if(plotpcs)
+  {
+    plot(cumsum(prfit$sdev^2)/sum(prfit$sdev^2),main=glue("{titulo}"))
+    pairs(prfit$rotation[,1:7],main=glue("{titulo}"))
+    }
+
+  ## check point: do gexmat and pc matrices have = rownames (IID)
+  if(!identical(rownames(gexmat),rownames(prfit$rotation))) stop("gene expr and pc ids don't match")
+
+  cova_df_ext <- cova_df[match(rownames(gexmat),cova_df$IID), ]
+  cova_df_ext <- cbind(cova_df_ext,prfit$rotation[cova_df_ext$IID,1:mPCs])
+  
+  res_expr_mat = matrix(NA,nrow(gexmat),ncol(gexmat))
+  rownames(res_expr_mat) = rownames(gexmat)
+  colnames(res_expr_mat) = colnames(gexmat)
+
+  # ## adjust for cova
+  # ## mPCs <- 7
+  # cova_mat <- 
+  #   cova_df[match(rownames(gexmat),cova_df$IID), ] %>% 
+  #   mutate(nsex= as.numeric(sex=="F"))
+  # cova_mat <- cova_mat %>% select(nsex) %>% as.matrix()
+  # rownames(cova_mat) <- cova_mat$IID 
+  # ## 1 is female
+  # 
+  # cova_mat <- cbind(cova_mat,prfit$rotation[,1:mPCs])
+  # 
+  # 
+  # res_expr_mat = matrix(NA,nrow(gexmat),ncol(gexmat))
+  # rownames(res_expr_mat) = rownames(gexmat)
+  # colnames(res_expr_mat) = colnames(gexmat)
+
+  ## Nat used sex, batch number, batch center and 7 PEER
+  ## center is unique so remove
+  regformula = glue("gex ~ sex + batchnumber")
+  for(ii in 1:mPCs) regformula = glue("{regformula} + PC{ii}")
+  for(gg in 1:ncol(gexmat))
+  {
+    gex <- gexmat[,gg]
+    cova_df_ext$gex = gex
+    res_expr_mat[,gg] <- resid(lm(as.formula(regformula), data=cova_df_ext))
+  }
+
+  res_expr_mat
+
+}
+
+AC_res_expr = QC_process_gexmat(AC_expr)
+IL_res_expr = QC_process_gexmat(IL_expr)
+LH_res_expr = QC_process_gexmat(LH_expr)
+PL_res_expr = QC_process_gexmat(PL_expr)
+VO_res_expr = QC_process_gexmat(VO_expr)
+
+```
+
+-   [x] load expression_RDS
+
+```{r load expression_RDS, eval=FALSE}
+recalculate=FALSE
+tissuelist = c("AC","IL","LH","PL","VO")
+tissue="AC"
+expression_RDS <- glue("{INPUT}/data/expression/{tissue}_res_expr.RDS")
+if(recalculate) 
+{
+saveRDS(AC_res_expr,glue("{INPUT}/data/expression/AC_res_expr.RDS"))
+saveRDS(IL_res_expr,glue("{INPUT}/data/expression/IL_res_expr.RDS"))
+saveRDS(LH_res_expr,glue("{INPUT}/data/expression/LH_res_expr.RDS"))
+saveRDS(PL_res_expr,glue("{INPUT}/data/expression/PL_res_expr.RDS"))
+saveRDS(VO_res_expr,glue("{INPUT}/data/expression/VO_res_expr.RDS"))
+} else 
+{
+AC_res_expr <- readRDS(glue("{INPUT}/data/expression/AC_res_expr.RDS"))
+IL_res_expr <- readRDS(glue("{INPUT}/data/expression/IL_res_expr.RDS"))
+LH_res_expr <- readRDS(glue("{INPUT}/data/expression/LH_res_expr.RDS"))
+PL_res_expr <- readRDS(glue("{INPUT}/data/expression/PL_res_expr.RDS"))
+VO_res_expr <- readRDS(glue("{INPUT}/data/expression/VO_res_expr.RDS"))
+}
+dim(AC_res_expr)
+#[1]    78 14908
+dim(IL_res_expr)
+#[1]    83 15118
+dim(LH_res_expr)
+#[1]    83 15082
+dim(PL_res_expr)
+#[1]    81 15130
+dim(VO_res_expr)
+```
+
+-   [x] run training with dopar
+
+```{r EDIT train predictors with dopar, eval=FALSE}
+CODE=glue("/Users/haekyungim/Github/web-internal-notes-quarto/post/2022-10-24-train-rat-brain-expression-predictors/")
+source(glue("{CODE}/scripts/modified-GTEx_Tissue_Wide_CV_elasticNet.R"))
+# options(error=recover)
+# ##debug(fit_model)
+# fit_model(expression_RDS, geno_file_chr, gene_annot_RDS, snp_annot_RDS, n_k_folds, alpha, out_dir, tis, chrom, snpset, window)
+
+if(F){
+  suppressMessages(library(foreach))
+  suppressMessages(library(parallel))
+  
+  parallel::detectCores()
+  n.cores <- parallel::detectCores() - 1
+  #create the cluster
+  my.cluster <- parallel::makeCluster(
+    n.cores, 
+    type = "FORK"
+    )
+  print(my.cluster)
+  doParallel::registerDoParallel(cl = my.cluster)
+  #check if it is registered (optional)
+  foreach::getDoParRegistered()
+  #how many workers are available? (optional)
+  foreach::getDoParWorkers()
+  
+  ##tis <- "IL"
+  ##c("AC","IL","LH","PL","VO")
+  for(tis in c("LH","PL","VO"))
+  {      
+  foreach(chrom=1:20) %dopar% {
+    
+    alpha <- 0.5
+    window <- 1e6
+    ## DEFINED ABOVE expression_RDS <- glue("{WORK}/data/expression/resid_expr_mat_nat.Rdata")
+##glue("{WORK}/data/expression/resid_expr_mat.Rdata")
+    ##geno_file <- glue("./data/geno_by_chr/genotype.chr" %&% chrom %&% ".txt")
+    geno_file_chr <- glue("{WORK}/data/genotype/nat/geno_by_chr/train_genotype_chr{chrom}.txt")
+    train_rat_id_file <- glue("{WORK}/data/genotype/nat/train_rat_ids_nat.txt")
+    
+    gene_annot_RDS <- glue("{WORK}/data/expression/gene_annotation.RDS")
+    snp_annot_header = glue("{WORK}/data/genotype/snp_annot/snp_annot.chr.")
+    snp_annot_tail <- glue(".RDS")##"./data/snp_annot/snp_annot.chr" %&% chrom %&% ".RDS"
+    ##snp_annot_tail <- glue("{WORK}/data/snp_annot/snp_annot.chr.{chrom}.RDS")##"./data/snp_annot/snp_annot.chr" %&% chrom %&% ".RDS"
+    snp_annot_RDS = glue("{snp_annot_header}{chrom}{snp_annot_tail}")
+    n_k_folds <- 10
+    out_dir <- glue("{INPUT}/results/output/")
+    snpset <- "place_holder_1KG_snps"
+
+    fit_model(expression_RDS, geno_file_chr, gene_annot_RDS, snp_annot_RDS, n_k_folds, alpha, out_dir, tis, chrom, snpset, window)
+  }
+    
+  }
+
+
+
+  
+  ##Finally, it is always recommendable to stop the cluster when we are done working with it.
+  parallel::stopCluster(cl = my.cluster)
+
+} else print('Not running training in this knit')
+
+
+
+```
+
+-   [x] concatenate and make db's
+
+```{bash EDIT concatenate and make dbs, eval=FALSE}
+#| eval: FALSE
+
+##WORK="/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/web-data/2022-10-16-debug-rat-ptrs-with-larger-brain-transcriptome"
+
+WORK="/Users/haekyungim/Library/CloudStorage/Box-Box/LargeFiles/imlab-data/data-Github/web-data/ratxcan-tutorial"
+
+alpha=0.5 #$3
+snpset="place_holder_1KG_snps" #$4
+OUTPUT=$WORK/results/output #$5
+
+CODE="/Users/haekyungim/Github/web-internal-notes-quarto/post/2022-10-24-train-rat-brain-expression-predictors/"
+CURDIR=$(pwd)
+cd $CODE
+
+##c("AC","IL","LH","PL","VO")
+
+tissue='VO' #$1
+
+
+allResults=$WORK/results/all_results_$tissue #$2
+allBetas=$WORK/results/all_betas_$tissue
+allLogs=$WORK/results/all_logs_$tissue
+allCovariances=$WORK/results/all_covariances_$tissue
+allMetadata=$WORK/results/allMetaData_$tissue
+
+
+i=0
+for resultsfile in $(ls ${OUTPUT}/working_TW_${tissue}_exp_10-foldCV_elasticNet_alpha${alpha}_${snpset}_chr*); do
+  echo "$resultsfile"
+        if [ $i -eq 0 ] ; then
+                head -n 1 $resultsfile > $allResults
+                i=1
+        fi
+        tail -n +2 $resultsfile >> $allResults
+done
+echo "finished collecting $allResults"
+
+i=0
+for betafile in $(ls ${OUTPUT}/TW_${tissue}_elasticNet_alpha${alpha}_${snpset}_weights_chr*); do
+  echo "$betafile"
+	if [ $i -eq 0 ] ; then
+		head -n 1 $betafile > $allBetas
+		i=1
+	fi
+	tail -n +2 $betafile >> $allBetas
+done
+echo "Finished collecting $allBetas"
+
+echo "GENE RSID1 RSID2 VALUE" > $allCovariances
+i=0
+for i in {1..20}; do
+	for covfile in $(ls ${OUTPUT}/${tissue}_chr${i}_snpset_${snpset}_alpha_${alpha}_covariances.txt); do
+		echo $covfile
+		cat $covfile >> $allCovariances
+	done
+done
+gzip $allCovariances
+
+
+i=0
+for logfile in $(ls ${OUTPUT}/${tissue}_chr*_elasticNet_model_log.txt); do
+  echo $logfile
+        if [ $i -eq 0 ] ; then
+                head -n 1 $logfile > $allLogs
+                i=1
+        fi
+        tail -n +2 $logfile >> $allLogs
+done
+
+## create meta data, just enough data for the pipeline to work
+##python scripts/create_meta_data.py --geno "{WORK}/data/genotype.txt" --expr "Ac_expression_transformed.tsv" --alpha 1 --snpset $snpset --rsid_label 1 --window 1000000 --out_prefix "Results/allMetaData/Ac"
+
+echo -e 'n_samples\tn_folds_cv\tsnpset\trsid_db_snp_label\talpha\twindow' > $allMetadata
+echo -e '9999\t10\t'${snpset}'\t1\t0.5\t1Mb' >> $allMetadata ## not using real sample size
+
+# Putting these into sqlite databases
+## make directory $WORK/results/sql if not existent
+mkdir -p "$WORK/results/sql"
+## source ~/Virtualenvs/bioinfo/bin/activate
+python scripts/make_sqlite_db.py --output $WORK/results/sql/$tissue.db --results $WORK/results/all_results_$tissue --construction $WORK/results/all_logs_$tissue --betas $WORK/results/all_betas_$tissue --meta $WORK/results/allMetadata_$tissue
+
+
+
+
+cd $CURDIR
+
+```
+
+-   [x] filter out low R2
+
+```{r filter dbs, eval=FALSE}
+for(tis in tissuelist)
+{
+  ## read {tis}.db {WEBDATA}/ratxcan-tutorial/results/sql/AC.db
+  db_con = dbConnect(sqlite,glue("{INPUT}/results/sql/{tis}.db"))
+  extra = dbGetQuery(db_con,"select * from extra") %>% filter(R2 > 0.01)
+  weights = dbGetQuery(db_con,"select * from weights") %>% filter(gene %in% extra$gene)
+  construction = dbGetQuery(db_con, "select * from construction")
+  dbDisconnect(db_con)
+  ## sample info was wrong, so dropping here HKI
+  ## create filtered db
+  extra = extra %>% rename(n.snps.in.model=n.snps, pred.perf.R2=R2, pred.perf.pval=pval)
+  extra$pred.perf.qval = NA
+  new_db_con <- dbConnect(sqlite, glue("{INPUT}/models/{tis}-filtered.db"))
+  dbWriteTable(new_db_con, "extra", extra)
+  dbWriteTable(new_db_con, "weights", weights)
+  dbWriteTable(new_db_con, "construction", construction)
+  dbDisconnect(new_db_con)
+}
+```
+
+-   [x] compare prediction performance
+
+```{r compare prediction performance}
+sqlite <- dbDriver("SQLite")
+
+##br_hki_file <- glue("{INPUT}/models/br-hki.db")
+br_db = dbConnect(sqlite,glue("{INPUT}/models/Br-hki.db"))
+perf_br = dbGetQuery(br_db,"select * from extra") %>% rename(R2=pred.perf.R2,pval=pred.perf.pval) %>% select(-pred.perf.qval)
+dbDisconnect(br_db)
+
+AC_2024_db = dbConnect(sqlite,glue("{INPUT}/results/sql/AC.db"))
+perf_AC_2024 = dbGetQuery(AC_2024_db,"select * from extra")
+dbDisconnect(AC_2024_db)
+
+explore_db = function(dbname,tis)
+{
+  db_con = dbConnect(sqlite,dbname)
+  perfdf = dbGetQuery(db_con,"select * from extra")
+  cat("dist of R2")
+  print(summary(perfdf$R2))
+  R2_filtered = perfdf$R2[perfdf$R2>0.01]
+  print(summary(R2_filtered))
+  hist(perfdf$R2,main=glue("{tis} R2"))
+  cat(nrow(perfdf),"gene predicted \n")
+  cat(nrow(perfdf %>% filter(perfdf$R2>0.01)),"genes predicted with R2>0.01\n")
+  cat(nrow(perfdf %>% filter(perfdf$R2>0.05)),"genes predicted with pval<0.05","\n")
+  hist(perfdf$pval,main=glue("{tis} pval"))
+  print(summary(perfdf$pval))  
+  hist(perfdf$n.snps,main=glue("{tis} n snps per gene"))
+  print(summary(perfdf$n.snps))
+  
+  dbDisconnect(db_con)
+  
+  data.frame(tissue=tis, n_genes_after_R2_filter=length(R2_filtered), meanR2 = mean(R2_filtered))
+
+}
+
+tempo = data.frame()
+tissuelist = c("AC","IL","LH","PL","VO")
+for(tis in tissuelist)
+{
+  cat("\n---",tis,"---\n")
+  tempo = rbind(tempo,explore_db(glue("{INPUT}/results/sql/{tis}.db"),tis))
+  cat("\n")
+  }
+
+tempo
+```

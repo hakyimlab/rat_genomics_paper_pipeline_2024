@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,9 +19,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -48,43 +49,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -122,7 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script>
@@ -155,6 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   })
   </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../styles.css">
@@ -171,17 +144,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">
+    <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -561,9 +536,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -679,6 +668,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -959,100 +1034,100 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb28-241"><a href="#cb28-241" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
 <span id="cb28-242"><a href="#cb28-242" aria-hidden="true" tabindex="-1"></a><span class="ex">qsub</span> <span class="at">-v</span> chr=<span class="va">$i</span>,alpha=<span class="va">$a</span> GTEx_single_nested_EN.pbs  </span>
 <span id="cb28-243"><a href="#cb28-243" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb28-244"><a href="#cb28-244" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb28-244"><a href="#cb28-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-245"><a href="#cb28-245" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-246"><a href="#cb28-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-247"><a href="#cb28-247" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{bash concatenate all results, eval=FALSE}</span>
+<span id="cb28-247"><a href="#cb28-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash concatenate all results, eval=FALSE}</span></span>
 <span id="cb28-248"><a href="#cb28-248" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenating all of the results files for each tissue</span></span>
 <span id="cb28-249"><a href="#cb28-249" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> /gpfs/data/im-lab/nas40t2/natasha/rat_genomics/rat-genomic-analysis/scripts/make_all_results.sh  <span class="st">'Whole_Blood'</span> <span class="st">'/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/comp_to_GTEx/Results/all_Results_Whole_Blood_0.01'</span> 0.01 <span class="st">'1KG_snps'</span></span>
 <span id="cb28-250"><a href="#cb28-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-252"><a href="#cb28-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-253"><a href="#cb28-253" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare number of genes predicted in GTEx to those in Rats</span></span>
+<span id="cb28-253"><a href="#cb28-253" aria-hidden="true" tabindex="-1"></a><span class="fu"># Compare number of genes predicted in GTEx to those in Rats</span></span>
 <span id="cb28-254"><a href="#cb28-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-255"><a href="#cb28-255" aria-hidden="true" tabindex="-1"></a><span class="ex">Now</span> we have predictability for all parameters of alpha. We can now iterate through all alphas and create the long data format. We also only select for genes that have an average R2 <span class="op">&gt;</span> 0.3 and subsample 20 genes. </span>
+<span id="cb28-255"><a href="#cb28-255" aria-hidden="true" tabindex="-1"></a>Now we have predictability for all parameters of alpha. We can now iterate through all alphas and create the long data format. We also only select for genes that have an average R2 &gt; 0.3 and subsample 20 genes. </span>
 <span id="cb28-256"><a href="#cb28-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{r create GTEx n genes matrix, eval=FALSE}</span>
-<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a><span class="ex">filelist</span> <span class="op">&lt;</span>- list.files<span class="er">(</span><span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/comp_to_GTEx/Results/chr_Results"</span><span class="ex">,</span> pattern = <span class="st">"working_TW_"</span>, full.names = TRUE<span class="kw">)</span></span>
+<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r create GTEx n genes matrix, eval=FALSE}</span></span>
+<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a>filelist <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/comp_to_GTEx/Results/chr_Results"</span>, <span class="at">pattern =</span> <span class="st">"working_TW_"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb28-259"><a href="#cb28-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo</span> <span class="op">&lt;</span>- read_tsv<span class="er">(</span><span class="va">filelist</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span><span class="kw">)</span> <span class="ex">%</span><span class="op">&gt;</span>% filter<span class="er">(</span><span class="ex">R2</span> <span class="op">&lt;</span>= 1<span class="kw">)</span> <span class="ex">%</span><span class="op">&gt;</span>% select<span class="er">(</span><span class="ex">c</span><span class="er">(</span><span class="ex">gene,</span> cor, R2<span class="kw">))</span> <span class="ex">%</span><span class="op">&gt;</span>% distinct<span class="er">(</span><span class="ex">gene,</span> .keep_all = TRUE<span class="kw">)</span></span>
-<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo</span><span class="va">$cor</span> = as.numeric<span class="er">(</span><span class="ex">tempo</span><span class="va">$cor</span><span class="kw">)</span></span>
-<span id="cb28-262"><a href="#cb28-262" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo</span><span class="va">$R2</span> = tempo<span class="va">$R2</span><span class="pp">*</span>sign<span class="er">(</span><span class="ex">tempo</span><span class="va">$cor</span><span class="kw">)</span></span>
-<span id="cb28-263"><a href="#cb28-263" aria-hidden="true" tabindex="-1"></a><span class="ex">colnames</span><span class="er">(</span><span class="ex">tempo</span><span class="kw">)</span><span class="ex">[2]</span> = paste<span class="er">(</span><span class="st">"cor"</span><span class="ex">,</span> <span class="st">"0.01"</span>, sep=<span class="st">"_"</span><span class="kw">)</span></span>
-<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a><span class="ex">colnames</span><span class="er">(</span><span class="ex">tempo</span><span class="kw">)</span><span class="ex">[3]</span> = paste<span class="er">(</span><span class="st">"R2"</span><span class="ex">,</span> <span class="st">"0.01"</span>, sep=<span class="st">"_"</span><span class="kw">)</span></span>
+<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(filelist[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(R2 <span class="sc">&lt;=</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene, cor, R2)) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(gene, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a>tempo<span class="sc">$</span>cor <span class="ot">=</span> <span class="fu">as.numeric</span>(tempo<span class="sc">$</span>cor)</span>
+<span id="cb28-262"><a href="#cb28-262" aria-hidden="true" tabindex="-1"></a>tempo<span class="sc">$</span>R2 <span class="ot">=</span> tempo<span class="sc">$</span>R2<span class="sc">*</span><span class="fu">sign</span>(tempo<span class="sc">$</span>cor)</span>
+<span id="cb28-263"><a href="#cb28-263" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(tempo)[<span class="dv">2</span>] <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"cor"</span>, <span class="st">"0.01"</span>, <span class="at">sep=</span><span class="st">"_"</span>)</span>
+<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(tempo)[<span class="dv">3</span>] <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"R2"</span>, <span class="st">"0.01"</span>, <span class="at">sep=</span><span class="st">"_"</span>)</span>
 <span id="cb28-265"><a href="#cb28-265" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-266"><a href="#cb28-266" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="kw">(</span><span class="ex">k</span> in 2:<span class="er">(</span><span class="ex">length</span><span class="er">(</span><span class="ex">filelist</span><span class="kw">))){</span></span>
-<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a> <span class="fu">df</span> <span class="op">&lt;</span>- read_tsv<span class="er">(</span><span class="va">filelist</span><span class="op">[</span>k<span class="op">]</span><span class="ex">,</span> col_names = TRUE<span class="kw">)</span> <span class="ex">%</span><span class="op">&gt;</span>% distinct<span class="er">(</span><span class="ex">gene,</span> .keep_all = TRUE<span class="kw">)</span></span>
-<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a> <span class="ex">alpha</span> <span class="op">&lt;</span>- substr<span class="er">(</span><span class="va">filelist</span><span class="op">[</span>k<span class="op">]</span><span class="ex">,</span> 135, str_length<span class="er">(</span><span class="va">filelist</span><span class="op">[</span>k<span class="op">]</span><span class="kw">)</span> <span class="ex">-</span> 8<span class="kw">)</span></span>
-<span id="cb28-270"><a href="#cb28-270" aria-hidden="true" tabindex="-1"></a> <span class="fu">df</span> <span class="op">&lt;</span>- as.data.frame<span class="er">(</span><span class="fu">df</span><span class="kw">)</span> <span class="ex">%</span><span class="op">&gt;</span>% select<span class="er">(</span><span class="ex">c</span><span class="er">(</span><span class="ex">gene,</span> cor, R2<span class="kw">))</span> <span class="ex">%</span><span class="op">&gt;</span>% filter<span class="er">(</span><span class="ex">R2</span> <span class="op">&lt;</span>= 1<span class="kw">)</span></span>
-<span id="cb28-271"><a href="#cb28-271" aria-hidden="true" tabindex="-1"></a> <span class="ex">df</span><span class="va">$cor</span> = as.numeric<span class="er">(</span><span class="ex">df</span><span class="va">$cor</span><span class="kw">)</span></span>
-<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a> <span class="ex">df</span><span class="va">$R2</span> = as.numeric<span class="er">(</span><span class="ex">df</span><span class="va">$R2</span><span class="kw">)</span><span class="ex">*sign</span><span class="er">(</span><span class="ex">df</span><span class="va">$cor</span><span class="kw">)</span></span>
-<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a> <span class="ex">colnames</span><span class="er">(</span><span class="fu">df</span><span class="kw">)</span><span class="ex">[2]</span> <span class="op">&lt;</span>- paste<span class="er">(</span><span class="st">"cor"</span><span class="ex">,</span> alpha, sep=<span class="st">"_"</span><span class="kw">)</span></span>
-<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a> <span class="ex">colnames</span><span class="er">(</span><span class="fu">df</span><span class="kw">)</span><span class="ex">[3]</span> <span class="op">&lt;</span>- paste<span class="er">(</span><span class="st">"R2"</span><span class="ex">,</span> alpha, sep=<span class="st">"_"</span><span class="kw">)</span></span>
-<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a> <span class="ex">tempo</span> <span class="op">&lt;</span>- inner_join<span class="er">(</span><span class="ex">tempo,</span> df, by = c<span class="er">(</span><span class="st">"gene"</span><span class="kw">))</span></span>
-<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">length</span>(filelist))){</span>
+<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a> df <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(filelist[k], <span class="at">col_names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(gene, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a> alpha <span class="ot">&lt;-</span> <span class="fu">substr</span>(filelist[k], <span class="dv">135</span>, <span class="fu">str_length</span>(filelist[k]) <span class="sc">-</span> <span class="dv">8</span>)</span>
+<span id="cb28-270"><a href="#cb28-270" aria-hidden="true" tabindex="-1"></a> df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(df) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene, cor, R2)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(R2 <span class="sc">&lt;=</span> <span class="dv">1</span>)</span>
+<span id="cb28-271"><a href="#cb28-271" aria-hidden="true" tabindex="-1"></a> df<span class="sc">$</span>cor <span class="ot">=</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>cor)</span>
+<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a> df<span class="sc">$</span>R2 <span class="ot">=</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>R2)<span class="sc">*</span><span class="fu">sign</span>(df<span class="sc">$</span>cor)</span>
+<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a> <span class="fu">colnames</span>(df)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"cor"</span>, alpha, <span class="at">sep=</span><span class="st">"_"</span>)</span>
+<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a> <span class="fu">colnames</span>(df)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"R2"</span>, alpha, <span class="at">sep=</span><span class="st">"_"</span>)</span>
+<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a> tempo <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(tempo, df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"gene"</span>))</span>
+<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb28-277"><a href="#cb28-277" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-278"><a href="#cb28-278" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-279"><a href="#cb28-279" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-280"><a href="#cb28-280" aria-hidden="true" tabindex="-1"></a><span class="co">#tempo &lt;- read_tsv("/Users/natashasanthanam/Downloads/GTEx_Whole_Blood_sparsity_all_parameters.txt", col_names = TRUE)</span></span>
-<span id="cb28-281"><a href="#cb28-281" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo_cor_df</span> <span class="op">&lt;</span>- tempo %<span class="op">&gt;</span>% select<span class="er">(</span><span class="ex">c</span><span class="er">(</span><span class="ex">gene,</span> starts_with<span class="er">(</span><span class="st">"cor"</span><span class="kw">)))</span> <span class="ex">%</span><span class="op">&gt;</span>% select<span class="er">(</span><span class="ex">-c</span><span class="er">(</span><span class="ex">cor_0.01</span><span class="kw">))</span></span>
-<span id="cb28-282"><a href="#cb28-282" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo_R2_df</span> <span class="op">&lt;</span>- tempo %<span class="op">&gt;</span>% select<span class="er">(</span><span class="ex">c</span><span class="er">(</span><span class="ex">gene,</span> starts_with<span class="er">(</span><span class="st">"R"</span><span class="kw">)))</span> <span class="ex">%</span><span class="op">&gt;</span>% select<span class="er">(</span><span class="ex">-c</span><span class="er">(</span><span class="ex">R_0.01</span><span class="kw">))</span></span>
+<span id="cb28-281"><a href="#cb28-281" aria-hidden="true" tabindex="-1"></a>tempo_cor_df <span class="ot">&lt;-</span> tempo <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene, <span class="fu">starts_with</span>(<span class="st">"cor"</span>))) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(cor_0<span class="fl">.01</span>))</span>
+<span id="cb28-282"><a href="#cb28-282" aria-hidden="true" tabindex="-1"></a>tempo_R2_df <span class="ot">&lt;-</span> tempo <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene, <span class="fu">starts_with</span>(<span class="st">"R"</span>))) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(R_0<span class="fl">.01</span>))</span>
 <span id="cb28-283"><a href="#cb28-283" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-284"><a href="#cb28-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo_R2_df</span> <span class="op">&lt;</span>- tempo_R2_df[sample<span class="er">(</span><span class="ex">nrow</span><span class="er">(</span><span class="ex">tempo_R2_df</span><span class="kw">)</span><span class="ex">,</span> 20<span class="kw">)</span><span class="ex">,</span> ]</span>
-<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a><span class="ex">tempo_cor_df</span> <span class="op">&lt;</span>- tempo_cor_df[sample<span class="er">(</span><span class="ex">nrow</span><span class="er">(</span><span class="ex">tempo_cor_df</span><span class="kw">)</span><span class="ex">,</span> 20<span class="kw">)</span><span class="ex">,</span> ]</span>
-<span id="cb28-287"><a href="#cb28-287" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a>tempo_R2_df <span class="ot">&lt;-</span> tempo_R2_df[<span class="fu">sample</span>(<span class="fu">nrow</span>(tempo_R2_df), <span class="dv">20</span>), ]</span>
+<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a>tempo_cor_df <span class="ot">&lt;-</span> tempo_cor_df[<span class="fu">sample</span>(<span class="fu">nrow</span>(tempo_cor_df), <span class="dv">20</span>), ]</span>
+<span id="cb28-287"><a href="#cb28-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-288"><a href="#cb28-288" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-289"><a href="#cb28-289" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-290"><a href="#cb28-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-291"><a href="#cb28-291" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot Sparsity for GTEx</span></span>
+<span id="cb28-291"><a href="#cb28-291" aria-hidden="true" tabindex="-1"></a><span class="fu"># Plot Sparsity for GTEx</span></span>
 <span id="cb28-292"><a href="#cb28-292" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-295"><a href="#cb28-295" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-296"><a href="#cb28-296" aria-hidden="true" tabindex="-1"></a><span class="ex">data_long</span> <span class="op">&lt;</span>- tempo_R2_df  %<span class="op">&gt;</span>%  pivot_longer<span class="er">(</span><span class="ex">!gene,</span> names_to = <span class="st">"value"</span>, values_to = <span class="st">"count"</span><span class="kw">)</span> </span>
-<span id="cb28-297"><a href="#cb28-297" aria-hidden="true" tabindex="-1"></a><span class="ex">data_long</span><span class="va">$value</span> = as.numeric<span class="er">(</span><span class="ex">substr</span><span class="er">(</span><span class="ex">data_long</span><span class="va">$value</span><span class="ex">,</span> 4, str_length<span class="er">(</span><span class="ex">data_long</span><span class="va">$value</span><span class="kw">)))</span></span>
+<span id="cb28-296"><a href="#cb28-296" aria-hidden="true" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> tempo_R2_df  <span class="sc">%&gt;%</span>  <span class="fu">pivot_longer</span>(<span class="sc">!</span>gene, <span class="at">names_to =</span> <span class="st">"value"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) </span>
+<span id="cb28-297"><a href="#cb28-297" aria-hidden="true" tabindex="-1"></a>data_long<span class="sc">$</span>value <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">substr</span>(data_long<span class="sc">$</span>value, <span class="dv">4</span>, <span class="fu">str_length</span>(data_long<span class="sc">$</span>value)))</span>
 <span id="cb28-298"><a href="#cb28-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-299"><a href="#cb28-299" aria-hidden="true" tabindex="-1"></a><span class="ex">p1</span> <span class="op">&lt;</span>-  ggplot<span class="er">(</span><span class="ex">data_long,</span> aes<span class="er">(</span><span class="ex">x</span> = as.numeric<span class="er">(</span><span class="ex">value</span><span class="kw">)</span><span class="ex">,</span> y = count<span class="kw">))</span> <span class="ex">+</span> geom_smooth<span class="er">(</span><span class="ex">method</span> = <span class="st">"loess"</span>, span = 2, show_guide = FALSE, se=T, size = .5, col = <span class="st">"maroon1"</span><span class="kw">)</span>  <span class="ex">+</span>  xlab<span class="er">(</span><span class="ex">expression</span><span class="er">(</span><span class="fu">paste</span><span class="er">(</span><span class="st">"Elastic net mixing parameter ("</span><span class="ex">,alpha,</span> <span class="st">")"</span><span class="kw">)))</span> <span class="ex">+</span> ylab<span class="er">(</span><span class="ex">expression</span><span class="er">(</span><span class="fu">paste</span><span class="er">(</span><span class="st">"10-fold cross-validated R2"</span><span class="kw">)))</span></span>
+<span id="cb28-299"><a href="#cb28-299" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span>  <span class="fu">ggplot</span>(data_long, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(value), <span class="at">y =</span> count)) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">span =</span> <span class="dv">2</span>, <span class="at">show_guide =</span> <span class="cn">FALSE</span>, <span class="at">se=</span>T, <span class="at">size =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">"maroon1"</span>)  <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Elastic net mixing parameter ("</span>,alpha, <span class="st">")"</span>))) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"10-fold cross-validated R2"</span>)))</span>
 <span id="cb28-300"><a href="#cb28-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-301"><a href="#cb28-301" aria-hidden="true" tabindex="-1"></a><span class="ex">p1</span></span>
+<span id="cb28-301"><a href="#cb28-301" aria-hidden="true" tabindex="-1"></a>p1</span>
 <span id="cb28-302"><a href="#cb28-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a><span class="ex">cor_long</span> <span class="op">&lt;</span>- tempo_cor_df  %<span class="op">&gt;</span>%  pivot_longer<span class="er">(</span><span class="ex">!gene,</span> names_to = <span class="st">"value"</span>, values_to = <span class="st">"count"</span><span class="kw">)</span> </span>
-<span id="cb28-304"><a href="#cb28-304" aria-hidden="true" tabindex="-1"></a><span class="ex">cor_long</span><span class="va">$value</span> = as.numeric<span class="er">(</span><span class="ex">substr</span><span class="er">(</span><span class="ex">cor_long</span><span class="va">$value</span><span class="ex">,</span> 5, str_length<span class="er">(</span><span class="ex">cor_long</span><span class="va">$value</span><span class="kw">)))</span></span>
+<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a>cor_long <span class="ot">&lt;-</span> tempo_cor_df  <span class="sc">%&gt;%</span>  <span class="fu">pivot_longer</span>(<span class="sc">!</span>gene, <span class="at">names_to =</span> <span class="st">"value"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) </span>
+<span id="cb28-304"><a href="#cb28-304" aria-hidden="true" tabindex="-1"></a>cor_long<span class="sc">$</span>value <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">substr</span>(cor_long<span class="sc">$</span>value, <span class="dv">5</span>, <span class="fu">str_length</span>(cor_long<span class="sc">$</span>value)))</span>
 <span id="cb28-305"><a href="#cb28-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a><span class="ex">p2</span> <span class="op">&lt;</span>-  ggplot<span class="er">(</span><span class="ex">cor_long,</span> aes<span class="er">(</span><span class="ex">x</span> = as.numeric<span class="er">(</span><span class="ex">value</span><span class="kw">)</span><span class="ex">,</span> y = count<span class="kw">))</span> <span class="ex">+</span> geom_smooth<span class="er">(</span><span class="ex">show_guide</span> = FALSE, se=T, size = .5, col = <span class="st">"maroon1"</span><span class="kw">)</span>  <span class="ex">+</span>  xlab<span class="er">(</span><span class="ex">expression</span><span class="er">(</span><span class="fu">paste</span><span class="er">(</span><span class="st">"Elastic net mixing parameter ("</span><span class="ex">,alpha,</span> <span class="st">")"</span><span class="kw">)))</span> <span class="ex">+</span> ylab<span class="er">(</span><span class="ex">expression</span><span class="er">(</span><span class="fu">paste</span><span class="er">(</span><span class="st">"10-fold cross-validated cor"</span><span class="kw">)))</span></span>
+<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span>  <span class="fu">ggplot</span>(cor_long, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(value), <span class="at">y =</span> count)) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">show_guide =</span> <span class="cn">FALSE</span>, <span class="at">se=</span>T, <span class="at">size =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">"maroon1"</span>)  <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Elastic net mixing parameter ("</span>,alpha, <span class="st">")"</span>))) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"10-fold cross-validated cor"</span>)))</span>
 <span id="cb28-307"><a href="#cb28-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-308"><a href="#cb28-308" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb28-308"><a href="#cb28-308" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-309"><a href="#cb28-309" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-310"><a href="#cb28-310" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-311"><a href="#cb28-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-312"><a href="#cb28-312" aria-hidden="true" tabindex="-1"></a><span class="ex">Create</span> Number of Genes for Rat Tissues</span>
-<span id="cb28-313"><a href="#cb28-313" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{r create rat tissue matrix, eval=FALSE}</span>
-<span id="cb28-314"><a href="#cb28-314" aria-hidden="true" tabindex="-1"></a><span class="ex">rat.dir</span> <span class="op">&lt;</span>- <span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Tyson_Results/"</span></span>
-<span id="cb28-315"><a href="#cb28-315" aria-hidden="true" tabindex="-1"></a><span class="ex">filelist</span> <span class="op">&lt;</span>- list.files<span class="er">(</span><span class="ex">rat.dir,</span> pattern = <span class="st">"all_results"</span>, full.names=TRUE<span class="kw">)</span></span>
-<span id="cb28-316"><a href="#cb28-316" aria-hidden="true" tabindex="-1"></a><span class="ex">rat_n_genes</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="va">tis</span><span class="op">=</span> <span class="fu">as.character()</span><span class="ex">,</span> n.genes = numeric<span class="er">(</span><span class="kw">)</span><span class="ex">,</span> species = as.character<span class="er">(</span><span class="kw">))</span></span>
+<span id="cb28-312"><a href="#cb28-312" aria-hidden="true" tabindex="-1"></a>Create Number of Genes for Rat Tissues</span>
+<span id="cb28-313"><a href="#cb28-313" aria-hidden="true" tabindex="-1"></a><span class="in">```{r create rat tissue matrix, eval=FALSE}</span></span>
+<span id="cb28-314"><a href="#cb28-314" aria-hidden="true" tabindex="-1"></a>rat.dir <span class="ot">&lt;-</span> <span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Tyson_Results/"</span></span>
+<span id="cb28-315"><a href="#cb28-315" aria-hidden="true" tabindex="-1"></a>filelist <span class="ot">&lt;-</span> <span class="fu">list.files</span>(rat.dir, <span class="at">pattern =</span> <span class="st">"all_results"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb28-316"><a href="#cb28-316" aria-hidden="true" tabindex="-1"></a>rat_n_genes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">tis=</span> <span class="fu">as.character</span>(), <span class="at">n.genes =</span> <span class="fu">numeric</span>(), <span class="at">species =</span> <span class="fu">as.character</span>())</span>
 <span id="cb28-317"><a href="#cb28-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-318"><a href="#cb28-318" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="kw">(</span><span class="ex">fila</span> in filelist<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb28-319"><a href="#cb28-319" aria-hidden="true" tabindex="-1"></a>  <span class="ex">i</span> = match<span class="er">(</span><span class="ex">fila,</span> filelist<span class="kw">)</span></span>
-<span id="cb28-320"><a href="#cb28-320" aria-hidden="true" tabindex="-1"></a>  <span class="ex">tempo</span> <span class="op">&lt;</span>- read_tsv<span class="er">(</span><span class="ex">fila,</span> col_names = TRUE<span class="kw">)</span></span>
-<span id="cb28-321"><a href="#cb28-321" aria-hidden="true" tabindex="-1"></a>  <span class="ex">tempo</span> <span class="op">&lt;</span>- tempo %<span class="op">&gt;</span>% filter<span class="er">(</span><span class="ex">R2</span> <span class="op">&gt;</span>= 0<span class="kw">)</span></span>
-<span id="cb28-322"><a href="#cb28-322" aria-hidden="true" tabindex="-1"></a>  <span class="va">rat_n_genes</span><span class="op">[</span>i,2<span class="op">]</span> <span class="op">&lt;</span>- <span class="ex">n_distinct</span><span class="er">(</span><span class="ex">tempo</span><span class="va">$gene</span><span class="kw">)</span> </span>
-<span id="cb28-323"><a href="#cb28-323" aria-hidden="true" tabindex="-1"></a>  <span class="va">rat_n_genes</span><span class="op">[</span>i,1<span class="op">]</span> <span class="op">&lt;</span>- <span class="ex">substr</span><span class="er">(</span><span class="ex">fila,</span> 75, 76<span class="kw">)</span></span>
-<span id="cb28-324"><a href="#cb28-324" aria-hidden="true" tabindex="-1"></a>  <span class="va">rat_n_genes</span><span class="op">[</span>i,3<span class="op">]</span> <span class="op">&lt;</span>- <span class="st">"Rat"</span></span>
-<span id="cb28-325"><a href="#cb28-325" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb28-318"><a href="#cb28-318" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(fila <span class="cf">in</span> filelist) {</span>
+<span id="cb28-319"><a href="#cb28-319" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">=</span> <span class="fu">match</span>(fila, filelist)</span>
+<span id="cb28-320"><a href="#cb28-320" aria-hidden="true" tabindex="-1"></a>  tempo <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(fila, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-321"><a href="#cb28-321" aria-hidden="true" tabindex="-1"></a>  tempo <span class="ot">&lt;-</span> tempo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(R2 <span class="sc">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb28-322"><a href="#cb28-322" aria-hidden="true" tabindex="-1"></a>  rat_n_genes[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(tempo<span class="sc">$</span>gene) </span>
+<span id="cb28-323"><a href="#cb28-323" aria-hidden="true" tabindex="-1"></a>  rat_n_genes[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">substr</span>(fila, <span class="dv">75</span>, <span class="dv">76</span>)</span>
+<span id="cb28-324"><a href="#cb28-324" aria-hidden="true" tabindex="-1"></a>  rat_n_genes[i,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"Rat"</span></span>
+<span id="cb28-325"><a href="#cb28-325" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb28-326"><a href="#cb28-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-327"><a href="#cb28-327" aria-hidden="true" tabindex="-1"></a><span class="ex">rat_n_genes</span> <span class="op">&lt;</span>- rat_n_genes %<span class="op">&gt;</span>% mutate<span class="er">(</span><span class="ex">n.samples</span> = c<span class="er">(</span><span class="ex">78,</span> 83, 83, 81, 82<span class="kw">))</span> </span>
-<span id="cb28-328"><a href="#cb28-328" aria-hidden="true" tabindex="-1"></a><span class="ex">total_genes</span> <span class="op">&lt;</span>- rbind<span class="er">(</span><span class="ex">GWAS_n_genes,</span> rat_n_genes<span class="kw">)</span></span>
-<span id="cb28-329"><a href="#cb28-329" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb28-327"><a href="#cb28-327" aria-hidden="true" tabindex="-1"></a>rat_n_genes <span class="ot">&lt;-</span> rat_n_genes <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">n.samples =</span> <span class="fu">c</span>(<span class="dv">78</span>, <span class="dv">83</span>, <span class="dv">83</span>, <span class="dv">81</span>, <span class="dv">82</span>)) </span>
+<span id="cb28-328"><a href="#cb28-328" aria-hidden="true" tabindex="-1"></a>total_genes <span class="ot">&lt;-</span> <span class="fu">rbind</span>(GWAS_n_genes, rat_n_genes)</span>
+<span id="cb28-329"><a href="#cb28-329" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-330"><a href="#cb28-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-331"><a href="#cb28-331" aria-hidden="true" tabindex="-1"></a><span class="ex">Create</span> Plot Comparing Tissues</span>
+<span id="cb28-331"><a href="#cb28-331" aria-hidden="true" tabindex="-1"></a>Create Plot Comparing Tissues</span>
 <span id="cb28-334"><a href="#cb28-334" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-335"><a href="#cb28-335" aria-hidden="true" tabindex="-1"></a><span class="ex">total_genes</span> <span class="op">&lt;</span>- read_tsv<span class="er">(</span><span class="st">"/Users/natashasanthanam/Github/rat-genomic-analysis/data/n_genes_comparison_GTEx_subset_genes.txt"</span><span class="ex">,</span> col_names = TRUE<span class="kw">)</span></span>
+<span id="cb28-335"><a href="#cb28-335" aria-hidden="true" tabindex="-1"></a>total_genes <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/Users/natashasanthanam/Github/rat-genomic-analysis/data/n_genes_comparison_GTEx_subset_genes.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb28-336"><a href="#cb28-336" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb28-337"><a href="#cb28-337" aria-hidden="true" tabindex="-1"></a><span class="ex">ggplot</span><span class="er">(</span><span class="ex">total_genes,</span> aes<span class="er">(</span><span class="ex">n.samples,</span> n.genes<span class="kw">))</span> <span class="ex">+</span> geom_point<span class="er">(</span><span class="kw">)</span> <span class="ex">+geom_smooth</span><span class="er">(</span><span class="va">data</span><span class="op">=</span>subset<span class="kw">(</span><span class="ex">total_genes,species==</span><span class="st">"Human"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb28-338"><a href="#cb28-338" aria-hidden="true" tabindex="-1"></a><span class="ex">aes</span><span class="er">(</span><span class="ex">n.samples,</span> n.genes<span class="kw">)</span><span class="ex">,</span> method=lm<span class="kw">)</span> <span class="ex">+</span> geom_label_repel<span class="er">(</span> <span class="ex">label</span> = total_genes<span class="va">$tis</span>, box.padding   = 0.35, point.padding = 0.5<span class="kw">)</span> <span class="ex">+</span>  xlab<span class="er">(</span><span class="st">"Number of Individuals"</span><span class="kw">)</span> <span class="ex">+</span> ylab<span class="er">(</span><span class="st">"Number of Genes Predicted"</span><span class="kw">)</span>  <span class="ex">+</span> theme<span class="er">(</span><span class="ex">legend.position</span> = <span class="st">"None"</span><span class="kw">)</span> <span class="ex">+</span> theme_bw<span class="er">(</span><span class="kw">)</span></span>
+<span id="cb28-337"><a href="#cb28-337" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(total_genes, <span class="fu">aes</span>(n.samples, n.genes)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span><span class="fu">geom_smooth</span>(<span class="at">data=</span><span class="fu">subset</span>(total_genes,species<span class="sc">==</span><span class="st">"Human"</span>),</span>
+<span id="cb28-338"><a href="#cb28-338" aria-hidden="true" tabindex="-1"></a><span class="fu">aes</span>(n.samples, n.genes), <span class="at">method=</span>lm) <span class="sc">+</span> <span class="fu">geom_label_repel</span>( <span class="at">label =</span> total_genes<span class="sc">$</span>tis, <span class="at">box.padding   =</span> <span class="fl">0.35</span>, <span class="at">point.padding =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">"Number of Individuals"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Number of Genes Predicted"</span>)  <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"None"</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
 <span id="cb28-339"><a href="#cb28-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-340"><a href="#cb28-340" aria-hidden="true" tabindex="-1"></a><span class="ex">ggsave</span><span class="er">(</span><span class="st">"/Users/natashasanthanam/Downloads/GTEx_rats_n_genes.pdf"</span><span class="kw">)</span></span>
-<span id="cb28-341"><a href="#cb28-341" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb28-340"><a href="#cb28-340" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"/Users/natashasanthanam/Downloads/GTEx_rats_n_genes.pdf"</span>)</span>
+<span id="cb28-341"><a href="#cb28-341" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

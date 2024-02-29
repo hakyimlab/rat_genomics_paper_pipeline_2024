@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,9 +19,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -48,43 +49,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -122,7 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script>
@@ -155,6 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   })
   </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../styles.css">
@@ -171,17 +144,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">
+    <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -448,9 +423,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -566,6 +555,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -686,37 +761,37 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="co">#merge all chromosomes</span></span>
 <span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--merge-list</span> mergelist.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_impute</span>
-<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{r, have to match snps from datasets, eval=FALSE}</span>
-<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="ex">bim</span> <span class="op">&lt;</span>- read_tsv<span class="er">(</span><span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/genotype_files/rat_genotype_Ac.bim"</span><span class="ex">,</span> col_names = FALSE<span class="kw">)</span></span>
-<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="ex">bim</span><span class="va">$X2</span> <span class="op">&lt;</span>- paste<span class="er">(</span><span class="fu">paste</span><span class="er">(</span><span class="st">"chr"</span><span class="ex">,</span> bim<span class="va">$X1</span>, sep= <span class="st">""</span><span class="kw">)</span><span class="ex">,</span> bim<span class="va">$X4</span>, sep = <span class="st">":"</span><span class="kw">)</span></span>
-<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, have to match snps from datasets, eval=FALSE}</span></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>bim <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/genotype_files/rat_genotype_Ac.bim"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>bim<span class="sc">$</span>X2 <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste</span>(<span class="st">"chr"</span>, bim<span class="sc">$</span>X1, <span class="at">sep=</span> <span class="st">""</span>), bim<span class="sc">$</span>X4, <span class="at">sep =</span> <span class="st">":"</span>)</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the both rat genotype data sets</span></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="fu"># Merge the both rat genotype data sets</span></span>
 <span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior to merging,  want to make sure that the files are mergeable, for this we conduct 3 steps:</span></span>
-<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Make sure the reference genome is similar in the HapMap and the 1000 Genomes Project datasets.</span></span>
-<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Resolve strand issues.</span></span>
-<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Remove the SNPs which after the previous two steps still differ between datasets.</span></span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="fu"># Prior to merging,  want to make sure that the files are mergeable, for this we conduct 3 steps:</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="fu"># 1) Make sure the reference genome is similar in the HapMap and the 1000 Genomes Project datasets.</span></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="fu"># 2) Resolve strand issues.</span></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a><span class="fu"># 3) Remove the SNPs which after the previous two steps still differ between datasets.</span></span>
 <span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{bash set ref genome, eval=FALSE}</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash set ref genome, eval=FALSE}</span></span>
 <span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5}'</span> rat_metabolic_impute.bim <span class="op">&gt;</span> rat_metabolic_impute_ref-list.txt</span>
 <span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merge_Ac <span class="at">--reference-allele</span> rat_metabolic_impute_ref-list.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_genotype_Ac-adj</span>
-<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{bash resolve strand issues, eval=FALSE}</span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash resolve strand issues, eval=FALSE}</span></span>
 <span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for potential strand issues.</span></span>
 <span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> rat_metabolic_impute.bim <span class="op">&gt;</span> rat_metabolic_impute_tmp</span>
 <span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> rat_genotype_Ac-adj.bim <span class="op">&gt;</span> rat_genotype_Ac-adj_tmp</span>
 <span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> rat_metabolic_impute_tmp rat_genotype_Ac-adj_tmp <span class="kw">|</span><span class="fu">uniq</span> <span class="at">-u</span> <span class="op">&gt;</span> all_differences.txt</span>
 <span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a><span class="co"># 164380 differences between the files, some of these might be due to strand issues.</span></span>
-<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{bash flip snps, eval=FALSE}</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash flip snps, eval=FALSE}</span></span>
 <span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a><span class="co"># Print SNP-identifier and remove duplicates.</span></span>
 <span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$1}'</span> all_differences.txt <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> flip_list.txt</span>
 <span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a><span class="co"># Generates a file of 164380 SNPs. These are the non-corresponding SNPs between the two files. </span></span>
@@ -727,9 +802,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for SNPs which are still problematic after they have been flipped.</span></span>
 <span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> corrected_rat_geno_Ac.bim <span class="op">&gt;</span> corrected_rat_Ac_tmp</span>
 <span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> rat_metabolic_impute_tmp corrected_rat_Ac_tmp <span class="kw">|</span><span class="fu">uniq</span> <span class="at">-u</span>  <span class="op">&gt;</span> uncorresponding_SNPs.txt</span>
-<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{bash remove problematic snps, eval=FALSE}</span>
+<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash remove problematic snps, eval=FALSE}</span></span>
 <span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$1}'</span> uncorresponding_SNPs.txt <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> SNPs_for_exlusion.txt</span>
 <span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a><span class="co"># The command above generates a list of the 245556 SNPs</span></span>
 <span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a></span>
@@ -740,62 +815,62 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge original rat file with rat metabolic phenotype Data.</span></span>
 <span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_Ac_MDS2 <span class="at">--bmerge</span> rat_metabolic_corr.bed rat_metabolic_corr.bim rat_metabolic_corr.fam <span class="at">--allow-no-sex</span> <span class="at">--make-bed</span> <span class="at">--out</span> all_rats_merged</span>
-<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate GRM</span></span>
-<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{bash create GRM, eval=FALSE}</span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a><span class="fu"># Generate GRM</span></span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash create GRM, eval=FALSE}</span></span>
 <span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a><span class="ex">gcta</span> <span class="at">--bfile</span> all_rats_merged <span class="at">--make-grm-bin</span> <span class="at">--out</span> all_rats_grm</span>
-<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine GRM for relatedness between overlap individuals</span></span>
-<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{r read GRM, eval=FALSE}</span>
+<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a><span class="fu"># Examine GRM for relatedness between overlap individuals</span></span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read GRM, eval=FALSE}</span></span>
 <span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a><span class="co">#from https://gist.github.com/explodecomputer/7150052</span></span>
-<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a><span class="ex">readGRM</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">rootname</span><span class="kw">)</span></span>
-<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
-<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bin.file.name</span> <span class="op">&lt;</span>- paste<span class="er">(</span><span class="ex">rootname,</span> <span class="st">".grm.bin"</span>, sep=<span class="st">""</span><span class="kw">)</span></span>
-<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>    <span class="ex">n.file.name</span> <span class="op">&lt;</span>- paste<span class="er">(</span><span class="ex">rootname,</span> <span class="st">".grm.N.bin"</span>, sep=<span class="st">""</span><span class="kw">)</span></span>
-<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>    <span class="ex">id.file.name</span> <span class="op">&lt;</span>- paste<span class="er">(</span><span class="ex">rootname,</span> <span class="st">".grm.id"</span>, sep=<span class="st">""</span><span class="kw">)</span></span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a>readGRM <span class="ot">&lt;-</span> <span class="cf">function</span>(rootname)</span>
+<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a>    bin.file.name <span class="ot">&lt;-</span> <span class="fu">paste</span>(rootname, <span class="st">".grm.bin"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>    n.file.name <span class="ot">&lt;-</span> <span class="fu">paste</span>(rootname, <span class="st">".grm.N.bin"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>    id.file.name <span class="ot">&lt;-</span> <span class="fu">paste</span>(rootname, <span class="st">".grm.id"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
 <span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span><span class="er">(</span><span class="st">"Reading IDs\n"</span><span class="kw">)</span></span>
-<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a>    <span class="fu">id</span> <span class="op">&lt;</span>- read.table<span class="er">(</span><span class="ex">id.file.name,</span> colClasses=<span class="st">"character"</span><span class="kw">)</span></span>
-<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>    <span class="ex">n</span> <span class="op">&lt;</span>- dim<span class="er">(</span><span class="fu">id</span><span class="kw">)</span><span class="ex">[1]</span></span>
-<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span><span class="er">(</span><span class="st">"Reading GRM\n"</span><span class="kw">)</span></span>
-<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bin.file</span> <span class="op">&lt;</span>- file<span class="er">(</span><span class="ex">bin.file.name,</span> <span class="st">"rb"</span><span class="kw">)</span></span>
-<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a>    <span class="ex">grm</span> <span class="op">&lt;</span>- readBin<span class="er">(</span><span class="ex">bin.file,</span> n=n<span class="pp">*(</span>n+1<span class="pp">)</span>/2, what=numeric<span class="er">(</span><span class="ex">0</span><span class="kw">)</span><span class="ex">,</span> size=4<span class="kw">)</span></span>
-<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a>    <span class="ex">close</span><span class="er">(</span><span class="ex">bin.file</span><span class="kw">)</span></span>
-<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span><span class="er">(</span><span class="st">"Reading N\n"</span><span class="kw">)</span></span>
-<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a>    <span class="ex">n.file</span> <span class="op">&lt;</span>- file<span class="er">(</span><span class="ex">n.file.name,</span> <span class="st">"rb"</span><span class="kw">)</span></span>
-<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a>    <span class="ex">N</span> <span class="op">&lt;</span>- readBin<span class="er">(</span><span class="ex">n.file,</span> n=n<span class="pp">*(</span>n+1<span class="pp">)</span>/2, what=numeric<span class="er">(</span><span class="ex">0</span><span class="kw">)</span><span class="ex">,</span> size=4<span class="kw">)</span></span>
-<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a>    <span class="ex">close</span><span class="er">(</span><span class="ex">n.file</span><span class="kw">)</span></span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Reading IDs</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a>    id <span class="ot">&lt;-</span> <span class="fu">read.table</span>(id.file.name, <span class="at">colClasses=</span><span class="st">"character"</span>)</span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">dim</span>(id)[<span class="dv">1</span>]</span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Reading GRM</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a>    bin.file <span class="ot">&lt;-</span> <span class="fu">file</span>(bin.file.name, <span class="st">"rb"</span>)</span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a>    grm <span class="ot">&lt;-</span> <span class="fu">readBin</span>(bin.file, <span class="at">n=</span>n<span class="sc">*</span>(n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span><span class="dv">4</span>)</span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a>    <span class="fu">close</span>(bin.file)</span>
+<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Reading N</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a>    n.file <span class="ot">&lt;-</span> <span class="fu">file</span>(n.file.name, <span class="st">"rb"</span>)</span>
+<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a>    N <span class="ot">&lt;-</span> <span class="fu">readBin</span>(n.file, <span class="at">n=</span>n<span class="sc">*</span>(n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span><span class="dv">4</span>)</span>
+<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a>    <span class="fu">close</span>(n.file)</span>
 <span id="cb11-163"><a href="#cb11-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span><span class="er">(</span><span class="st">"Creating data frame\n"</span><span class="kw">)</span></span>
-<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a>    <span class="ex">l</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="kw">(</span><span class="ex">i</span> in 1:n<span class="kw">)</span></span>
-<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a>    <span class="kw">{</span></span>
-<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a>        <span class="va">l</span><span class="op">[</span>[i<span class="op">]</span><span class="ex">]</span> <span class="op">&lt;</span>- 1:i</span>
-<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a>    <span class="kw">}</span></span>
-<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a>    <span class="ex">col1</span> <span class="op">&lt;</span>- rep<span class="er">(</span><span class="ex">1:n,</span> 1:n<span class="kw">)</span></span>
-<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a>    <span class="ex">col2</span> <span class="op">&lt;</span>- unlist<span class="er">(</span><span class="ex">l</span><span class="kw">)</span></span>
-<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a>    <span class="ex">grm</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="va">id1</span><span class="op">=</span>col1, <span class="va">id2</span><span class="op">=</span>col2, <span class="va">N</span><span class="op">=</span>N, <span class="va">grm</span><span class="op">=</span>grm<span class="kw">)</span> </span>
+<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Creating data frame</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a>    l <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a>        l[[i]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>i</span>
+<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a>    col1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a>    col2 <span class="ot">&lt;-</span> <span class="fu">unlist</span>(l)</span>
+<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a>    grm <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id1=</span>col1, <span class="at">id2=</span>col2, <span class="at">N=</span>N, <span class="at">grm=</span>grm) </span>
 <span id="cb11-173"><a href="#cb11-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a>    <span class="ex">ret</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a>    <span class="ex">ret</span><span class="va">$grm</span> <span class="op">&lt;</span>- grm</span>
-<span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a>    <span class="ex">ret</span><span class="va">$id</span> <span class="op">&lt;</span>- id</span>
-<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="kw">(</span><span class="ex">ret</span><span class="kw">)</span></span>
-<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a>    ret <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a>    ret<span class="sc">$</span>grm <span class="ot">&lt;-</span> grm</span>
+<span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a>    ret<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
+<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(ret)</span>
+<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a><span class="ex">all_rats_GRM</span> <span class="op">&lt;</span>- readGRM<span class="er">(</span><span class="ex">geno.dir</span> %<span class="kw">&amp;</span><span class="ex">%</span> <span class="st">"plink_format/all_rats_grm"</span><span class="kw">)</span></span>
-<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a>all_rats_GRM <span class="ot">&lt;-</span> <span class="fu">readGRM</span>(geno.dir <span class="sc">%&amp;%</span> <span class="st">"plink_format/all_rats_grm"</span>)</span>
+<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{r check overlap relatedness, eval=FALSE}</span>
-<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a><span class="ex">overlap</span> <span class="op">&lt;</span>- read_tsv<span class="er">(</span><span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/MultiXcan/overlap_rat_original_metabolic.txt"</span><span class="ex">,</span> col_names = FALSE<span class="kw">)</span></span>
-<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a><span class="ex">ids</span> <span class="op">&lt;</span>- all_rats_GRM<span class="va">$id</span> %<span class="op">&gt;</span>% mutate<span class="er">(</span><span class="ex">num</span> = rownames<span class="er">(</span><span class="ex">ids</span><span class="kw">))</span> <span class="ex">%</span><span class="op">&gt;</span>% filter<span class="er">(</span><span class="ex">V1</span> %in% overlap<span class="va">$X1</span><span class="kw">)</span></span>
+<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r check overlap relatedness, eval=FALSE}</span></span>
+<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a>overlap <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/MultiXcan/overlap_rat_original_metabolic.txt"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a>ids <span class="ot">&lt;-</span> all_rats_GRM<span class="sc">$</span>id <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">num =</span> <span class="fu">rownames</span>(ids)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(V1 <span class="sc">%in%</span> overlap<span class="sc">$</span>X1)</span>
 <span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a><span class="ex">grms</span> <span class="op">&lt;</span>- all_rats_GRM<span class="va">$grm</span> %<span class="op">&gt;</span>% filter<span class="er">(</span><span class="ex">id1</span> %in% ids<span class="va">$num</span><span class="kw">)</span> <span class="ex">%</span><span class="op">&gt;</span>%  filter<span class="er">(</span><span class="ex">id1</span> == id2 <span class="kw">)</span></span>
-<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a><span class="ex">summary</span><span class="er">(</span><span class="ex">grms</span><span class="va">$grm</span><span class="kw">)</span></span>
-<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
-<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a><span class="ex">Min.</span> 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a> <span class="ex">0.6856</span>  0.7511  0.7851  0.7833  0.8211  0.8801 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a>grms <span class="ot">&lt;-</span> all_rats_GRM<span class="sc">$</span>grm <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id1 <span class="sc">%in%</span> ids<span class="sc">$</span>num) <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(id1 <span class="sc">==</span> id2 )</span>
+<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(grms<span class="sc">$</span>grm)</span>
+<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a>Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a> 0.6856  0.7511  0.7851  0.7833  0.8211  0.8801 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
