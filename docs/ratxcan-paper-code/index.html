@@ -6,10 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Natasha Santhanam">
-<meta name="dcterms.date" content="2022-03-09">
+<meta name="author" content="Sabrina Mi">
 
-<title>Rat Genomics Pipeline Rendered - Generate Sparsity Figures</title>
+<title>Rat Genomics Pipeline Rendered - RatXcan Tutorial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -174,8 +139,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#subset-genes-used-in-prediction-to-those-that-have-an-analog-in-gtex-tissues" id="toc-subset-genes-used-in-prediction-to-those-that-have-an-analog-in-gtex-tissues" class="nav-link active" data-scroll-target="#subset-genes-used-in-prediction-to-those-that-have-an-analog-in-gtex-tissues">Subset genes used in prediction to those that have an analog in GTEx tissues</a></li>
-  <li><a href="#generate-r2-predictions-for-all-elastic-net-parameters-between-0-and-1" id="toc-generate-r2-predictions-for-all-elastic-net-parameters-between-0-and-1" class="nav-link" data-scroll-target="#generate-r2-predictions-for-all-elastic-net-parameters-between-0-and-1">Generate R2 predictions for all elastic net parameters between 0 and 1</a></li>
+  <li><a href="#data-requirements" id="toc-data-requirements" class="nav-link active" data-scroll-target="#data-requirements">Data Requirements</a></li>
+  <li><a href="#software-requirements" id="toc-software-requirements" class="nav-link" data-scroll-target="#software-requirements">Software Requirements</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#define-paths" id="toc-define-paths" class="nav-link" data-scroll-target="#define-paths">Define Paths</a></li>
+  <li><a href="#predict-expression" id="toc-predict-expression" class="nav-link" data-scroll-target="#predict-expression">Predict Expression</a></li>
+  <li><a href="#compute-genetic-relatedness-and-heritability" id="toc-compute-genetic-relatedness-and-heritability" class="nav-link" data-scroll-target="#compute-genetic-relatedness-and-heritability">Compute Genetic Relatedness and Heritability</a></li>
+  </ul></li>
+  <li><a href="#prepare-inputs-for-mixed-effect-model" id="toc-prepare-inputs-for-mixed-effect-model" class="nav-link" data-scroll-target="#prepare-inputs-for-mixed-effect-model">Prepare Inputs for Mixed Effect Model</a>
+  <ul class="collapse">
+  <li><a href="#setup-1" id="toc-setup-1" class="nav-link" data-scroll-target="#setup-1">Setup</a></li>
+  <li><a href="#read-in-grm-h2-phenotypes-and-predicted-gene-expression" id="toc-read-in-grm-h2-phenotypes-and-predicted-gene-expression" class="nav-link" data-scroll-target="#read-in-grm-h2-phenotypes-and-predicted-gene-expression">Read in GRM, h2, phenotypes, and predicted gene expression</a></li>
+  <li><a href="#convert-to-matrices" id="toc-convert-to-matrices" class="nav-link" data-scroll-target="#convert-to-matrices">Convert to Matrices</a></li>
+  </ul></li>
+  <li><a href="#ratxcan-association" id="toc-ratxcan-association" class="nav-link" data-scroll-target="#ratxcan-association">RatXcan Association</a>
+  <ul class="collapse">
+  <li><a href="#run-regression" id="toc-run-regression" class="nav-link" data-scroll-target="#run-regression">Run regression</a></li>
+  <li><a href="#plot-p-values" id="toc-plot-p-values" class="nav-link" data-scroll-target="#plot-p-values">Plot P-values</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -184,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Generate Sparsity Figures</h1>
+<h1 class="title">RatXcan Tutorial</h1>
 </div>
 
 
@@ -194,16 +176,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Natasha Santhanam </p>
+             <p>Sabrina Mi </p>
           </div>
   </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">March 9, 2022</p>
-    </div>
-  </div>
   
     
   </div>
@@ -211,61 +187,206 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="subset-genes-used-in-prediction-to-those-that-have-an-analog-in-gtex-tissues" class="level2">
-<h2 class="anchored" data-anchor-id="subset-genes-used-in-prediction-to-those-that-have-an-analog-in-gtex-tissues">Subset genes used in prediction to those that have an analog in GTEx tissues</h2>
-<p>we will use this for comparison later</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>overlap <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"Box_files/overlap_rat_genes_GTEx.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)  <span class="co"># genes that are present in both rat expression data and in GTEx</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>expr_Ac <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"expression/Ac_expression_transformed.RDS"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>expr_Ac <span class="ot">&lt;-</span> expr_Ac[, <span class="fu">intersect</span>(<span class="fu">colnames</span>(expr_Ac), overlap<span class="sc">$</span>rat_gene)]</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(expr_Ac, data.dir <span class="sc">%&amp;%</span> <span class="st">"expression/Ac_expression_intesrect_GTEx.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="data-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="data-requirements">Data Requirements</h2>
+<ul>
+<li><p>genotype (plink bed/bim/fam format)</p></li>
+<li><p>phenotype (TSV with columns FID, IID, phenotypes)</p></li>
+<li><p>prediction weights (*.db examples on <a href="https://predictdb.org" class="uri">https://predictdb.org</a>)</p></li>
+</ul>
+<p>All of the data and prediction models used in the tutorial can be downloaded from Box: <a href="https://uchicago.box.com/v/ratxcan-tutorial" class="uri">https://uchicago.box.com/v/ratxcan-tutorial</a>.</p>
+</section>
+<section id="software-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="software-requirements">Software Requirements</h2>
+<ul>
+<li><p>plink</p></li>
+<li><p>gcta</p></li>
+<li><p>metaxcan (<a href="https://uchicago.box.com/s/84zoxdk3ws0m34zpgup6sizzzt6hcenp">included in Box folder</a>)</p>
+<ul>
+<li>set up conda environment</li>
+</ul></li>
+</ul>
+<pre><code>conda env create -f /Users/sabrinami/ratxcan-tutorial/MetaXcan/software/conda_env.yaml
+conda activate imlabtools</code></pre>
+<p>Also check that the folders containing compiled plink and gcta binary files are in your $PATH variable.</p>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>In this section, we generate all results needed for the mixed effects modeling (predicted gene expression, genetic relatedness, and heritability)</p>
+<section id="define-paths" class="level3">
+<h3 class="anchored" data-anchor-id="define-paths">Define Paths</h3>
+<pre><code>PRE="/Users/sabrinami/ratxcan-tutorial" ## Replace with path to downloaded ratxcan-tutorial folder
+
+OUTPUT="$PRE/output"
+
+METAXCAN="$PRE/MetaXcan"
+MODEL="$PRE/models"
+
+GENO_PREFIX="$PRE/data/genotype/rat6k"</code></pre>
+<p>PrediXcan requires input genotypes in VCF format:</p>
+<pre><code>plink --bfile $GENO_PREFIX --recode vcf --out $GENO_PREFIX
+gzip ${GENO_PREFIX}.vcf</code></pre>
+</section>
+<section id="predict-expression" class="level3">
+<h3 class="anchored" data-anchor-id="predict-expression">Predict Expression</h3>
+<p>The <code>models</code> folder contains PrediXcan prediction models <a href="https://sabrina-mi.github.io/RatXcan_Training/EN_Prediction_Model.html">trained on 5 tissues</a>:</p>
+<ul>
+<li><p>nucleus accumbens (<code>AC-filtered.db</code>)</p></li>
+<li><p>infralimbic cortex (<code>IL-filtered.db</code>)</p></li>
+<li><p>lateral habenula (<code>LH-filtered.db</code>)</p></li>
+<li><p>prelimbic cortex (<code>PL-filtered.db</code>)</p></li>
+<li><p>orbitofrontal cortex (<code>VO-filtered.db</code>)</p></li>
+</ul>
+<p>For the tutorial, we’ll use the AC model.</p>
+<pre><code>conda activate imlabtools
+python ${METAXCAN}/software/Predict.py \
+--model_db_path ${MODEL}/AC-filtered.db \
+--model_db_snp_key rsid \
+--vcf_genotypes ${GENO_PREFIX}.vcf.gz \
+--vcf_mode genotyped \
+--on_the_fly_mapping METADATA "{}_{}_{}_{}" \
+--prediction_output $OUTPUT/AC-filtered-rat6k__predict.txt  \
+--prediction_summary_output $OUTPUT/AC-filtered-rat6k__summary.txt \
+--throw</code></pre>
+</section>
+<section id="compute-genetic-relatedness-and-heritability" class="level3">
+<h3 class="anchored" data-anchor-id="compute-genetic-relatedness-and-heritability">Compute Genetic Relatedness and Heritability</h3>
+<p>GCTA outputs a genetic relatedness matrix (GRM), then computes heritability (h2) for a given phenotype data. The following example uses bodylength data.</p>
+<pre><code>## Compute GRM
+gcta --bfile $GENO/rat6k --make-grm-bin --out $OUTPUT/rat6k
+## Compute h2
+## argument --mpheno specifies fam column to be used as phenotype, 1 for bodylength and 2 for bmi
+gcta --grm $OUTPUT/rat6k --reml --pheno $PRE/data/phenotype/pheno.fam --mpheno 1 --out $OUTPUT/bodylen_h2</code></pre>
+<p>Heritability is estimated as V(G)/Vp Variance. In this case, we extract <code>h2_bodylen = 0.390288</code> from the gcta results summary:</p>
+<pre><code>Summary result of REML analysis:
+Source  Variance    SE
+V(G)    0.395810    0.027842
+V(e)    0.618337    0.014383
+Vp  1.014147    0.027031
+V(G)/Vp 0.390288    0.019209</code></pre>
+</section>
+</section>
+<section id="prepare-inputs-for-mixed-effect-model" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-inputs-for-mixed-effect-model">Prepare Inputs for Mixed Effect Model</h2>
+<section id="setup-1" class="level3">
+<h3 class="anchored" data-anchor-id="setup-1">Setup</h3>
+<p>Load Libraries and Gist Functions:</p>
+<p>Replace with your path to downloaded <code>ratxcan-tutorial</code> folder:</p>
+</section>
+<section id="read-in-grm-h2-phenotypes-and-predicted-gene-expression" class="level3">
+<h3 class="anchored" data-anchor-id="read-in-grm-h2-phenotypes-and-predicted-gene-expression">Read in GRM, h2, phenotypes, and predicted gene expression</h3>
+<div class="cell" data-hash="index_cache/html/read outputs_fec765224bf9784c3884c36b98a3ec16">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 5628 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (2): X1, X2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 10 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (1): Source
+dbl (2): Variance, SE
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 5401 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (2): X1, X2
+dbl (2): X3, X4
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 5628 Columns: 5881
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr    (2): FID, IID
+dbl (5879): ENSRNOG00000015552, ENSRNOG00000016054, ENSRNOG00000049505, ENSR...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Summarize median predicted expression for all genes:</p>
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-3_b0a802acdbb32f2dbfb8b0709c8c17b5">
+<div class="cell-output cell-output-stdout">
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-4742.218    -0.442     0.000    -0.646     0.368  1998.544 </code></pre>
+</div>
+</div>
+<p>Plot distribution of median gene expression with outliers removed:</p>
+<div class="cell" data-hash="index_cache/html/hist median expr_77bd52817c3c039b251fd95855c2fb54">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/hist median expr-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Final check that IIDs between phenotype and genotype matrices align:</p>
+</section>
+<section id="convert-to-matrices" class="level3">
+<h3 class="anchored" data-anchor-id="convert-to-matrices">Convert to Matrices</h3>
+</section>
+</section>
+<section id="ratxcan-association" class="level2">
+<h2 class="anchored" data-anchor-id="ratxcan-association">RatXcan Association</h2>
+<p>The end goal is to compute gene-level associations under the mixed effect model <span class="math inline">\(Y = T b + u + \epsilon\)</span>, where</p>
+<ul>
+<li><p><span class="math inline">\(Y\)</span> is the phenotype</p></li>
+<li><p><span class="math inline">\(T\)</span> is predicted gene expression</p></li>
+<li><p><span class="math inline">\(u\)</span> is the random effect with covariance given by the genetic relatedness matrix (<span class="math inline">\(GRM\)</span>)</p></li>
+<li><p><span class="math inline">\(\epsilon\)</span> is uncorrelated noise</p></li>
+</ul>
+<p>The difference between RatXcan and PrediXcan is the <span class="math inline">\(u\)</span> term accounting for correlated effects due to relatedness. The <span class="math inline">\(GRM\)</span> and <span class="math inline">\(h2\)</span> estimates are needed to decorrelate the error term <span class="math inline">\(u+\epsilon\)</span>, so that traditional linear regression can replace mixed modeling fitting.</p>
+<section id="run-regression" class="level3">
+<h3 class="anchored" data-anchor-id="run-regression">Run regression</h3>
+<p><code>lmmGRM</code> performs the decorrelation and linear regression. It takes phenotype, GRM, h2, and predicted expression as input, and computes gene-level correlation and p-value with and without correction accounting for relatedness.</p>
+<div class="cell" data-hash="index_cache/html/bodylen and AC_4b5c0cd39eed8fb2c4d05618ca4bae58">
+<div class="cell-output cell-output-stdout">
+<pre><code>5401 samples, 5879 genes used in association test</code></pre>
+</div>
 </div>
 </section>
-<section id="generate-r2-predictions-for-all-elastic-net-parameters-between-0-and-1" class="level2">
-<h2 class="anchored" data-anchor-id="generate-r2-predictions-for-all-elastic-net-parameters-between-0-and-1">Generate R2 predictions for all elastic net parameters between 0 and 1</h2>
-<p>We run the same Prediction Model Pipeline only for Ac tissue. However this time, I didn’t break it down into chromosome. This takes longer but means you have less files, a file for each alpha parameter.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> 0 0.1 1.0<span class="va">)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">qsub</span> <span class="at">-v</span> alpha=<span class="va">$i</span> sparsity_rats_pipeline.pbs</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="plot-p-values" class="level3">
+<h3 class="anchored" data-anchor-id="plot-p-values">Plot P-values</h3>
+<p>The following QQ-plot shows the distribution of p-values of gene-trait associations: blue dots are the p-values with mixed effects correction and black dots are the inflated p-values.</p>
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-4_3f7176337edac1865e71ec9c3ec17083">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
-<p>Now we have predictability for all parameters of alpha. We can now iterate through all alphas and create the long data format. We also only select for genes that have an average cor &gt; 0.3 and subsample 20 genes.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ldf <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="co"># creates a list</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>listtsv <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> dir, <span class="at">pattern =</span> <span class="st">"working_TW_Ac_exp_10-foldCV_elasticNet_alpha"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="co"># creates the list of all the tsv files in the directory</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(listtsv[<span class="dv">1</span>], <span class="at">col_names =</span> <span class="cn">TRUE</span>) </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> tempo <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene, cor))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(tempo)[<span class="dv">2</span>] <span class="ot">=</span> <span class="st">"0"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(listtsv)){</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a> ldf[[k]] <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(listtsv[k], <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a> alpha <span class="ot">&lt;-</span> <span class="fu">substr</span>(listtsv[k], <span class="dv">107</span>, <span class="fu">str_length</span>(listtsv[k]) <span class="sc">-</span> <span class="dv">13</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> fila <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ldf[[k]]) </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a> fila <span class="ot">&lt;-</span> fila <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(gene, cor)) </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a> <span class="fu">colnames</span>(fila)[<span class="dv">2</span>] <span class="ot">=</span> alpha</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a> tempo <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(tempo, fila, <span class="at">by =</span> <span class="st">"gene"</span>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Plot results of r for all parameers of alpha</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"/Users/natashasanthanam/Downloads/rat_elastic_net_all_parameters_GTEx_only_genes.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data_long <span class="ot">&lt;-</span> tempo  <span class="sc">%&gt;%</span>   <span class="fu">pivot_longer</span>(<span class="sc">!</span>gene, <span class="at">names_to =</span> <span class="st">"value"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span>  <span class="fu">ggplot</span>(data_long, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(value), <span class="at">y =</span> count)) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">show_guide =</span> <span class="cn">FALSE</span>, <span class="at">se=</span>T, <span class="at">size =</span> .<span class="dv">5</span>, <span class="at">col =</span> <span class="st">"dodgerblue2"</span>)  <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"Elastic net mixing parameter ("</span>,alpha, <span class="st">")"</span>))) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">"10-fold cross-validated R"</span>)))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">ggplot</span>(tempo, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">0</span><span class="st">`</span>, <span class="at">y =</span> <span class="st">`</span><span class="at">0.5</span><span class="st">`</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)   <span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ylab</span>(<span class="st">"cor for mixing paramter = 0.5"</span> ) <span class="sc">+</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">xlab</span>(<span class="st">"cor for mixing paramter = 0"</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The following Manhattan plot was generated with <a href="https://github.com/hakyimlab/Rat_Genomics_Paper_Pipeline/blob/main/analysis/03.PrediXcan.Rmd">Natasha Santhanam’s</a> function:</p>
+<p><br>
+We used <code>biomaRt</code> to annotate genes:</p>
+<div class="cell" data-hash="index_cache/html/unnamed-chunk-6_a46741fb2dbb64f23c7507720eba247f">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 10933 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): gene_name, hugo_gene, trait, gene, gene_id
+dbl (12): p_acat_6, chr, start, qval, p_human, BR, AC, IL, LH, PL, VO, p_acat_5
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The full RatXcan results includes tissue-specific p-values (AC, IL, LH, PL, VO) and a combination p-value (<a href="https://www.cell.com/ajhg/fulltext/S0002-9297(19)30002-3">ACAT</a>), as well as PhenomeXcan results for corresponding human phenotypes and genes. The datasets are included in the <code>data</code> subdirectory and accessible on <a href="https://imlab.shinyapps.io/RatXcan/" class="uri">https://imlab.shinyapps.io/RatXcan/</a>.</p>
 
 
 
+</section>
 </section>
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
