@@ -282,7 +282,7 @@ V(G)/Vp 0.390288    0.019209</code></pre>
 </section>
 <section id="read-in-grm-h2-phenotypes-and-predicted-gene-expression" class="level3">
 <h3 class="anchored" data-anchor-id="read-in-grm-h2-phenotypes-and-predicted-gene-expression">Read in GRM, h2, phenotypes, and predicted gene expression</h3>
-<div class="cell" data-hash="index_cache/html/read outputs_fec765224bf9784c3884c36b98a3ec16">
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/read outputs_acd8e45a1ac40216576fe3ec7647f828">
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 5628 Columns: 2
 ── Column specification ────────────────────────────────────────────────────────
@@ -326,16 +326,16 @@ dbl (5879): ENSRNOG00000015552, ENSRNOG00000016054, ENSRNOG00000049505, ENSR...
 </div>
 </div>
 <p>Summarize median predicted expression for all genes:</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-3_b0a802acdbb32f2dbfb8b0709c8c17b5">
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/unnamed-chunk-3_bd509ec3c763a5c417cc3ee9fd3b0c3f">
 <div class="cell-output cell-output-stdout">
 <pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 -4742.218    -0.442     0.000    -0.646     0.368  1998.544 </code></pre>
 </div>
 </div>
 <p>Plot distribution of median gene expression with outliers removed:</p>
-<div class="cell" data-hash="index_cache/html/hist median expr_77bd52817c3c039b251fd95855c2fb54">
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/hist median expr_685eb813177c46419df3289148a8bdfe">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/hist median expr-1.png" class="img-fluid" width="672"></p>
+<p><img src="ratxcan_tutorial_files/figure-html/hist median expr-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Final check that IIDs between phenotype and genotype matrices align:</p>
@@ -357,7 +357,7 @@ dbl (5879): ENSRNOG00000015552, ENSRNOG00000016054, ENSRNOG00000049505, ENSR...
 <section id="run-regression" class="level3">
 <h3 class="anchored" data-anchor-id="run-regression">Run regression</h3>
 <p><code>lmmGRM</code> performs the decorrelation and linear regression. It takes phenotype, GRM, h2, and predicted expression as input, and computes gene-level correlation and p-value with and without correction accounting for relatedness.</p>
-<div class="cell" data-hash="index_cache/html/bodylen and AC_4b5c0cd39eed8fb2c4d05618ca4bae58">
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/bodylen and AC_1be6b00aa74afb2cb900d7e2a1461ab0">
 <div class="cell-output cell-output-stdout">
 <pre><code>5401 samples, 5879 genes used in association test</code></pre>
 </div>
@@ -366,15 +366,15 @@ dbl (5879): ENSRNOG00000015552, ENSRNOG00000016054, ENSRNOG00000049505, ENSR...
 <section id="plot-p-values" class="level3">
 <h3 class="anchored" data-anchor-id="plot-p-values">Plot P-values</h3>
 <p>The following QQ-plot shows the distribution of p-values of gene-trait associations: blue dots are the p-values with mixed effects correction and black dots are the inflated p-values.</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-4_3f7176337edac1865e71ec9c3ec17083">
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/unnamed-chunk-4_30914e72a983770eca2324f39953d783">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="ratxcan_tutorial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The following Manhattan plot was generated with <a href="https://github.com/hakyimlab/Rat_Genomics_Paper_Pipeline/blob/main/analysis/03.PrediXcan.Rmd">Natasha Santhanam’s</a> function:</p>
 <p><br>
 We used <code>biomaRt</code> to annotate genes:</p>
-<div class="cell" data-hash="index_cache/html/unnamed-chunk-6_a46741fb2dbb64f23c7507720eba247f">
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/unnamed-chunk-6_7c85061370b85896535723a06c38094c">
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 10933 Columns: 17
 ── Column specification ────────────────────────────────────────────────────────
@@ -386,7 +386,7 @@ dbl (12): p_acat_6, chr, start, qval, p_human, BR, AC, IL, LH, PL, VO, p_acat_5
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="ratxcan_tutorial_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The full RatXcan results includes tissue-specific p-values (AC, IL, LH, PL, VO) and a combination p-value (<a href="https://www.cell.com/ajhg/fulltext/S0002-9297(19)30002-3">ACAT</a>), as well as PhenomeXcan results for corresponding human phenotypes and genes. The datasets are included in the <code>data</code> subdirectory and accessible on <a href="https://imlab.shinyapps.io/RatXcan/" class="uri">https://imlab.shinyapps.io/RatXcan/</a>.</p>
