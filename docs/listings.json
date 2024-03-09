@@ -120,7 +120,7 @@
       "/ratxcan-paper-code/Coregualtion_across_Tissues_Species.html",
       "/ratxcan-paper-code/generate_sparsity_figs.html",
       "/ratxcan-paper-code/Heritability_Sparsity_SM.html",
-      "/ratxcan-paper-code/index.html",
+      "/ratxcan-paper-code/ratxcan_tutorial.html",
       "/ratxcan-paper-code/ratxcan-figures-3-4.html",
       "/ratxcan-paper-code/train-brain-region-predictors.html"
     ]
@@ -153,15 +153,15 @@
     ]
   },
   {
+    "listing": "/ratxcan-paper-code/ratxcan_tutorial.html",
+    "items": []
+  },
+  {
     "listing": "/ratxcan-paper-code/train-brain-region-predictors.html",
     "items": []
   },
   {
     "listing": "/ratxcan-paper-code/Heritability_Sparsity_SM.html",
-    "items": []
-  },
-  {
-    "listing": "/ratxcan-paper-code/index.html",
     "items": []
   },
   {
