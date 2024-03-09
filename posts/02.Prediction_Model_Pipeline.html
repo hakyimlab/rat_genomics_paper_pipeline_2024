@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tyson Miller">
+<meta name="dcterms.date" content="2022-02-07">
+
+<title>Rat Genomics Pipeline Rendered - 02. Prediction_Model_Pipeline</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">paper_code</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../other_code.html" rel="" target="">
+ <span class="menu-text">more_code</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#definitions" id="toc-definitions" class="nav-link active" data-scroll-target="#definitions">Definitions</a></li>
+  <li><a href="#gene-expression-files" id="toc-gene-expression-files" class="nav-link" data-scroll-target="#gene-expression-files">Gene Expression Files</a>
+  <ul class="collapse">
+  <li><a href="#peer-analysis" id="toc-peer-analysis" class="nav-link" data-scroll-target="#peer-analysis">PEER analysis</a></li>
+  </ul></li>
+  <li><a href="#covariate-files" id="toc-covariate-files" class="nav-link" data-scroll-target="#covariate-files">Covariate Files</a></li>
+  <li><a href="#metadata-files" id="toc-metadata-files" class="nav-link" data-scroll-target="#metadata-files">Metadata Files</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">02. Prediction_Model_Pipeline</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tyson Miller </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 7, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="definitions" class="level1">
+<h1>Definitions</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Data from <a href="https://uchicago.app.box.com/folder/102043737114">here</a> - genoGex.Rdata has everything we need in it There are 5 ‘gex’ RDS files which are the gene expressions for the 5 different tissues, the ‘gtf’ is the gene annotation, ‘phyMap’ is the snp annotation, and ‘geno’ is the genotype matrix</p>
+<p>Our pipeline predicts expressions from the gene expression data and genotypes of the rats from the study.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"~/Box/imlab-data/Projects/PTRS-PGRS-Rosetta/Data-From-Abe-Palmer-Lab/Rdata/genoGex.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="gene-expression-files" class="level1">
+<h1>Gene Expression Files</h1>
+<p>First, we transpose each tissue’s gene expression file to fit the format expected by the PrediXcan pipeline scripts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#transposing gene expression files for the 5 tissues </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexAc<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>gexAc_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexAc[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexAc_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexIl<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>gexIl_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexIl[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexIl_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexLh<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>gexLh_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexLh[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexLh_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexPl<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>gexPl_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexPl[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexPl_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexVo<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>gexVo_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexVo[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexVo_transpose) <span class="ot">&lt;-</span> n</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Running inverse normalization on each gene expression</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>invnorm <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(<span class="fu">dim</span>(x))) res <span class="ot">=</span> <span class="fu">invnorm.vector</span>(x) <span class="cf">else</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  res<span class="ot">=</span><span class="fu">apply</span>(x,<span class="dv">2</span>,invnorm.vector)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  res</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>invnorm.vector <span class="ot">=</span> <span class="cf">function</span>(x) {yy <span class="ot">=</span> <span class="fu">rank</span>(x)<span class="sc">/</span>(<span class="fu">length</span>(x)<span class="sc">+</span><span class="dv">1</span>); <span class="fu">qnorm</span>(yy)}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>gexAc_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexAc_transpose)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>gexIl_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexIl_transpose)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>gexLh_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexLh_transpose)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>gexPl_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexPl_transpose)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>gexVo_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexVo_transpose)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Write to file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Writing the gene expression files to csv files to be used for PEER Factor analysis</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexAc_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexAc.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexIl_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexIl.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexLh_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexLh.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexPl_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexPl.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexVo_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexVo.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="peer-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="peer-analysis">PEER analysis</h2>
+<p>Now we are performing PEER factor analysis on each tissue, choosing 7 factors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexAc.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Ac <span class="at">--has_header</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexIl.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Il <span class="at">--has_header</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexLh.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Lh <span class="at">--has_header</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexPl.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Pl <span class="at">--has_header</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexVo.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Vo <span class="at">--has_header</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Later on, we examine these 7 factors, as well as other covariates, to interpret expression variability. # Gene, snp annotation files The prediction model pipeline also requires a gene annotation file as input. The code below generates it from the gene annotations provided by Palmer lab in ‘gtf’. We also collect snp info.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gtf<span class="sc">$</span>gene_type <span class="ot">=</span> <span class="fu">sub</span>(<span class="st">".*?gene_biotype(.*?);.*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, gtf<span class="sc">$</span>Attr)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>gtf<span class="sc">$</span>gene_name <span class="ot">=</span> <span class="fu">sub</span>(<span class="st">".*?gene_name(.*?);.*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, gtf<span class="sc">$</span>Attr)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>gene_annotation <span class="ot">=</span> <span class="fu">subset</span>(gtf, <span class="at">select =</span> <span class="sc">-</span><span class="fu">c</span>(Source, Feature, Score, Strand, Attr, Frame) )</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>gene_annotation <span class="ot">=</span> gene_annotation[, <span class="fu">c</span>(<span class="st">"Chr"</span>,<span class="st">"Gene"</span>, <span class="st">"gene_name"</span>, <span class="st">"Start"</span>, <span class="st">"End"</span>, <span class="st">"gene_type"</span> )]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gene_annotation) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"chr"</span>, <span class="st">"gene_id"</span>, <span class="st">"gene_name"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(gene_annotation) <span class="ot">=</span> gene_annotation<span class="sc">$</span>gene_id</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We have all the information needed to generate the predictions models. We are left to reorganize it to fit the pipeline. The specifics of each step is commented at the top of each block.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Making the snp annotation in the correct format for the pipeline</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>phyMap <span class="ot">&lt;-</span> <span class="fu">within</span>(phyMap,  varID <span class="ot">&lt;-</span> <span class="fu">paste</span>(Chr, Pos, Ref, Alt, <span class="at">sep=</span><span class="st">"_"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(phyMap) <span class="ot">=</span> phyMap<span class="sc">$</span>varID</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>phyMap<span class="sc">$</span>rsid <span class="ot">=</span> phyMap<span class="sc">$</span>varID</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(phyMap) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"snp"</span>, <span class="st">"chr"</span>, <span class="st">"pos"</span>, <span class="st">"refAllele"</span>, <span class="st">"effectAllele"</span>, <span class="st">'varID'</span>, <span class="st">"rsid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the snp annotation file by chromosome</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">split</span>(phyMap, phyMap<span class="sc">$</span>chr), <span class="fu">paste0</span>(<span class="st">"snp_annot.chr"</span>, <span class="fu">unique</span>(phyMap<span class="sc">$</span>chr)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list2env</span>(s, <span class="fu">globalenv</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The new genotype file combines the provided <code>geno</code> file and combines information from the provided snp annotation file, <code>phyMap</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># writing the genotype file to a .txt file so that we can separate it by chromosome using our geneotype parse script.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(geno) <span class="ot">=</span> <span class="fu">rownames</span>(phyMap)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(geno, <span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/genotype.txt"</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This python script separates the genotype file by chromosome.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Splitting the genotype file by chromosome - run this from the rat_genomic_alaysis directory</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/split_genotype_by_chr.py data/genotype.txt data/geno_by_chr/<span class="st">'genotype'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="covariate-files" class="level1">
+<h1>Covariate Files</h1>
+<p>We analyze sex, batch number, and batch center, as possible covariates, along with the 7 PEER factors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the phenotype file in to create covariate files. For this we are selecting sex, batch number, and batch center as covariates as well as the 7 PEER factors we generate</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"~/Box/imlab-data/Projects/PTRS-PGRS-Rosetta/Data-From-Abe-Palmer-Lab/Final_P50_traits/P50_raw_trait_values.RData"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>covariatesAc <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexAc_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>covariatesAc <span class="ot">=</span> <span class="fu">subset</span>(covariatesAc, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>covariatesIl <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexIl_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>covariatesIl <span class="ot">=</span> <span class="fu">subset</span>(covariatesIl, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>covariatesLh <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexLh_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>covariatesLh <span class="ot">=</span> <span class="fu">subset</span>(covariatesLh, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>covariatesPl <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexPl_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>covariatesPl <span class="ot">=</span> <span class="fu">subset</span>(covariatesPl, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>covariatesVo <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexVo_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>covariatesVo <span class="ot">=</span> <span class="fu">subset</span>(covariatesVo, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading the PEER factor output files to be appended to the covariate file and eventually regressed out of the expression files</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>peer_factorsAc <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Ac/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>peer_factorsIl <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Il/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>peer_factorsLh <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Lh/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>peer_factorsPl <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Pl/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>peer_factorsVo <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Vo/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For each tissue’s PEER factor output, set individual IDs as rownames and enumerate the PEER factors in the columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manipulating the PEER factor files so we can append to covariate file</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsAc) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsAc) <span class="ot">=</span> <span class="fu">rownames</span>(gexAc_transpose)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsIl) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsIl) <span class="ot">=</span> <span class="fu">rownames</span>(gexIl_transpose)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsLh) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsLh) <span class="ot">=</span> <span class="fu">rownames</span>(gexLh_transpose)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsPl) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsPl) <span class="ot">=</span> <span class="fu">rownames</span>(gexPl_transpose)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsVo) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsVo) <span class="ot">=</span> <span class="fu">rownames</span>(gexVo_transpose)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#initializing matrices to be filled with t-stats, p_vals, and residuals of the regression of each gene vs. the covariates for each tissue. t-stat and p-val matrices are just for diagnostics</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsAc = matrix(nrow = 13, ncol = length(colnames(gexAc_transpose)))</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsAc = matrix(nrow = 13, ncol = length(colnames(gexAc_transpose)))</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>expressionAc <span class="ot">=</span> gexAc_transpose</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsIl = matrix(nrow = 13, ncol = length(colnames(gexIl_transpose)))</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsIl = matrix(nrow = 13, ncol = length(colnames(gexIl_transpose)))</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>expressionIl <span class="ot">=</span> gexIl_transpose</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsLh = matrix(nrow = 13, ncol = length(colnames(gexLh_transpose)))</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsLh = matrix(nrow = 13, ncol = length(colnames(gexLh_transpose)))</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>expressionLh <span class="ot">=</span> gexLh_transpose</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsPl = matrix(nrow = 13, ncol = length(colnames(gexPl_transpose)))</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsPl = matrix(nrow = 13, ncol = length(colnames(gexPl_transpose)))</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>expressionPl <span class="ot">=</span> gexPl_transpose</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsVo = matrix(nrow = 13, ncol = length(colnames(gexVo_transpose)))</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsVo = matrix(nrow = 13, ncol = length(colnames(gexVo_transpose)))</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>expressionVo <span class="ot">=</span> gexVo_transpose</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the following code, we regress out the covariates and save the residuals as the new expression for each tissue.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexAc_transpose))) {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexAc_transpose[,i] <span class="sc">~</span> covariatesAc<span class="sc">$</span>sex <span class="sc">+</span> covariatesAc<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF7)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    expressionAc[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexIl_transpose))) {</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexIl_transpose[,i] <span class="sc">~</span> covariatesIl<span class="sc">$</span>sex <span class="sc">+</span> covariatesIl<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF7)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    expressionIl[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexLh_transpose))) {</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexLh_transpose[,i] <span class="sc">~</span> covariatesLh<span class="sc">$</span>sex <span class="sc">+</span> covariatesLh<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF7)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    expressionLh[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexPl_transpose))) {</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexPl_transpose[,i] <span class="sc">~</span> covariatesPl<span class="sc">$</span>sex <span class="sc">+</span> covariatesPl<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF7)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    expressionPl[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexVo_transpose))) {</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexVo_transpose[,i] <span class="sc">~</span> covariatesVo<span class="sc">$</span>sex <span class="sc">+</span> covariatesVo<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF7)</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    expressionVo[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Write the processed expression data to file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save expression as tsv</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Ac_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionAc) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionAc), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionAc))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>Il_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionIl) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionIl), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionIl))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>Lh_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionLh) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionLh), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionLh))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>Pl_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionPl) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionPl), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionPl))</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>Vo_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionVo) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionVo), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionVo))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="st">"%&amp;%"</span> <span class="ot">=</span> <span class="cf">function</span>(a,b) <span class="fu">paste</span>(a,b,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>exprlist <span class="ot">&lt;-</span> <span class="fu">list</span>(Ac_expr, Il_expr, Lh_expr, Pl_expr, Vo_expr)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>tis <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Ac"</span>, <span class="st">"Il"</span>, <span class="st">"Lh"</span>, <span class="st">"Pl"</span>, <span class="st">"Vo"</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>i <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(l <span class="cf">in</span> exprlist) {</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(l, <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/"</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="sc">%&amp;%</span> tis[i] <span class="sc">%&amp;%</span> <span class="st">"_expression_transformed.tsv"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Save the expression RDS objects to be used as arguments in the script.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionAc), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Ac_expression_transformed.RDS"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionIl), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Il_expression_transformed.RDS"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionLh), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Lh_expression_transformed.RDS"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionPl), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Pl_expression_transformed.RDS"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionVo), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Vo_expression_transformed.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Save the gene and SNP annotation as RDS objects to be used as arguments in the script.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>snp_files <span class="ot">&lt;-</span> <span class="fu">list</span>(snp_annot.chr1, snp_annot.chr2, snp_annot.chr3, snp_annot.chr4, snp_annot.chr5, snp_annot.chr6, snp_annot.chr7, snp_annot.chr8, snp_annot.chr9, snp_annot.chr10, snp_annot.chr11, snp_annot.chr12, snp_annot.chr13, snp_annot.chr14, snp_annot.chr15, snp_annot.chr16, snp_annot.chr17, snp_annot.chr18, snp_annot.chr19, snp_annot.chr20)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>i <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(l <span class="cf">in</span> snp_files) {</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(l, <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/snp_annot/"</span> <span class="sc">%&amp;%</span> <span class="st">"snp_annot.chr"</span> <span class="sc">%&amp;%</span> i <span class="sc">%&amp;%</span> <span class="st">".RDS"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Saving the gene annotation RDS object to be used as an argument in the script</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(gene_annotation, <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gene_annotation.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="metadata-files" class="level1">
+<h1>Metadata Files</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the meta data file for each tissue </span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Ac_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Ac"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Il_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Il"</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Lh_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Lh"</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Pl_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Pl"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Vo_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Vo"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Running the model training script for each tissue/chromosome pair</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="dt">{</span><span class="dv">1</span><span class="dt">..</span><span class="dv">20</span><span class="dt">}</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Ac'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Il'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Lh'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Pl'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Vo'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenating all of the results files for each tissue</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Ac'</span> <span class="st">'Results/all_results_Ac'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Ac'</span> <span class="st">'Results/all_betas_Ac'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Ac'</span> <span class="st">'Results/all_logs_Ac'</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Ac'</span> <span class="st">'Results/all_covariances_Ac'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Il'</span> <span class="st">'Results/all_results_Il'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Il'</span> <span class="st">'Results/all_betas_Il'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Il'</span> <span class="st">'Results/all_logs_Il'</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Il'</span> <span class="st">'Results/all_covariances_Il'</span> 0.5 <span class="st">'1KG_snps'</span> </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Lh'</span> <span class="st">'Results/all_results_Lh'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Lh'</span> <span class="st">'Results/all_betas_Lh'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Lh'</span> <span class="st">'Results/all_logs_Lh'</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Lh'</span> <span class="st">'Results/all_covariances_Lh'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Pl'</span> <span class="st">'Results/all_results_Pl'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Pl'</span> <span class="st">'Results/all_betas_Pl'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Pl'</span> <span class="st">'Results/all_logs_Pl'</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Pl'</span> <span class="st">'Results/all_covariances_Pl'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Vo'</span> <span class="st">'Results/all_results_Vo'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Vo'</span> <span class="st">'Results/all_betas_Vo'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Vo'</span> <span class="st">'Results/all_logs_Vo'</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Vo'</span> <span class="st">'Results/all_covariances_Vo'</span> 0.5 <span class="st">'1KG_snps'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Putting these into sql lite databases</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Ac_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Ac"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Ac"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Ac"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Ac.allMetaData.txt"</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Il_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Il"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Il"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Il"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Il.allMetaData.txt"</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Lh_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Lh"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Lh"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Lh"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Lh.allMetaData.txt"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Pl_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Pl"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Pl"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Pl"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Pl.allMetaData.txt"</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Vo_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Vo"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Vo"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Vo"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Vo.allMetaData.txt"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+<!-- -->
+
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb25" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "02. Prediction_Model_Pipeline"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Tyson Miller" </span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2/7/2022" </span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="an">output:</span><span class="co"> html_document</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu"># Definitions</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="in">```{r libraries,eval=FALSE}</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>Data from <span class="co">[</span><span class="ot">here</span><span class="co">](https://uchicago.app.box.com/folder/102043737114)</span> - genoGex.Rdata has everything we need in it There are 5 'gex' RDS files which are the gene expressions for the 5 different tissues, the 'gtf' is the gene annotation, 'phyMap' is the snp annotation, and 'geno' is the genotype matrix</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>Our pipeline predicts expressions from the gene expression data and genotypes of the rats from the study.</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r load raw data}</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"~/Box/imlab-data/Projects/PTRS-PGRS-Rosetta/Data-From-Abe-Palmer-Lab/Rdata/genoGex.RData"</span>)</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="fu"># Gene Expression Files</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>First, we transpose each tissue's gene expression file to fit the format expected by the PrediXcan pipeline scripts.</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{r transpose}</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co">#transposing gene expression files for the 5 tissues </span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexAc<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>gexAc_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexAc[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexAc_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexIl<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>gexIl_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexIl[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexIl_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexLh<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>gexLh_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexLh[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexLh_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexPl<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>gexPl_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexPl[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexPl_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> gexVo<span class="sc">$</span>EnsemblGeneID</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>gexVo_transpose <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(gexVo[,<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gexVo_transpose) <span class="ot">&lt;-</span> n</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r invnorm function}</span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Running inverse normalization on each gene expression</span></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>invnorm <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(<span class="fu">dim</span>(x))) res <span class="ot">=</span> <span class="fu">invnorm.vector</span>(x) <span class="cf">else</span></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>  res<span class="ot">=</span><span class="fu">apply</span>(x,<span class="dv">2</span>,invnorm.vector)</span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>  res</span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>invnorm.vector <span class="ot">=</span> <span class="cf">function</span>(x) {yy <span class="ot">=</span> <span class="fu">rank</span>(x)<span class="sc">/</span>(<span class="fu">length</span>(x)<span class="sc">+</span><span class="dv">1</span>); <span class="fu">qnorm</span>(yy)}</span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>gexAc_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexAc_transpose)</span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>gexIl_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexIl_transpose)</span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>gexLh_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexLh_transpose)</span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>gexPl_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexPl_transpose)</span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>gexVo_transpose <span class="ot">=</span> <span class="fu">invnorm</span>(gexVo_transpose)</span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>Write to file.</span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Writing the gene expression files to csv files to be used for PEER Factor analysis</span></span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexAc_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexAc.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexIl_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexIl.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexLh_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexLh.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexPl_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexPl.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(gexVo_transpose, <span class="at">file =</span> <span class="st">'/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gexVo.csv'</span>, <span class="at">sep =</span> <span class="st">","</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a><span class="fu">## PEER analysis</span></span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>Now we are performing PEER factor analysis on each tissue, choosing 7 factors.</span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexAc.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Ac <span class="at">--has_header</span></span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexIl.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Il <span class="at">--has_header</span></span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexLh.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Lh <span class="at">--has_header</span></span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexPl.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Pl <span class="at">--has_header</span></span>
+<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a><span class="ex">peertool</span> <span class="at">-f</span> data/<span class="st">"gexVo.csv"</span> <span class="at">-n</span> 7 <span class="at">-o</span> peer_Vo <span class="at">--has_header</span></span>
+<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-94"><a href="#cb25-94" aria-hidden="true" tabindex="-1"></a>Later on, we examine these 7 factors, as well as other covariates, to interpret expression variability. <span class="sc">\#</span> Gene, snp annotation files The prediction model pipeline also requires a gene annotation file as input. The code below generates it from the gene annotations provided by Palmer lab in 'gtf'. We also collect snp info.</span>
+<span id="cb25-95"><a href="#cb25-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-96"><a href="#cb25-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r annotation file}</span></span>
+<span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a>gtf<span class="sc">$</span>gene_type <span class="ot">=</span> <span class="fu">sub</span>(<span class="st">".*?gene_biotype(.*?);.*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, gtf<span class="sc">$</span>Attr)</span>
+<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a>gtf<span class="sc">$</span>gene_name <span class="ot">=</span> <span class="fu">sub</span>(<span class="st">".*?gene_name(.*?);.*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, gtf<span class="sc">$</span>Attr)</span>
+<span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a>gene_annotation <span class="ot">=</span> <span class="fu">subset</span>(gtf, <span class="at">select =</span> <span class="sc">-</span><span class="fu">c</span>(Source, Feature, Score, Strand, Attr, Frame) )</span>
+<span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a>gene_annotation <span class="ot">=</span> gene_annotation[, <span class="fu">c</span>(<span class="st">"Chr"</span>,<span class="st">"Gene"</span>, <span class="st">"gene_name"</span>, <span class="st">"Start"</span>, <span class="st">"End"</span>, <span class="st">"gene_type"</span> )]</span>
+<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(gene_annotation) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"chr"</span>, <span class="st">"gene_id"</span>, <span class="st">"gene_name"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>)</span>
+<span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(gene_annotation) <span class="ot">=</span> gene_annotation<span class="sc">$</span>gene_id</span>
+<span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-105"><a href="#cb25-105" aria-hidden="true" tabindex="-1"></a>We have all the information needed to generate the predictions models. We are left to reorganize it to fit the pipeline. The specifics of each step is commented at the top of each block.</span>
+<span id="cb25-106"><a href="#cb25-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-109"><a href="#cb25-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-110"><a href="#cb25-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Making the snp annotation in the correct format for the pipeline</span></span>
+<span id="cb25-111"><a href="#cb25-111" aria-hidden="true" tabindex="-1"></a>phyMap <span class="ot">&lt;-</span> <span class="fu">within</span>(phyMap,  varID <span class="ot">&lt;-</span> <span class="fu">paste</span>(Chr, Pos, Ref, Alt, <span class="at">sep=</span><span class="st">"_"</span>))</span>
+<span id="cb25-112"><a href="#cb25-112" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(phyMap) <span class="ot">=</span> phyMap<span class="sc">$</span>varID</span>
+<span id="cb25-113"><a href="#cb25-113" aria-hidden="true" tabindex="-1"></a>phyMap<span class="sc">$</span>rsid <span class="ot">=</span> phyMap<span class="sc">$</span>varID</span>
+<span id="cb25-114"><a href="#cb25-114" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(phyMap) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"snp"</span>, <span class="st">"chr"</span>, <span class="st">"pos"</span>, <span class="st">"refAllele"</span>, <span class="st">"effectAllele"</span>, <span class="st">'varID'</span>, <span class="st">"rsid"</span>)</span>
+<span id="cb25-115"><a href="#cb25-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-116"><a href="#cb25-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-119"><a href="#cb25-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-120"><a href="#cb25-120" aria-hidden="true" tabindex="-1"></a><span class="co"># Splitting the snp annotation file by chromosome</span></span>
+<span id="cb25-121"><a href="#cb25-121" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">split</span>(phyMap, phyMap<span class="sc">$</span>chr), <span class="fu">paste0</span>(<span class="st">"snp_annot.chr"</span>, <span class="fu">unique</span>(phyMap<span class="sc">$</span>chr)))</span>
+<span id="cb25-122"><a href="#cb25-122" aria-hidden="true" tabindex="-1"></a><span class="fu">list2env</span>(s, <span class="fu">globalenv</span>())</span>
+<span id="cb25-123"><a href="#cb25-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-124"><a href="#cb25-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-125"><a href="#cb25-125" aria-hidden="true" tabindex="-1"></a>The new genotype file combines the provided <span class="in">`geno`</span> file and combines information from the provided snp annotation file, <span class="in">`phyMap`</span>.</span>
+<span id="cb25-126"><a href="#cb25-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-127"><a href="#cb25-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r write geno file}</span></span>
+<span id="cb25-128"><a href="#cb25-128" aria-hidden="true" tabindex="-1"></a><span class="co"># writing the genotype file to a .txt file so that we can separate it by chromosome using our geneotype parse script.</span></span>
+<span id="cb25-129"><a href="#cb25-129" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(geno) <span class="ot">=</span> <span class="fu">rownames</span>(phyMap)</span>
+<span id="cb25-130"><a href="#cb25-130" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(geno, <span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/genotype.txt"</span>, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">col.names =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-131"><a href="#cb25-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-132"><a href="#cb25-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-133"><a href="#cb25-133" aria-hidden="true" tabindex="-1"></a>This python script separates the genotype file by chromosome.</span>
+<span id="cb25-134"><a href="#cb25-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-137"><a href="#cb25-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb25-138"><a href="#cb25-138" aria-hidden="true" tabindex="-1"></a><span class="co">#Splitting the genotype file by chromosome - run this from the rat_genomic_alaysis directory</span></span>
+<span id="cb25-139"><a href="#cb25-139" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/split_genotype_by_chr.py data/genotype.txt data/geno_by_chr/<span class="st">'genotype'</span></span>
+<span id="cb25-140"><a href="#cb25-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-141"><a href="#cb25-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-142"><a href="#cb25-142" aria-hidden="true" tabindex="-1"></a><span class="fu"># Covariate Files</span></span>
+<span id="cb25-143"><a href="#cb25-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-144"><a href="#cb25-144" aria-hidden="true" tabindex="-1"></a>We analyze sex, batch number, and batch center, as possible covariates, along with the 7 PEER factors.</span>
+<span id="cb25-145"><a href="#cb25-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-148"><a href="#cb25-148" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-149"><a href="#cb25-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the phenotype file in to create covariate files. For this we are selecting sex, batch number, and batch center as covariates as well as the 7 PEER factors we generate</span></span>
+<span id="cb25-150"><a href="#cb25-150" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"~/Box/imlab-data/Projects/PTRS-PGRS-Rosetta/Data-From-Abe-Palmer-Lab/Final_P50_traits/P50_raw_trait_values.RData"</span>)</span>
+<span id="cb25-151"><a href="#cb25-151" aria-hidden="true" tabindex="-1"></a>covariatesAc <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexAc_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb25-152"><a href="#cb25-152" aria-hidden="true" tabindex="-1"></a>covariatesAc <span class="ot">=</span> <span class="fu">subset</span>(covariatesAc, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb25-153"><a href="#cb25-153" aria-hidden="true" tabindex="-1"></a>covariatesIl <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexIl_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb25-154"><a href="#cb25-154" aria-hidden="true" tabindex="-1"></a>covariatesIl <span class="ot">=</span> <span class="fu">subset</span>(covariatesIl, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb25-155"><a href="#cb25-155" aria-hidden="true" tabindex="-1"></a>covariatesLh <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexLh_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb25-156"><a href="#cb25-156" aria-hidden="true" tabindex="-1"></a>covariatesLh <span class="ot">=</span> <span class="fu">subset</span>(covariatesLh, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb25-157"><a href="#cb25-157" aria-hidden="true" tabindex="-1"></a>covariatesPl <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexPl_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb25-158"><a href="#cb25-158" aria-hidden="true" tabindex="-1"></a>covariatesPl <span class="ot">=</span> <span class="fu">subset</span>(covariatesPl, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb25-159"><a href="#cb25-159" aria-hidden="true" tabindex="-1"></a>covariatesVo <span class="ot">=</span> raw_traits[<span class="fu">match</span>(<span class="fu">rownames</span>(gexVo_transpose), raw_traits<span class="sc">$</span>rfid), ]</span>
+<span id="cb25-160"><a href="#cb25-160" aria-hidden="true" tabindex="-1"></a>covariatesVo <span class="ot">=</span> <span class="fu">subset</span>(covariatesVo, <span class="at">select =</span> <span class="fu">c</span>(rfid, sex, batchnumber, center))</span>
+<span id="cb25-161"><a href="#cb25-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-162"><a href="#cb25-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-163"><a href="#cb25-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r reed peer factor outputs}</span></span>
+<span id="cb25-164"><a href="#cb25-164" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading the PEER factor output files to be appended to the covariate file and eventually regressed out of the expression files</span></span>
+<span id="cb25-165"><a href="#cb25-165" aria-hidden="true" tabindex="-1"></a>peer_factorsAc <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Ac/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-166"><a href="#cb25-166" aria-hidden="true" tabindex="-1"></a>peer_factorsIl <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Il/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-167"><a href="#cb25-167" aria-hidden="true" tabindex="-1"></a>peer_factorsLh <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Lh/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-168"><a href="#cb25-168" aria-hidden="true" tabindex="-1"></a>peer_factorsPl <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Pl/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-169"><a href="#cb25-169" aria-hidden="true" tabindex="-1"></a>peer_factorsVo <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/peer_Vo/X.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-170"><a href="#cb25-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-171"><a href="#cb25-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-172"><a href="#cb25-172" aria-hidden="true" tabindex="-1"></a>For each tissue's PEER factor output, set individual IDs as rownames and enumerate the PEER factors in the columns.</span>
+<span id="cb25-173"><a href="#cb25-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-176"><a href="#cb25-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-177"><a href="#cb25-177" aria-hidden="true" tabindex="-1"></a><span class="co"># Manipulating the PEER factor files so we can append to covariate file</span></span>
+<span id="cb25-178"><a href="#cb25-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-179"><a href="#cb25-179" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsAc) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb25-180"><a href="#cb25-180" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsAc) <span class="ot">=</span> <span class="fu">rownames</span>(gexAc_transpose)</span>
+<span id="cb25-181"><a href="#cb25-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-182"><a href="#cb25-182" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsIl) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb25-183"><a href="#cb25-183" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsIl) <span class="ot">=</span> <span class="fu">rownames</span>(gexIl_transpose)</span>
+<span id="cb25-184"><a href="#cb25-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-185"><a href="#cb25-185" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsLh) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb25-186"><a href="#cb25-186" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsLh) <span class="ot">=</span> <span class="fu">rownames</span>(gexLh_transpose)</span>
+<span id="cb25-187"><a href="#cb25-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-188"><a href="#cb25-188" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsPl) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb25-189"><a href="#cb25-189" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsPl) <span class="ot">=</span> <span class="fu">rownames</span>(gexPl_transpose)</span>
+<span id="cb25-190"><a href="#cb25-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-191"><a href="#cb25-191" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(peer_factorsVo) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PF1'</span>, <span class="st">'PF2'</span>, <span class="st">'PF3'</span>, <span class="st">'PF4'</span>, <span class="st">'PF5'</span>, <span class="st">'PF6'</span>, <span class="st">'PF7'</span>)</span>
+<span id="cb25-192"><a href="#cb25-192" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(peer_factorsVo) <span class="ot">=</span> <span class="fu">rownames</span>(gexVo_transpose)</span>
+<span id="cb25-193"><a href="#cb25-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-194"><a href="#cb25-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-197"><a href="#cb25-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-198"><a href="#cb25-198" aria-hidden="true" tabindex="-1"></a><span class="co">#initializing matrices to be filled with t-stats, p_vals, and residuals of the regression of each gene vs. the covariates for each tissue. t-stat and p-val matrices are just for diagnostics</span></span>
+<span id="cb25-199"><a href="#cb25-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-200"><a href="#cb25-200" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsAc = matrix(nrow = 13, ncol = length(colnames(gexAc_transpose)))</span></span>
+<span id="cb25-201"><a href="#cb25-201" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsAc = matrix(nrow = 13, ncol = length(colnames(gexAc_transpose)))</span></span>
+<span id="cb25-202"><a href="#cb25-202" aria-hidden="true" tabindex="-1"></a>expressionAc <span class="ot">=</span> gexAc_transpose</span>
+<span id="cb25-203"><a href="#cb25-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-204"><a href="#cb25-204" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsIl = matrix(nrow = 13, ncol = length(colnames(gexIl_transpose)))</span></span>
+<span id="cb25-205"><a href="#cb25-205" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsIl = matrix(nrow = 13, ncol = length(colnames(gexIl_transpose)))</span></span>
+<span id="cb25-206"><a href="#cb25-206" aria-hidden="true" tabindex="-1"></a>expressionIl <span class="ot">=</span> gexIl_transpose</span>
+<span id="cb25-207"><a href="#cb25-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-208"><a href="#cb25-208" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsLh = matrix(nrow = 13, ncol = length(colnames(gexLh_transpose)))</span></span>
+<span id="cb25-209"><a href="#cb25-209" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsLh = matrix(nrow = 13, ncol = length(colnames(gexLh_transpose)))</span></span>
+<span id="cb25-210"><a href="#cb25-210" aria-hidden="true" tabindex="-1"></a>expressionLh <span class="ot">=</span> gexLh_transpose</span>
+<span id="cb25-211"><a href="#cb25-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-212"><a href="#cb25-212" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsPl = matrix(nrow = 13, ncol = length(colnames(gexPl_transpose)))</span></span>
+<span id="cb25-213"><a href="#cb25-213" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsPl = matrix(nrow = 13, ncol = length(colnames(gexPl_transpose)))</span></span>
+<span id="cb25-214"><a href="#cb25-214" aria-hidden="true" tabindex="-1"></a>expressionPl <span class="ot">=</span> gexPl_transpose</span>
+<span id="cb25-215"><a href="#cb25-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-216"><a href="#cb25-216" aria-hidden="true" tabindex="-1"></a><span class="co">#t_statsVo = matrix(nrow = 13, ncol = length(colnames(gexVo_transpose)))</span></span>
+<span id="cb25-217"><a href="#cb25-217" aria-hidden="true" tabindex="-1"></a><span class="co">#p_valsVo = matrix(nrow = 13, ncol = length(colnames(gexVo_transpose)))</span></span>
+<span id="cb25-218"><a href="#cb25-218" aria-hidden="true" tabindex="-1"></a>expressionVo <span class="ot">=</span> gexVo_transpose</span>
+<span id="cb25-219"><a href="#cb25-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-220"><a href="#cb25-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-221"><a href="#cb25-221" aria-hidden="true" tabindex="-1"></a>In the following code, we regress out the covariates and save the residuals as the new expression for each tissue.</span>
+<span id="cb25-222"><a href="#cb25-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-225"><a href="#cb25-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-226"><a href="#cb25-226" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexAc_transpose))) {</span>
+<span id="cb25-227"><a href="#cb25-227" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexAc_transpose[,i] <span class="sc">~</span> covariatesAc<span class="sc">$</span>sex <span class="sc">+</span> covariatesAc<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsAc<span class="sc">$</span>PF7)</span>
+<span id="cb25-228"><a href="#cb25-228" aria-hidden="true" tabindex="-1"></a>    expressionAc[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb25-229"><a href="#cb25-229" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb25-230"><a href="#cb25-230" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb25-231"><a href="#cb25-231" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-232"><a href="#cb25-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-233"><a href="#cb25-233" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexIl_transpose))) {</span>
+<span id="cb25-234"><a href="#cb25-234" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexIl_transpose[,i] <span class="sc">~</span> covariatesIl<span class="sc">$</span>sex <span class="sc">+</span> covariatesIl<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsIl<span class="sc">$</span>PF7)</span>
+<span id="cb25-235"><a href="#cb25-235" aria-hidden="true" tabindex="-1"></a>    expressionIl[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb25-236"><a href="#cb25-236" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb25-237"><a href="#cb25-237" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb25-238"><a href="#cb25-238" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-239"><a href="#cb25-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-240"><a href="#cb25-240" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexLh_transpose))) {</span>
+<span id="cb25-241"><a href="#cb25-241" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexLh_transpose[,i] <span class="sc">~</span> covariatesLh<span class="sc">$</span>sex <span class="sc">+</span> covariatesLh<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsLh<span class="sc">$</span>PF7)</span>
+<span id="cb25-242"><a href="#cb25-242" aria-hidden="true" tabindex="-1"></a>    expressionLh[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb25-243"><a href="#cb25-243" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb25-244"><a href="#cb25-244" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb25-245"><a href="#cb25-245" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-246"><a href="#cb25-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-247"><a href="#cb25-247" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexPl_transpose))) {</span>
+<span id="cb25-248"><a href="#cb25-248" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexPl_transpose[,i] <span class="sc">~</span> covariatesPl<span class="sc">$</span>sex <span class="sc">+</span> covariatesPl<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsPl<span class="sc">$</span>PF7)</span>
+<span id="cb25-249"><a href="#cb25-249" aria-hidden="true" tabindex="-1"></a>    expressionPl[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb25-250"><a href="#cb25-250" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb25-251"><a href="#cb25-251" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb25-252"><a href="#cb25-252" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-253"><a href="#cb25-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-254"><a href="#cb25-254" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">colnames</span>(gexVo_transpose))) {</span>
+<span id="cb25-255"><a href="#cb25-255" aria-hidden="true" tabindex="-1"></a>    fit <span class="ot">=</span> <span class="fu">lm</span>(gexVo_transpose[,i] <span class="sc">~</span> covariatesVo<span class="sc">$</span>sex <span class="sc">+</span> covariatesVo<span class="sc">$</span>batchnumber <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF1 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF2 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF3 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF4 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF5 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF6 <span class="sc">+</span> peer_factorsVo<span class="sc">$</span>PF7)</span>
+<span id="cb25-256"><a href="#cb25-256" aria-hidden="true" tabindex="-1"></a>    expressionVo[,i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>residuals</span>
+<span id="cb25-257"><a href="#cb25-257" aria-hidden="true" tabindex="-1"></a>    <span class="co">#t_statsAc[,i] &lt;- tidy(fit)$statistic</span></span>
+<span id="cb25-258"><a href="#cb25-258" aria-hidden="true" tabindex="-1"></a>    <span class="co">#p_valsAc[,i] &lt;- tidy(fit)$p.value</span></span>
+<span id="cb25-259"><a href="#cb25-259" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-260"><a href="#cb25-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-261"><a href="#cb25-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-262"><a href="#cb25-262" aria-hidden="true" tabindex="-1"></a>Write the processed expression data to file.</span>
+<span id="cb25-263"><a href="#cb25-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-266"><a href="#cb25-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-267"><a href="#cb25-267" aria-hidden="true" tabindex="-1"></a><span class="co"># Save expression as tsv</span></span>
+<span id="cb25-268"><a href="#cb25-268" aria-hidden="true" tabindex="-1"></a>Ac_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionAc) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionAc), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionAc))</span>
+<span id="cb25-269"><a href="#cb25-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-270"><a href="#cb25-270" aria-hidden="true" tabindex="-1"></a>Il_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionIl) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionIl), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionIl))</span>
+<span id="cb25-271"><a href="#cb25-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-272"><a href="#cb25-272" aria-hidden="true" tabindex="-1"></a>Lh_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionLh) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionLh), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionLh))</span>
+<span id="cb25-273"><a href="#cb25-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-274"><a href="#cb25-274" aria-hidden="true" tabindex="-1"></a>Pl_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionPl) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionPl), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionPl))</span>
+<span id="cb25-275"><a href="#cb25-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-276"><a href="#cb25-276" aria-hidden="true" tabindex="-1"></a>Vo_expr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(expressionVo) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rownames</span>(expressionVo), <span class="at">.before =</span> <span class="fu">colnames</span>(expressionVo))</span>
+<span id="cb25-277"><a href="#cb25-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-278"><a href="#cb25-278" aria-hidden="true" tabindex="-1"></a><span class="st">"%&amp;%"</span> <span class="ot">=</span> <span class="cf">function</span>(a,b) <span class="fu">paste</span>(a,b,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb25-279"><a href="#cb25-279" aria-hidden="true" tabindex="-1"></a>exprlist <span class="ot">&lt;-</span> <span class="fu">list</span>(Ac_expr, Il_expr, Lh_expr, Pl_expr, Vo_expr)</span>
+<span id="cb25-280"><a href="#cb25-280" aria-hidden="true" tabindex="-1"></a>tis <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Ac"</span>, <span class="st">"Il"</span>, <span class="st">"Lh"</span>, <span class="st">"Pl"</span>, <span class="st">"Vo"</span>)</span>
+<span id="cb25-281"><a href="#cb25-281" aria-hidden="true" tabindex="-1"></a>i <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb25-282"><a href="#cb25-282" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(l <span class="cf">in</span> exprlist) {</span>
+<span id="cb25-283"><a href="#cb25-283" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(l, <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/"</span></span>
+<span id="cb25-284"><a href="#cb25-284" aria-hidden="true" tabindex="-1"></a><span class="sc">%&amp;%</span> tis[i] <span class="sc">%&amp;%</span> <span class="st">"_expression_transformed.tsv"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-285"><a href="#cb25-285" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb25-286"><a href="#cb25-286" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-287"><a href="#cb25-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-288"><a href="#cb25-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-289"><a href="#cb25-289" aria-hidden="true" tabindex="-1"></a>Save the expression RDS objects to be used as arguments in the script.</span>
+<span id="cb25-290"><a href="#cb25-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-293"><a href="#cb25-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-294"><a href="#cb25-294" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionAc), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Ac_expression_transformed.RDS"</span>)</span>
+<span id="cb25-295"><a href="#cb25-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-296"><a href="#cb25-296" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionIl), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Il_expression_transformed.RDS"</span>)</span>
+<span id="cb25-297"><a href="#cb25-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-298"><a href="#cb25-298" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionLh), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Lh_expression_transformed.RDS"</span>)</span>
+<span id="cb25-299"><a href="#cb25-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-300"><a href="#cb25-300" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionPl), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Pl_expression_transformed.RDS"</span>)</span>
+<span id="cb25-301"><a href="#cb25-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-302"><a href="#cb25-302" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">as.matrix</span>(expressionVo), <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/Vo_expression_transformed.RDS"</span>)</span>
+<span id="cb25-303"><a href="#cb25-303" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-304"><a href="#cb25-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-305"><a href="#cb25-305" aria-hidden="true" tabindex="-1"></a>Save the gene and SNP annotation as RDS objects to be used as arguments in the script.</span>
+<span id="cb25-306"><a href="#cb25-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-309"><a href="#cb25-309" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-310"><a href="#cb25-310" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb25-311"><a href="#cb25-311" aria-hidden="true" tabindex="-1"></a>snp_files <span class="ot">&lt;-</span> <span class="fu">list</span>(snp_annot.chr1, snp_annot.chr2, snp_annot.chr3, snp_annot.chr4, snp_annot.chr5, snp_annot.chr6, snp_annot.chr7, snp_annot.chr8, snp_annot.chr9, snp_annot.chr10, snp_annot.chr11, snp_annot.chr12, snp_annot.chr13, snp_annot.chr14, snp_annot.chr15, snp_annot.chr16, snp_annot.chr17, snp_annot.chr18, snp_annot.chr19, snp_annot.chr20)</span>
+<span id="cb25-312"><a href="#cb25-312" aria-hidden="true" tabindex="-1"></a>i <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb25-313"><a href="#cb25-313" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(l <span class="cf">in</span> snp_files) {</span>
+<span id="cb25-314"><a href="#cb25-314" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(l, <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/snp_annot/"</span> <span class="sc">%&amp;%</span> <span class="st">"snp_annot.chr"</span> <span class="sc">%&amp;%</span> i <span class="sc">%&amp;%</span> <span class="st">".RDS"</span>)</span>
+<span id="cb25-315"><a href="#cb25-315" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb25-316"><a href="#cb25-316" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-317"><a href="#cb25-317" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-318"><a href="#cb25-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-321"><a href="#cb25-321" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-322"><a href="#cb25-322" aria-hidden="true" tabindex="-1"></a><span class="co"># Saving the gene annotation RDS object to be used as an argument in the script</span></span>
+<span id="cb25-323"><a href="#cb25-323" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(gene_annotation, <span class="st">"/Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline/data/gene_annotation.RDS"</span>)</span>
+<span id="cb25-324"><a href="#cb25-324" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-325"><a href="#cb25-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-326"><a href="#cb25-326" aria-hidden="true" tabindex="-1"></a><span class="fu"># Metadata Files</span></span>
+<span id="cb25-327"><a href="#cb25-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-330"><a href="#cb25-330" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb25-331"><a href="#cb25-331" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the meta data file for each tissue </span></span>
+<span id="cb25-332"><a href="#cb25-332" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Ac_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Ac"</span></span>
+<span id="cb25-333"><a href="#cb25-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-334"><a href="#cb25-334" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Il_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Il"</span></span>
+<span id="cb25-335"><a href="#cb25-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-336"><a href="#cb25-336" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Lh_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Lh"</span></span>
+<span id="cb25-337"><a href="#cb25-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-338"><a href="#cb25-338" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Pl_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Pl"</span></span>
+<span id="cb25-339"><a href="#cb25-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-340"><a href="#cb25-340" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/create_meta_data.py <span class="at">--geno</span> <span class="st">"data/genotype.txt"</span> <span class="at">--expr</span> <span class="st">"Vo_expression_transformed.tsv"</span> <span class="at">--alpha</span> 1 <span class="at">--snpset</span> <span class="st">"1KG"</span> <span class="at">--rsid_label</span> 1 <span class="at">--window</span> 1000000 <span class="at">--out_prefix</span> <span class="st">"Results/allMetaData/Vo"</span></span>
+<span id="cb25-341"><a href="#cb25-341" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-342"><a href="#cb25-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-345"><a href="#cb25-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb25-346"><a href="#cb25-346" aria-hidden="true" tabindex="-1"></a><span class="co"># Running the model training script for each tissue/chromosome pair</span></span>
+<span id="cb25-347"><a href="#cb25-347" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /Users/sabrinami/Github/Rat_Genomics_Paper_Pipeline</span>
+<span id="cb25-348"><a href="#cb25-348" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="dt">{</span><span class="dv">1</span><span class="dt">..</span><span class="dv">20</span><span class="dt">}</span></span>
+<span id="cb25-349"><a href="#cb25-349" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb25-350"><a href="#cb25-350" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Ac'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb25-351"><a href="#cb25-351" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Il'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb25-352"><a href="#cb25-352" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Lh'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb25-353"><a href="#cb25-353" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Pl'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb25-354"><a href="#cb25-354" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Rscript</span> scripts/create_model.R <span class="st">'Vo'</span> <span class="va">$i</span> 0.5 1000000</span>
+<span id="cb25-355"><a href="#cb25-355" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb25-356"><a href="#cb25-356" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-357"><a href="#cb25-357" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-358"><a href="#cb25-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-361"><a href="#cb25-361" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb25-362"><a href="#cb25-362" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenating all of the results files for each tissue</span></span>
+<span id="cb25-363"><a href="#cb25-363" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Ac'</span> <span class="st">'Results/all_results_Ac'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-364"><a href="#cb25-364" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Ac'</span> <span class="st">'Results/all_betas_Ac'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-365"><a href="#cb25-365" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Ac'</span> <span class="st">'Results/all_logs_Ac'</span></span>
+<span id="cb25-366"><a href="#cb25-366" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Ac'</span> <span class="st">'Results/all_covariances_Ac'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-367"><a href="#cb25-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-368"><a href="#cb25-368" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Il'</span> <span class="st">'Results/all_results_Il'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-369"><a href="#cb25-369" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Il'</span> <span class="st">'Results/all_betas_Il'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-370"><a href="#cb25-370" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Il'</span> <span class="st">'Results/all_logs_Il'</span></span>
+<span id="cb25-371"><a href="#cb25-371" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Il'</span> <span class="st">'Results/all_covariances_Il'</span> 0.5 <span class="st">'1KG_snps'</span> </span>
+<span id="cb25-372"><a href="#cb25-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-373"><a href="#cb25-373" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Lh'</span> <span class="st">'Results/all_results_Lh'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-374"><a href="#cb25-374" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Lh'</span> <span class="st">'Results/all_betas_Lh'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-375"><a href="#cb25-375" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Lh'</span> <span class="st">'Results/all_logs_Lh'</span></span>
+<span id="cb25-376"><a href="#cb25-376" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Lh'</span> <span class="st">'Results/all_covariances_Lh'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-377"><a href="#cb25-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-378"><a href="#cb25-378" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Pl'</span> <span class="st">'Results/all_results_Pl'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-379"><a href="#cb25-379" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Pl'</span> <span class="st">'Results/all_betas_Pl'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-380"><a href="#cb25-380" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Pl'</span> <span class="st">'Results/all_logs_Pl'</span></span>
+<span id="cb25-381"><a href="#cb25-381" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Pl'</span> <span class="st">'Results/all_covariances_Pl'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-382"><a href="#cb25-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-383"><a href="#cb25-383" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_results.sh <span class="st">'Vo'</span> <span class="st">'Results/all_results_Vo'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-384"><a href="#cb25-384" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_betas.sh <span class="st">'Vo'</span> <span class="st">'Results/all_betas_Vo'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-385"><a href="#cb25-385" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_logs.sh <span class="st">'Vo'</span> <span class="st">'Results/all_logs_Vo'</span></span>
+<span id="cb25-386"><a href="#cb25-386" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/make_all_covariances.sh <span class="st">'Vo'</span> <span class="st">'Results/all_covariances_Vo'</span> 0.5 <span class="st">'1KG_snps'</span></span>
+<span id="cb25-387"><a href="#cb25-387" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-388"><a href="#cb25-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-391"><a href="#cb25-391" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb25-392"><a href="#cb25-392" aria-hidden="true" tabindex="-1"></a><span class="co"># Putting these into sql lite databases</span></span>
+<span id="cb25-393"><a href="#cb25-393" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Ac_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Ac"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Ac"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Ac"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Ac.allMetaData.txt"</span></span>
+<span id="cb25-394"><a href="#cb25-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-395"><a href="#cb25-395" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Il_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Il"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Il"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Il"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Il.allMetaData.txt"</span></span>
+<span id="cb25-396"><a href="#cb25-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-397"><a href="#cb25-397" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Lh_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Lh"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Lh"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Lh"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Lh.allMetaData.txt"</span></span>
+<span id="cb25-398"><a href="#cb25-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-399"><a href="#cb25-399" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Pl_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Pl"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Pl"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Pl"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Pl.allMetaData.txt"</span></span>
+<span id="cb25-400"><a href="#cb25-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-401"><a href="#cb25-401" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/make_sqlite_db.py <span class="at">--output</span> <span class="st">"Results/sql/Vo_output_db.db"</span> <span class="at">--results</span> <span class="st">"Results/all_results_Vo"</span> <span class="at">--construction</span> <span class="st">"Results/all_logs_Vo"</span> <span class="at">--betas</span> <span class="st">"Results/all_betas_Vo"</span> <span class="at">--meta</span> <span class="st">"Results/allMetaData/Vo.allMetaData.txt"</span></span>
+<span id="cb25-402"><a href="#cb25-402" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Sabrina Mi">
+<meta name="dcterms.date" content="2024-03-01">
+
+<title>Rat Genomics Pipeline Rendered - RatXcan Tutorial</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">paper_code</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../other_code.html" rel="" target="">
+ <span class="menu-text">more_code</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-requirements" id="toc-data-requirements" class="nav-link active" data-scroll-target="#data-requirements">Data Requirements</a></li>
+  <li><a href="#software-requirements" id="toc-software-requirements" class="nav-link" data-scroll-target="#software-requirements">Software Requirements</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#define-paths" id="toc-define-paths" class="nav-link" data-scroll-target="#define-paths">Define Paths</a></li>
+  <li><a href="#predict-expression" id="toc-predict-expression" class="nav-link" data-scroll-target="#predict-expression">Predict Expression</a></li>
+  <li><a href="#compute-genetic-relatedness-and-heritability" id="toc-compute-genetic-relatedness-and-heritability" class="nav-link" data-scroll-target="#compute-genetic-relatedness-and-heritability">Compute Genetic Relatedness and Heritability</a></li>
+  </ul></li>
+  <li><a href="#prepare-inputs-for-mixed-effect-model" id="toc-prepare-inputs-for-mixed-effect-model" class="nav-link" data-scroll-target="#prepare-inputs-for-mixed-effect-model">Prepare Inputs for Mixed Effect Model</a>
+  <ul class="collapse">
+  <li><a href="#setup-1" id="toc-setup-1" class="nav-link" data-scroll-target="#setup-1">Setup</a></li>
+  <li><a href="#read-in-grm-h2-phenotypes-and-predicted-gene-expression" id="toc-read-in-grm-h2-phenotypes-and-predicted-gene-expression" class="nav-link" data-scroll-target="#read-in-grm-h2-phenotypes-and-predicted-gene-expression">Read in GRM, h2, phenotypes, and predicted gene expression</a></li>
+  <li><a href="#convert-to-matrices" id="toc-convert-to-matrices" class="nav-link" data-scroll-target="#convert-to-matrices">Convert to Matrices</a></li>
+  </ul></li>
+  <li><a href="#ratxcan-association" id="toc-ratxcan-association" class="nav-link" data-scroll-target="#ratxcan-association">RatXcan Association</a>
+  <ul class="collapse">
+  <li><a href="#run-regression" id="toc-run-regression" class="nav-link" data-scroll-target="#run-regression">Run regression</a></li>
+  <li><a href="#plot-p-values" id="toc-plot-p-values" class="nav-link" data-scroll-target="#plot-p-values">Plot P-values</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">RatXcan Tutorial</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sabrina Mi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="data-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="data-requirements">Data Requirements</h2>
+<ul>
+<li><p>genotype (plink bed/bim/fam format)</p></li>
+<li><p>phenotype (TSV with columns FID, IID, phenotypes)</p></li>
+<li><p>prediction weights (*.db models on <a href="https://predictdb.org" class="uri">https://predictdb.org</a>)</p></li>
+</ul>
+<p>All of the data and prediction models used in the tutorial can be downloaded from Box: <a href="https://uchicago.box.com/v/ratxcan-tutorial" class="uri">https://uchicago.box.com/v/ratxcan-tutorial</a>.</p>
+</section>
+<section id="software-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="software-requirements">Software Requirements</h2>
+<ul>
+<li><p>plink</p></li>
+<li><p>gcta</p></li>
+<li><p>metaxcan (<a href="https://uchicago.box.com/s/84zoxdk3ws0m34zpgup6sizzzt6hcenp">included in Box folder</a>)</p>
+<ul>
+<li>set up conda environment</li>
+</ul></li>
+</ul>
+<pre><code>conda env create -f /Users/sabrinami/ratxcan-tutorial/MetaXcan/software/conda_env.yaml
+conda activate imlabtools</code></pre>
+<p>Also check that the folders containing compiled plink and gcta binary files are in your $PATH variable.</p>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>In this section, we generate all results needed for the mixed effects modeling (predicted gene expression, genetic relatedness, and heritability)</p>
+<section id="define-paths" class="level3">
+<h3 class="anchored" data-anchor-id="define-paths">Define Paths</h3>
+<pre><code>PRE="/Users/sabrinami/ratxcan-tutorial" ## Replace with path to downloaded ratxcan-tutorial folder
+
+OUTPUT="$PRE/output"
+
+METAXCAN="$PRE/MetaXcan"
+MODEL="$PRE/models"
+
+GENO_PREFIX="$PRE/data/genotype/rat6k"</code></pre>
+<p>Both <strong>VCF</strong> and <strong>bed/bim/fam</strong> formatted genotypes are used, convert files if needed:</p>
+<pre><code>plink --bfile $GENO_PREFIX --recode vcf --out $GENO_PREFIX
+gzip ${GENO_PREFIX}.vcf</code></pre>
+</section>
+<section id="predict-expression" class="level3">
+<h3 class="anchored" data-anchor-id="predict-expression">Predict Expression</h3>
+<p>The <code>models</code> folder contains PrediXcan prediction models <a href="https://sabrina-mi.github.io/RatXcan_Training/EN_Prediction_Model.html">trained on 5 tissues</a>:</p>
+<ul>
+<li><p>nucleus accumbens (<code>AC-filtered.db</code>)</p></li>
+<li><p>infralimbic cortex (<code>IL-filtered.db</code>)</p></li>
+<li><p>lateral habenula (<code>LH-filtered.db</code>)</p></li>
+<li><p>prelimbic cortex (<code>PL-filtered.db</code>)</p></li>
+<li><p>orbitofrontal cortex (<code>VO-filtered.db</code>)</p></li>
+</ul>
+<p>For the tutorial, we’ll use the AC model.</p>
+<pre><code>conda activate imlabtools
+python ${METAXCAN}/software/Predict.py \
+--model_db_path ${MODEL}/AC-filtered.db \
+--model_db_snp_key rsid \
+--vcf_genotypes ${GENO_PREFIX}.vcf.gz \
+--vcf_mode genotyped \
+--on_the_fly_mapping METADATA "{}_{}_{}_{}" \
+--prediction_output $OUTPUT/AC-filtered-rat6k__predict.txt  \
+--prediction_summary_output $OUTPUT/AC-filtered-rat6k__summary.txt \
+--throw</code></pre>
+</section>
+<section id="compute-genetic-relatedness-and-heritability" class="level3">
+<h3 class="anchored" data-anchor-id="compute-genetic-relatedness-and-heritability">Compute Genetic Relatedness and Heritability</h3>
+<p>GCTA outputs a genetic relatedness matrix (GRM), then computes heritability (h2) for a given phenotype data. The following example uses bodylength data.</p>
+<pre><code>## Compute GRM
+gcta --bfile $GENO/rat6k --make-grm-bin --out $OUTPUT/rat6k
+## Compute h2
+## argument --mpheno specifies fam column to be used as phenotype, 1 for bodylength and 2 for bmi
+gcta --grm $OUTPUT/rat6k --reml --pheno $PRE/data/phenotype/pheno.fam --mpheno 1 --out $OUTPUT/bodylen_h2</code></pre>
+<p>Heritability is estimated as V(G)/Vp Variance. In this case, we extract <code>h2_bodylen = 0.390288</code> from the gcta results summary:</p>
+<pre><code>Summary result of REML analysis:
+Source  Variance    SE
+V(G)    0.395810    0.027842
+V(e)    0.618337    0.014383
+Vp  1.014147    0.027031
+V(G)/Vp 0.390288    0.019209</code></pre>
+</section>
+</section>
+<section id="prepare-inputs-for-mixed-effect-model" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-inputs-for-mixed-effect-model">Prepare Inputs for Mixed Effect Model</h2>
+<section id="setup-1" class="level3">
+<h3 class="anchored" data-anchor-id="setup-1">Setup</h3>
+<p>Load Libraries and Gist Functions:</p>
+<p>Replace with your path to downloaded <code>ratxcan-tutorial</code> folder:</p>
+</section>
+<section id="read-in-grm-h2-phenotypes-and-predicted-gene-expression" class="level3">
+<h3 class="anchored" data-anchor-id="read-in-grm-h2-phenotypes-and-predicted-gene-expression">Read in GRM, h2, phenotypes, and predicted gene expression</h3>
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/read outputs_acd8e45a1ac40216576fe3ec7647f828">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 5628 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (2): X1, X2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 10 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (1): Source
+dbl (2): Variance, SE
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 5401 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (2): X1, X2
+dbl (2): X3, X4
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Rows: 5628 Columns: 5881
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr    (2): FID, IID
+dbl (5879): ENSRNOG00000015552, ENSRNOG00000016054, ENSRNOG00000049505, ENSR...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Summarize median predicted expression for all genes:</p>
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/unnamed-chunk-3_bd509ec3c763a5c417cc3ee9fd3b0c3f">
+<div class="cell-output cell-output-stdout">
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-4742.218    -0.442     0.000    -0.646     0.368  1998.544 </code></pre>
+</div>
+</div>
+<p>Plot distribution of median gene expression with outliers removed:</p>
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/hist median expr_685eb813177c46419df3289148a8bdfe">
+<div class="cell-output-display">
+<p><img src="ratxcan_tutorial_files/figure-html/hist median expr-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Final check that IIDs between phenotype and genotype matrices align:</p>
+</section>
+<section id="convert-to-matrices" class="level3">
+<h3 class="anchored" data-anchor-id="convert-to-matrices">Convert to Matrices</h3>
+</section>
+</section>
+<section id="ratxcan-association" class="level2">
+<h2 class="anchored" data-anchor-id="ratxcan-association">RatXcan Association</h2>
+<p>The end goal is to compute gene-level associations under the mixed effect model <span class="math inline">\(Y = T b + u + \epsilon\)</span>, where</p>
+<ul>
+<li><p><span class="math inline">\(Y\)</span> is the phenotype</p></li>
+<li><p><span class="math inline">\(T\)</span> is predicted gene expression</p></li>
+<li><p><span class="math inline">\(u\)</span> is the random effect with covariance given by the genetic relatedness matrix (<span class="math inline">\(GRM\)</span>)</p></li>
+<li><p><span class="math inline">\(\epsilon\)</span> is uncorrelated noise</p></li>
+</ul>
+<p>The difference between RatXcan and PrediXcan is the <span class="math inline">\(u\)</span> term accounting for correlated effects due to relatedness. The <span class="math inline">\(GRM\)</span> and <span class="math inline">\(h2\)</span> estimates are needed to decorrelate the error term <span class="math inline">\(u+\epsilon\)</span>, so that traditional linear regression can replace mixed modeling fitting.</p>
+<section id="run-regression" class="level3">
+<h3 class="anchored" data-anchor-id="run-regression">Run regression</h3>
+<p><code>lmmGRM</code> performs the decorrelation and linear regression. It takes phenotype, GRM, h2, and predicted expression as input, and computes gene-level correlation and p-value with and without correction accounting for relatedness.</p>
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/bodylen and AC_1be6b00aa74afb2cb900d7e2a1461ab0">
+<div class="cell-output cell-output-stdout">
+<pre><code>5401 samples, 5879 genes used in association test</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-p-values" class="level3">
+<h3 class="anchored" data-anchor-id="plot-p-values">Plot P-values</h3>
+<p>The following QQ-plot shows the distribution of p-values of gene-trait associations: blue dots are the p-values with mixed effects correction and black dots are the inflated p-values.</p>
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/unnamed-chunk-4_30914e72a983770eca2324f39953d783">
+<div class="cell-output-display">
+<p><img src="ratxcan_tutorial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The following Manhattan plot was generated with <a href="https://github.com/hakyimlab/Rat_Genomics_Paper_Pipeline/blob/main/analysis/03.PrediXcan.Rmd">Natasha Santhanam’s</a> function:</p>
+<p><br>
+We used <code>biomaRt</code> to annotate genes:</p>
+<div class="cell" data-hash="ratxcan_tutorial_cache/html/unnamed-chunk-6_7c85061370b85896535723a06c38094c">
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 10933 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): gene_name, hugo_gene, trait, gene, gene_id
+dbl (12): p_acat_6, chr, start, qval, p_human, BR, AC, IL, LH, PL, VO, p_acat_5
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ratxcan_tutorial_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The full RatXcan results includes tissue-specific p-values (AC, IL, LH, PL, VO) and a combination p-value (<a href="https://www.cell.com/ajhg/fulltext/S0002-9297(19)30002-3">ACAT</a>), as well as PhenomeXcan results for corresponding human phenotypes and genes. The datasets are included in the <code>data</code> subdirectory and accessible on <a href="https://imlab.shinyapps.io/RatXcan/" class="uri">https://imlab.shinyapps.io/RatXcan/</a>.</p>
+
+
+
+</section>
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

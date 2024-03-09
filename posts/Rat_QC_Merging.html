@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Natasha Santhanam">
+<meta name="dcterms.date" content="2021-10-26">
+
+<title>Rat Genomics Pipeline Rendered - Rat QC and Comparison Check</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rat Genomics Pipeline Rendered</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">paper_code</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../other_code.html" rel="" target="">
+ <span class="menu-text">more_code</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#compare-the-overlap-of-rats-between-the-original-80-and-new-ones-sent-by-apurva" id="toc-compare-the-overlap-of-rats-between-the-original-80-and-new-ones-sent-by-apurva" class="nav-link active" data-scroll-target="#compare-the-overlap-of-rats-between-the-original-80-and-new-ones-sent-by-apurva">Compare the overlap of Rats between the original 80 and new ones sent by Apurva</a></li>
+  <li><a href="#cleanup" id="toc-cleanup" class="nav-link" data-scroll-target="#cleanup">Cleanup</a></li>
+  <li><a href="#merge-the-both-rat-genotype-data-sets" id="toc-merge-the-both-rat-genotype-data-sets" class="nav-link" data-scroll-target="#merge-the-both-rat-genotype-data-sets">Merge the both rat genotype data sets</a></li>
+  <li><a href="#generate-grm-for-both-merged-rats-and-only-for-the-3000" id="toc-generate-grm-for-both-merged-rats-and-only-for-the-3000" class="nav-link" data-scroll-target="#generate-grm-for-both-merged-rats-and-only-for-the-3000">Generate GRM for both merged rats and only for the 3000</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Rat QC and Comparison Check</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Natasha Santhanam </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">10/26/2021</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="compare-the-overlap-of-rats-between-the-original-80-and-new-ones-sent-by-apurva" class="level2">
+<h2 class="anchored" data-anchor-id="compare-the-overlap-of-rats-between-the-original-80-and-new-ones-sent-by-apurva">Compare the overlap of Rats between the original 80 and new ones sent by Apurva</h2>
+<p>Apurva sent bimbam files that I converted to map/ped and then bim/bed/fam files using my own pipeline. Pipeline is in rat_compare_genotypes_metabolic.Rmd file.</p>
+</section>
+<section id="cleanup" class="level1">
+<h1>Cleanup</h1>
+<p>QC for Missingness in Apurva’s data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plink <span class="sc">--</span>bfile rat_metabolic_impute <span class="sc">--</span>missing <span class="sc">--</span>out rat_metabolic_missing</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#can also check missingness in Tyson's rats - shouldn't be since genotypes are imputed</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>plink <span class="sc">--</span>bfile rat_geno_merged_Ac <span class="sc">--</span>missing <span class="sc">--</span>out rat_Ac_missing</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Missingess in Apurva's dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>indmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_missing.imiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>snpmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_missing.lmiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(indmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snpmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Missingness in Tyson's rats</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>indmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_Ac_missing.imiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>snpmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_Ac_missing.lmiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(indmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snpmiss<span class="sc">$</span>N_MISS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As we expected since this is all imputed data, there are no snps missing across individuals or individuals missing</p>
+<p>Before merging, I’ll mark the ids of the Fam file from the original 80 so that way we can identify them later. This is in CRI. All the genotypes are in /gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files/rat_genotypes_LD_pruned_0.95/plink_format/</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/genotype_files/rat_genotype_Ac.fam"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fam<span class="sc">$</span>V1 <span class="ot">&lt;-</span> <span class="fu">paste</span>(fam<span class="sc">$</span>V1, <span class="st">"T"</span>, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fam<span class="sc">$</span>V2 <span class="ot">&lt;-</span> fam<span class="sc">$</span>V1</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(fam, geno.dir <span class="sc">%&amp;%</span> <span class="st">"plink_format/rat_geno_merged_Ac.fam"</span>, <span class="at">col.names=</span><span class="cn">FALSE</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>, <span class="at">quote=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Also, I have to edit the varID in the bim file for the original 80 rats. The varID is {chr}<em>{pos}</em>{ref}_{alt} and in the 3000 rats bim file it’s chr{}:{pos}</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bim <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/genotype_files/rat_genotype_Ac.bim"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bim<span class="sc">$</span>V2 <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste</span>(<span class="st">"chr"</span>, bim<span class="sc">$</span>V1, <span class="at">sep=</span> <span class="st">""</span>), bim<span class="sc">$</span>V4, <span class="at">sep =</span> <span class="st">":"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(bim, geno.dir <span class="sc">%&amp;%</span> <span class="st">"plink_format/rat_geno_merged_Ac.bim"</span>, <span class="at">col.names=</span><span class="cn">FALSE</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>, <span class="at">quote=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="merge-the-both-rat-genotype-data-sets" class="level1">
+<h1>Merge the both rat genotype data sets</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove variants based on MAF.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute <span class="at">--maf</span> 0.05 <span class="at">--allow-no-sex</span> <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_impute_maf</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the variants present in 80 rats from the 3000 rats genomes dataset.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2}'</span> rat_geno_merged_Ac.bim <span class="op">&gt;</span> rat_geno_Ac_SNPs.txt</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute_maf <span class="at">--extract</span> rat_geno_Ac_SNPs.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_impute_same_snps</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the variants present in 3000 rats Genomes dataset from the 80 rats dataset.</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2}'</span> rat_metabolic_impute.bim <span class="op">&gt;</span> rat_metabolic_SNPs.txt</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merged_Ac <span class="at">--extract</span> rat_metabolic_SNPs.txt <span class="at">--recode</span> <span class="at">--make-bed</span> <span class="at">--out</span> rat_geno_merged_Ac_same_snps</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># The datasets now contain the exact same variants.</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">## The datasets must have the same build. Change the build 3000 rats Genomes data build.</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$4}'</span> rat_metabolic_impute.map  <span class="op">&gt;</span> buildratmetabolic.txt</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># buildratmetabolic.txt contains one SNP-id and physical position per line.</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merged_Ac_same_snps <span class="at">--update-map</span> buildratmetabolic.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_geno_merged_Ac_same_build</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># both files  now have the same build.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Prior to merging, want to make sure that the files are mergeable, for this we conduct 3 steps:</p>
+<ol type="1">
+<li>Make sure the reference genome is similar in the 80 rat plink files and the 3000 rat datasets.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5}'</span> rat_geno_merged_Ac_same_build.bim <span class="op">&gt;</span> rat_Ac_ref-list.txt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute_same_snps <span class="at">--reference-allele</span> rat_Ac_ref-list.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic-adj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Resolve strand issues.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for potential strand issues.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> rat_geno_merged_Ac_same_build.bim <span class="op">&gt;</span> rat_genotype_Ac-adj_tmp</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> rat_metabolic-adj.bim <span class="op">&gt;</span> rat_metabolic_impute_tmp </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> rat_metabolic_impute_tmp rat_genotype_Ac-adj_tmp <span class="kw">|</span><span class="fu">uniq</span> <span class="at">-u</span> <span class="op">&gt;</span> all_differences.txt</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 366 differences between the files, some of these might be due to strand issues.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print SNP-identifier and remove duplicates.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$1}'</span> all_differences.txt <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> flip_list.txt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Generates a file of 366 SNPs. These are the non-corresponding SNPs between the two files. </span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Flip the 366 non-corresponding SNPs. </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic-adj <span class="at">--flip</span> flip_list.txt <span class="at">--reference-allele</span> rat_Ac_ref-list.txt <span class="at">--make-bed</span> <span class="at">--out</span> corrected_rat_metabo</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for SNPs which are still problematic after they have been flipped.</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> corrected_rat_metabo.bim <span class="op">&gt;</span> corrected_rat_metab_tmp</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> rat_genotype_Ac-adj_tmp corrected_rat_metab_tmp <span class="kw">|</span><span class="fu">uniq</span> <span class="at">-u</span>  <span class="op">&gt;</span> uncorresponding_SNPs.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Remove the SNPs which after the previous two steps still differ between datasets.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$1}'</span> uncorresponding_SNPs.txt <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> SNPs_for_exlusion.txt</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The command above generates a list of the 366 SNPs</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove problematic SNPs from both datasets.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> corrected_rat_metabo <span class="at">--exclude</span> SNPs_for_exlusion.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_corr </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merged_Ac_same_build <span class="at">--exclude</span> SNPs_for_exlusion.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_geno_Ac_MDS2</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge original rat file with rat metabolic phenotype Data.</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_corr <span class="at">--bmerge</span> rat_geno_Ac_MDS2.bed rat_geno_Ac_MDS2.bim rat_geno_Ac_MDS2.fam <span class="at">--allow-no-sex</span> <span class="at">--make-bed</span> <span class="at">--out</span> all_rats_merged</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After all of this I generated a set of plink files all_rats_merged with 3551 rats (3473 + 78). Next, I’ll generate the GRM using GCTA</p>
+</section>
+<section id="generate-grm-for-both-merged-rats-and-only-for-the-3000" class="level1">
+<h1>Generate GRM for both merged rats and only for the 3000</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcta</span> <span class="at">--bfile</span> rat_metabolic_impute <span class="at">--make-grm-bin</span> <span class="at">--out</span> rat_metabolic_grm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is done in CRI and in this folder /gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files/rat_genotypes_LD_pruned_0.95/plink_format/GRMs</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcta</span> <span class="at">--bfile</span> all_rats_merged <span class="at">--make-grm-bin</span> <span class="at">--out</span> all_rats_grm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next we can read in the GRM using the readGRM function</p>
+<p>Here is the histogram of both the diagonal and off diagonal GRM for the 3000 rats before ever merging</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rats_metabolic_GRM <span class="ot">&lt;-</span> <span class="fu">ReadGRMBin</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_grm"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>diag <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rats_metabolic_GRM<span class="sc">$</span>diag) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">rats_metabolic_GRM$diag</span><span class="st">`</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diag, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Diagonal of GRM of original 3473 rats before merging"</span>, <span class="at">x=</span> <span class="st">"Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>off <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rats_metabolic_GRM<span class="sc">$</span>off) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">rats_metabolic_GRM$off</span><span class="st">`</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(off, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Off - Diagonal of GRM of original 3473 rats before merging"</span>, <span class="at">x=</span> <span class="st">"off Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is the histogram of both the diagonal and off diagonal GRM for the 3551 rats after merging</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>all_rats_GRM <span class="ot">&lt;-</span> <span class="fu">ReadGRMBin</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"all_rats_grm"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>diag <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(all_rats_GRM<span class="sc">$</span>diag) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">all_rats_GRM$diag</span><span class="st">`</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diag, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.03</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Diagonal of GRM of merged 3551 rats"</span>, <span class="at">x=</span> <span class="st">"Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>off <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(all_rats_GRM<span class="sc">$</span>off) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">all_rats_GRM$off</span><span class="st">`</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(off, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.03</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Off Diagonal of GRM of merged 3551 rats"</span>, <span class="at">x=</span> <span class="st">" off Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>That small group to the right of the histogram are the relatedness between the 40ish rats that overlap between Tyson and Apurva’s mice.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tyson_rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"list_of_tyson_rats.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>all_rats <span class="ot">&lt;-</span> <span class="fu">readGRM</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"all_rats_grm"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>all_rats<span class="sc">$</span>grm<span class="sc">$</span>id1 <span class="ot">&lt;-</span> all_rats<span class="sc">$</span>id[<span class="fu">match</span>(all_rats<span class="sc">$</span>grm<span class="sc">$</span>id1, <span class="fu">rownames</span>(all_rats<span class="sc">$</span>id)), <span class="dv">1</span>]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>all_rats<span class="sc">$</span>grm<span class="sc">$</span>id2 <span class="ot">&lt;-</span> all_rats<span class="sc">$</span>id[<span class="fu">match</span>(all_rats<span class="sc">$</span>grm<span class="sc">$</span>id2, <span class="fu">rownames</span>(all_rats<span class="sc">$</span>id)), <span class="dv">1</span>]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>overlap_rats <span class="ot">&lt;-</span> all_rats<span class="sc">$</span>grm </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>overlap_rats <span class="ot">&lt;-</span> overlap_rats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id1 <span class="sc">%in%</span> tyson_rats<span class="sc">$</span>V1 <span class="sc">|</span> id2 <span class="sc">%in%</span> tyson_rats<span class="sc">$</span>V1) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(grm <span class="sc">&lt;=</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(overlap_rats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+<!-- -->
+
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Rat_QC_Merging"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Natasha Santhanam"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2/14/2022"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">output:</span><span class="co"> html_document</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>title: "Rat QC and Comparison Check"</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>author: "Natasha Santhanam"</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>date: "10/26/2021"</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>output: html_document</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(tidyverse))</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(data.table))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(RSQLite))</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(qqman))</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="st">"%&amp;%"</span> <span class="ot">=</span> <span class="cf">function</span>(a,b) <span class="fu">paste</span>(a,b,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>geno.dir <span class="ot">&lt;-</span> <span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files/rat_genotypes_LD_pruned_0.95/"</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>data.dir <span class="ot">&lt;-</span> <span class="st">"/Users/natashasanthanam/CRI/"</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Compare the overlap of Rats between the original 80 and new ones sent by Apurva</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>Apurva sent bimbam files that I converted to map/ped and then bim/bed/fam files using my own pipeline. Pipeline is in rat_compare_genotypes_metabolic.Rmd file.</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="fu"># Cleanup</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>QC for Missingness in Apurva's data</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{r check missing, eval=FALSE}</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>plink <span class="sc">--</span>bfile rat_metabolic_impute <span class="sc">--</span>missing <span class="sc">--</span>out rat_metabolic_missing</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="co">#can also check missingness in Tyson's rats - shouldn't be since genotypes are imputed</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>plink <span class="sc">--</span>bfile rat_geno_merged_Ac <span class="sc">--</span>missing <span class="sc">--</span>out rat_Ac_missing</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r visualize missingness for both files}</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co">#Missingess in Apurva's dataset</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>indmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_missing.imiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>snpmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_missing.lmiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(indmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snpmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="co">#Missingness in Tyson's rats</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>indmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_Ac_missing.imiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>snpmiss<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="at">file=</span> data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_Ac_missing.lmiss"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(indmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(snpmiss<span class="sc">$</span>N_MISS)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>As we expected since this is all imputed data, there are no snps missing across individuals or individuals missing</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>Before merging, I'll mark the ids of the Fam file from the original 80 so that way we can identify them later. This is in CRI. All the genotypes are in  /gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files/rat_genotypes_LD_pruned_0.95/plink_format/</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="in">```{r mark fam file, eval=FALSE}</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>fam <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/genotype_files/rat_genotype_Ac.fam"</span>)</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>fam<span class="sc">$</span>V1 <span class="ot">&lt;-</span> <span class="fu">paste</span>(fam<span class="sc">$</span>V1, <span class="st">"T"</span>, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>fam<span class="sc">$</span>V2 <span class="ot">&lt;-</span> fam<span class="sc">$</span>V1</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(fam, geno.dir <span class="sc">%&amp;%</span> <span class="st">"plink_format/rat_geno_merged_Ac.fam"</span>, <span class="at">col.names=</span><span class="cn">FALSE</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>, <span class="at">quote=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>Also, I have to edit the varID in the bim file for the original 80 rats. The varID is {chr}_{pos}_{ref}_{alt} and in the 3000 rats bim file it's chr{}:{pos} </span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{r edit bim file, eval=FALSE}</span></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>bim <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"/gpfs/data/im-lab/nas40t2/natasha/rat_genomics/genotype_files/rat_genotype_Ac.bim"</span>)</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>bim<span class="sc">$</span>V2 <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste</span>(<span class="st">"chr"</span>, bim<span class="sc">$</span>V1, <span class="at">sep=</span> <span class="st">""</span>), bim<span class="sc">$</span>V4, <span class="at">sep =</span> <span class="st">":"</span>)</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(bim, geno.dir <span class="sc">%&amp;%</span> <span class="st">"plink_format/rat_geno_merged_Ac.bim"</span>, <span class="at">col.names=</span><span class="cn">FALSE</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>, <span class="at">quote=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a><span class="fu"># Merge the both rat genotype data sets</span></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash make sure the two datasets have the same build}</span></span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove variants based on MAF.</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute <span class="at">--maf</span> 0.05 <span class="at">--allow-no-sex</span> <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_impute_maf</span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the variants present in 80 rats from the 3000 rats genomes dataset.</span></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2}'</span> rat_geno_merged_Ac.bim <span class="op">&gt;</span> rat_geno_Ac_SNPs.txt</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute_maf <span class="at">--extract</span> rat_geno_Ac_SNPs.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_impute_same_snps</span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the variants present in 3000 rats Genomes dataset from the 80 rats dataset.</span></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2}'</span> rat_metabolic_impute.bim <span class="op">&gt;</span> rat_metabolic_SNPs.txt</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merged_Ac <span class="at">--extract</span> rat_metabolic_SNPs.txt <span class="at">--recode</span> <span class="at">--make-bed</span> <span class="at">--out</span> rat_geno_merged_Ac_same_snps</span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="co"># The datasets now contain the exact same variants.</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a><span class="co">## The datasets must have the same build. Change the build 3000 rats Genomes data build.</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$4}'</span> rat_metabolic_impute.map  <span class="op">&gt;</span> buildratmetabolic.txt</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a><span class="co"># buildratmetabolic.txt contains one SNP-id and physical position per line.</span></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merged_Ac_same_snps <span class="at">--update-map</span> buildratmetabolic.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_geno_merged_Ac_same_build</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a><span class="co"># both files  now have the same build.</span></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a> Prior to merging,  want to make sure that the files are mergeable, for this we conduct 3 steps:</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>1) Make sure the reference genome is similar in the 80 rat plink files and the 3000 rat datasets.</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash set ref genome, eval=FALSE}</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5}'</span> rat_geno_merged_Ac_same_build.bim <span class="op">&gt;</span> rat_Ac_ref-list.txt</span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_impute_same_snps <span class="at">--reference-allele</span> rat_Ac_ref-list.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic-adj</span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>2) Resolve strand issues.</span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash resolve strand issues, eval=FALSE}</span></span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for potential strand issues.</span></span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> rat_geno_merged_Ac_same_build.bim <span class="op">&gt;</span> rat_genotype_Ac-adj_tmp</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> rat_metabolic-adj.bim <span class="op">&gt;</span> rat_metabolic_impute_tmp </span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> rat_metabolic_impute_tmp rat_genotype_Ac-adj_tmp <span class="kw">|</span><span class="fu">uniq</span> <span class="at">-u</span> <span class="op">&gt;</span> all_differences.txt</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="co"># 366 differences between the files, some of these might be due to strand issues.</span></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash flip snps, eval=FALSE}</span></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a><span class="co"># Print SNP-identifier and remove duplicates.</span></span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$1}'</span> all_differences.txt <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> flip_list.txt</span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a><span class="co"># Generates a file of 366 SNPs. These are the non-corresponding SNPs between the two files. </span></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a><span class="co"># Flip the 366 non-corresponding SNPs. </span></span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic-adj <span class="at">--flip</span> flip_list.txt <span class="at">--reference-allele</span> rat_Ac_ref-list.txt <span class="at">--make-bed</span> <span class="at">--out</span> corrected_rat_metabo</span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for SNPs which are still problematic after they have been flipped.</span></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$2,$5,$6}'</span> corrected_rat_metabo.bim <span class="op">&gt;</span> corrected_rat_metab_tmp</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> rat_genotype_Ac-adj_tmp corrected_rat_metab_tmp <span class="kw">|</span><span class="fu">uniq</span> <span class="at">-u</span>  <span class="op">&gt;</span> uncorresponding_SNPs.txt</span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>3) Remove the SNPs which after the previous two steps still differ between datasets.</span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash remove problematic snps, eval=FALSE}</span></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{print$1}'</span> uncorresponding_SNPs.txt <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> SNPs_for_exlusion.txt</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="co"># The command above generates a list of the 366 SNPs</span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove problematic SNPs from both datasets.</span></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> corrected_rat_metabo <span class="at">--exclude</span> SNPs_for_exlusion.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_metabolic_corr </span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_geno_merged_Ac_same_build <span class="at">--exclude</span> SNPs_for_exlusion.txt <span class="at">--make-bed</span> <span class="at">--out</span> rat_geno_Ac_MDS2</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge original rat file with rat metabolic phenotype Data.</span></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a><span class="ex">plink</span> <span class="at">--bfile</span> rat_metabolic_corr <span class="at">--bmerge</span> rat_geno_Ac_MDS2.bed rat_geno_Ac_MDS2.bim rat_geno_Ac_MDS2.fam <span class="at">--allow-no-sex</span> <span class="at">--make-bed</span> <span class="at">--out</span> all_rats_merged</span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>After all of this I generated a set of plink files all_rats_merged with 3551 rats (3473 + 78). Next, I'll generate the GRM using GCTA </span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a><span class="fu"># Generate GRM for both merged rats and only for the 3000</span></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash create GRM for only 3000 rats, eval=FALSE}</span></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="ex">gcta</span> <span class="at">--bfile</span> rat_metabolic_impute <span class="at">--make-grm-bin</span> <span class="at">--out</span> rat_metabolic_grm</span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a>This is done in CRI and in this folder /gpfs/data/im-lab/nas40t2/natasha/rat_genomics/Box_files/rat_genotypes_LD_pruned_0.95/plink_format/GRMs</span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash create GRM for merged rats, eval=FALSE}</span></span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a><span class="ex">gcta</span> <span class="at">--bfile</span> all_rats_merged <span class="at">--make-grm-bin</span> <span class="at">--out</span> all_rats_grm</span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a>Next we can read in the GRM using the readGRM function</span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read GRM, include=FALSE}</span></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a><span class="co">#from https://gist.github.com/explodecomputer/7150052</span></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>ReadGRMBin<span class="ot">=</span><span class="cf">function</span>(prefix, <span class="at">AllN=</span>F, <span class="at">size=</span><span class="dv">4</span>){</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>sum_i<span class="ot">=</span><span class="cf">function</span>(i){</span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>     <span class="fu">return</span>(<span class="fu">sum</span>(<span class="dv">1</span><span class="sc">:</span>i))</span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a>   BinFileName<span class="ot">=</span><span class="fu">paste</span>(prefix,<span class="st">".grm.bin"</span>,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a>   NFileName<span class="ot">=</span><span class="fu">paste</span>(prefix,<span class="st">".grm.N.bin"</span>,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>   IDFileName<span class="ot">=</span><span class="fu">paste</span>(prefix,<span class="st">".grm.id"</span>,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a>   id <span class="ot">=</span> <span class="fu">read.table</span>(IDFileName)</span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a>   n<span class="ot">=</span><span class="fu">dim</span>(id)[<span class="dv">1</span>]</span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>   BinFile<span class="ot">=</span><span class="fu">file</span>(BinFileName, <span class="st">"rb"</span>);</span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a>   grm<span class="ot">=</span><span class="fu">readBin</span>(BinFile, <span class="at">n=</span>n<span class="sc">*</span>(n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span>size)</span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>   NFile<span class="ot">=</span><span class="fu">file</span>(NFileName, <span class="st">"rb"</span>);</span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span>(AllN<span class="sc">==</span>T){</span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a>     N<span class="ot">=</span><span class="fu">readBin</span>(NFile, <span class="at">n=</span>n<span class="sc">*</span>(n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span>size)</span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>   <span class="cf">else</span> N<span class="ot">=</span><span class="fu">readBin</span>(NFile, <span class="at">n=</span><span class="dv">1</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span>size)</span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a>   i<span class="ot">=</span><span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>n, sum_i)</span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>   <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">diag=</span>grm[i], <span class="at">off=</span>grm[<span class="sc">-</span>i], <span class="at">id=</span>id, <span class="at">N=</span>N))</span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>readGRM <span class="ot">&lt;-</span> <span class="cf">function</span>(rootname)</span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a>    bin.file.name <span class="ot">&lt;-</span> <span class="fu">paste</span>(rootname, <span class="st">".grm.bin"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>    n.file.name <span class="ot">&lt;-</span> <span class="fu">paste</span>(rootname, <span class="st">".grm.N.bin"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>    id.file.name <span class="ot">&lt;-</span> <span class="fu">paste</span>(rootname, <span class="st">".grm.id"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Reading IDs</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>    id <span class="ot">&lt;-</span> <span class="fu">read.table</span>(id.file.name, <span class="at">colClasses=</span><span class="st">"character"</span>)</span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">dim</span>(id)[<span class="dv">1</span>]</span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Reading GRM</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>    bin.file <span class="ot">&lt;-</span> <span class="fu">file</span>(bin.file.name, <span class="st">"rb"</span>)</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>    grm <span class="ot">&lt;-</span> <span class="fu">readBin</span>(bin.file, <span class="at">n=</span>n<span class="sc">*</span>(n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span><span class="dv">4</span>)</span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>    <span class="fu">close</span>(bin.file)</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Reading N</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a>    n.file <span class="ot">&lt;-</span> <span class="fu">file</span>(n.file.name, <span class="st">"rb"</span>)</span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a>    N <span class="ot">&lt;-</span> <span class="fu">readBin</span>(n.file, <span class="at">n=</span>n<span class="sc">*</span>(n<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span><span class="dv">2</span>, <span class="at">what=</span><span class="fu">numeric</span>(<span class="dv">0</span>), <span class="at">size=</span><span class="dv">4</span>)</span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a>    <span class="fu">close</span>(n.file)</span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Creating data frame</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a>    l <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a>        l[[i]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>i</span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>    col1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a>    col2 <span class="ot">&lt;-</span> <span class="fu">unlist</span>(l)</span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a>    grm <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id1=</span>col1, <span class="at">id2=</span>col2, <span class="at">N=</span>N, <span class="at">grm=</span>grm) </span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a>    ret <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a>    ret<span class="sc">$</span>grm <span class="ot">&lt;-</span> grm</span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a>    ret<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(ret)</span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a>Here is the histogram of both the diagonal and off diagonal GRM for the 3000 rats before ever merging</span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read and analyze the pre merging GRM}</span></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a>rats_metabolic_GRM <span class="ot">&lt;-</span> <span class="fu">ReadGRMBin</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"rat_metabolic_grm"</span>)</span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a>diag <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rats_metabolic_GRM<span class="sc">$</span>diag) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">rats_metabolic_GRM$diag</span><span class="st">`</span>)</span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diag, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Diagonal of GRM of original 3473 rats before merging"</span>, <span class="at">x=</span> <span class="st">"Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a>off <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rats_metabolic_GRM<span class="sc">$</span>off) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">rats_metabolic_GRM$off</span><span class="st">`</span>)</span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(off, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Off - Diagonal of GRM of original 3473 rats before merging"</span>, <span class="at">x=</span> <span class="st">"off Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a>Here is the histogram of both the diagonal and off diagonal GRM for the 3551 rats after merging</span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a><span class="in">```{r read and analyze the GRM}</span></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a>all_rats_GRM <span class="ot">&lt;-</span> <span class="fu">ReadGRMBin</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"all_rats_grm"</span>)</span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a>diag <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(all_rats_GRM<span class="sc">$</span>diag) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">all_rats_GRM$diag</span><span class="st">`</span>)</span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diag, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.03</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Diagonal of GRM of merged 3551 rats"</span>, <span class="at">x=</span> <span class="st">"Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a>off <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(all_rats_GRM<span class="sc">$</span>off) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">val =</span> <span class="st">`</span><span class="at">all_rats_GRM$off</span><span class="st">`</span>)</span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(off, <span class="fu">aes</span>(<span class="at">x =</span> val)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.03</span>, <span class="at">colour=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Off Diagonal of GRM of merged 3551 rats"</span>, <span class="at">x=</span> <span class="st">" off Diagonal"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a>That small group to the right of the histogram are  the relatedness between the 40ish rats that overlap between Tyson and Apurva's mice. </span>
+<span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a>tyson_rats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"list_of_tyson_rats.txt"</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a>all_rats <span class="ot">&lt;-</span> <span class="fu">readGRM</span>(data.dir <span class="sc">%&amp;%</span> <span class="st">"all_rats_grm"</span>)</span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a>all_rats<span class="sc">$</span>grm<span class="sc">$</span>id1 <span class="ot">&lt;-</span> all_rats<span class="sc">$</span>id[<span class="fu">match</span>(all_rats<span class="sc">$</span>grm<span class="sc">$</span>id1, <span class="fu">rownames</span>(all_rats<span class="sc">$</span>id)), <span class="dv">1</span>]</span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a>all_rats<span class="sc">$</span>grm<span class="sc">$</span>id2 <span class="ot">&lt;-</span> all_rats<span class="sc">$</span>id[<span class="fu">match</span>(all_rats<span class="sc">$</span>grm<span class="sc">$</span>id2, <span class="fu">rownames</span>(all_rats<span class="sc">$</span>id)), <span class="dv">1</span>]</span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a>overlap_rats <span class="ot">&lt;-</span> all_rats<span class="sc">$</span>grm </span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a>overlap_rats <span class="ot">&lt;-</span> overlap_rats <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id1 <span class="sc">%in%</span> tyson_rats<span class="sc">$</span>V1 <span class="sc">|</span> id2 <span class="sc">%in%</span> tyson_rats<span class="sc">$</span>V1) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(grm <span class="sc">&lt;=</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(overlap_rats)</span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
