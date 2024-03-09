@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Sabrina Mi">
+<meta name="dcterms.date" content="2024-03-01">
 
 <title>Rat Genomics Pipeline Rendered - RatXcan Tutorial</title>
 <style>
@@ -180,6 +181,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -192,7 +199,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><p>genotype (plink bed/bim/fam format)</p></li>
 <li><p>phenotype (TSV with columns FID, IID, phenotypes)</p></li>
-<li><p>prediction weights (*.db examples on <a href="https://predictdb.org" class="uri">https://predictdb.org</a>)</p></li>
+<li><p>prediction weights (*.db models on <a href="https://predictdb.org" class="uri">https://predictdb.org</a>)</p></li>
 </ul>
 <p>All of the data and prediction models used in the tutorial can be downloaded from Box: <a href="https://uchicago.box.com/v/ratxcan-tutorial" class="uri">https://uchicago.box.com/v/ratxcan-tutorial</a>.</p>
 </section>
@@ -223,7 +230,7 @@ METAXCAN="$PRE/MetaXcan"
 MODEL="$PRE/models"
 
 GENO_PREFIX="$PRE/data/genotype/rat6k"</code></pre>
-<p>PrediXcan requires input genotypes in VCF format:</p>
+<p>Both <strong>VCF</strong> and <strong>bed/bim/fam</strong> formatted genotypes are used, convert files if needed:</p>
 <pre><code>plink --bfile $GENO_PREFIX --recode vcf --out $GENO_PREFIX
 gzip ${GENO_PREFIX}.vcf</code></pre>
 </section>
